@@ -3,8 +3,6 @@
     # Change heading to something prettier
 
 import webapp2
-import jinja2
-import os
 from handlers import Handler
 
 

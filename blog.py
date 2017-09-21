@@ -1,9 +1,7 @@
 import logging
 import webapp2
-import jinja2
-import os
 from google.appengine.ext import db
-from pyLib import myHash
+from lib import myHash
 from handlers import Handler
 
 
