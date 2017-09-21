@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form>
+  <h2>Enter a food</h2>
+  <input type="text" name="food">
+  <br>
+  <br>
+  {% if items %}
+    {% for item in items %}
+      <input type="hidden" name="food" value="{{item}}">
+    {%endfor%}
+  {%endif%}
+  <button>Add</button>
+
+  {%if items%}
+  <br />
+  <br />
+  <h2>Shopping List</h2>
+  <ul>
+    {% for item in items %}
+      <li>
+        {{item }}
+      </li>
+    {%endfor%}
+  </ul>
+  {%endif%}
+
+
+
+</form>
+
+{% endblock %}

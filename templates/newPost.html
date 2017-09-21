@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>New Post</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+  </head>
+  <body>
+    <form method="post">
+      <label>
+        <div> Title </div>
+        <input type="text" name="title" value="{{title}}"/>
+      </label>
+
+      <lable>
+        <div>
+          Text
+        </div>
+        <textarea name="text" >{{text}}</textarea>
+      </lable>
+      <div class="error"> {{error}} </div>
+      <input type="submit" />
+    </form>
+
+  </body>
+</html>

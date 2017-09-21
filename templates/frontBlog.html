@@ -1,0 +1,39 @@
+<!-- TODO: Preserve line returns from posts so that they will stay when displayed-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Blog Home Page</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/blogFront.css"/>
+  </head>
+  <body>
+    {% if user: %}
+      You are logged in as {{user.username}}
+      <a href="{{path}}/logout">Logout</a>
+      <a href="{{path}}/newpost">New Post</a>
+
+    {%else: %}
+      
+      <a href="{{path}}/login">login</a>
+      <a href="{{path}}/signup">sign up</a>
+
+    {% endif %}
+
+    <h1>Welcome to my Blog!</h1>
+
+    <hr />
+    {% for post in posts %}
+    <div class="post">
+      <div class="post-title">
+        <a href="{{path}}/{{post.key().id()}}">{{post.title}}</a>
+        
+      </div clas="post-body">
+      <!-- <pre class="post-body">{{post.text}}</pre> -->
+      {{post.text}}
+    </div>
+    {% endfor %}
+
+  </body>
+</html>

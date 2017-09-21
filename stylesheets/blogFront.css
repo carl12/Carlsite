@@ -1,0 +1,64 @@
+body {
+  width: 80%;
+  max-width: 800px;
+  background-color: white;
+  border: 20px solid #bdc3c7;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 20px;
+  font-family: "Source sans pro"
+
+}
+
+.error{
+  color: red;
+}
+
+label {
+  display: block;
+  font-size: 20px;
+}
+
+input[type=text]{
+  width=400px;
+  font-size: 20px;
+  padding: 20px;
+}
+
+textarea {
+  width: 400px;
+  height: 200px;
+  font-size: 12px;
+  font-family: monospace;
+
+}
+
+input[type=submit] {
+  font-size: 24px;
+}
+hr {
+  margin: 20px auto;
+}
+
+.post + .post {
+  border-top: 1px solid grey;
+  margin-top: 20px;
+}
+
+.post-title{
+  font-weight: bold;
+  font-size: 20px;
+  color: #2c3e50;
+}
+
+.post-body {
+  margin: 0;
+  width: 200px;
+  font-size: 17px;
+}
+
+.map {
+  position: absolute;
+  right: 0;
+  top: 112px;
+}

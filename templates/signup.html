@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Signup!</title>
+  </head>
+  <body>
+    <h1>Enter Information</h1>
+    <form method="post">
+      <div>
+        <tag name="username">Username: <input type="text" name="username" value="{{stored[0]}}"/></tag>
+        <span class="error">{{userE}}</span>
+      </div>
+      <div>
+        <tag name="password">Password: <input type="password" name="password"/></tag>
+        <span class="error">{{pwE}}</span>
+      </div>
+      <div>
+        <tag name="confirPassword">Verify Password: <input type="password" name="confirmPassword"/></tag>
+        
+      </div>
+      <div>
+        <tag name="email">Email: <input type="text" name="email" value="{{stored[1]}}"/></tag>
+        <span class="error">{{emailE}}</span>
+      </div>
+      <br />
+      <button>Submit</button>
+    </form>
+  </body>
+</html>
