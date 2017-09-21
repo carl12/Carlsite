@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-
-    <title>Udacity Templates</title>
+  	<title>Carlsite {% block title %}{% endblock %}</title>
+  	
   </head>
-  <body style="margin: 0">
-    <h1 style="background-color: #ddd; color: #888; margin: 0 height: 50px">
-      Udacity templates</h1>
+  <body>
+  	<div class="outer">
+    <h1 style="background-color: #ddd; color: #888; margin: 0 height: 50px">Carlsite {% block header%}{% endblock %}</h1>
     {% block content %}
     {% endblock %}
+    <h3> This is part of my base template </h3>
+
+    {% block footer %}
+    Here we are in a fouter
+    {% endblock %}
+	</div>
   </body>
+    
 </html>

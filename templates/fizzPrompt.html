@@ -1,12 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Fizzbuzz</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+ {% block title %}
+fizzprompt
+{% endblock %} 
+
+ {% block header %}
+fizzprompt
+{% endblock %} 
+
+{% block content %}
 	<h1>Welcome to F1ZZBUzz</h1>
 	<form>
 		<tag>Enter a number!: <input method="get" type="text" name="n"></form></tag>
 	</form>
-</body>
-</html>
+
+  {% block footer %}
+  {{super()}}
+  {% endblock %}
+  
+{% endblock %}
