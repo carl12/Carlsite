@@ -92,7 +92,13 @@ form {
 	/*width: 300px;*/
 	margin: 0px;
 	float: left;
-	
+	padding-bottom: 20px;
+}
+
+.submit {
+	margin-top: 10px;
+	margin-right: 20px;
+	float: right;
 }
 /*
 .fizzHead {
