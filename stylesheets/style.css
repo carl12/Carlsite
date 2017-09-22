@@ -28,8 +28,7 @@
 
 }
 h1 {
-	background-color: #ddd; 
-	color: #888; 
+	background-color: #8D8329;  
 	padding: 10px;
 	border-radius: 5px;
 	margin: 10px;
@@ -47,22 +46,31 @@ body {
 	height:100%;
 
 
-	background-color: green;
+	background-color: #6096A3;
 	margin: 0px;
+	color: #CCE1DB;
 
+}
+.topbar > a {
+	color: #8D8329;
+}
+a {
+	color: #CCE1DB;
 }
 
 .topbar {
-	background-color: orange;
+	background-color: #20586C;
 	padding: 3px;
 	text-align: center;
+	color: #8D8329;
 }
 
 .botbar {
-	background-color: orange;
+	background-color: #20586C;
 	padding: 10px;
 	/*border: 20px;*/
 	text-align: center;
+	color: #8D8329;
 	
 
 
