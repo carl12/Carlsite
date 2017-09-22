@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>ascii</title>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/front.css"/>
-  </head>
-  <body>
-    <h1>ASCII Chan</h1>
+{% extends 'base.html' %}
 
+{% block title %}
+AsciiChan!
+{% endblock %}
+
+{% block route %}
+- <a href="/ascii">AsciiChan</a>
+{% endblock %}
+
+{% block heading %}
+AsciiChan!
+{% endblock %}
+
+{% block content %}
     <form method="post">
       <label>
         <div> title </div>
@@ -26,15 +31,16 @@
     {% if img_url %}
       <img class="map" src="{{img_url}}">
     {% endif %}
-    <hr />
+    
     {% for a in arts %}
-    <div class="art">
+    <div class="art clear">
       <div class="art-title">
         {{a.title}}
       </div>
       <pre class="art-body">{{a.art}}</pre>
     </div>
     {% endfor %}
+{% endblock%}
 
-  </body>
-</html>
+
+
