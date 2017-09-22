@@ -22,11 +22,11 @@
 	border: 5px solid blue;
 	max-width: 700px;
 	width: 80%;
+	min-height: 90%;
+
 }
-html{
-	margin: 0;
-	padding: 0;
-}
+
+html,body { height:97%; }
 body {
 	border: pink 10px solid;
 	background-color: green;
@@ -36,9 +36,16 @@ body {
 
 .topbar {
 	background-color: orange;
-	margin-top: 0px;
-	padding-top: 0px;
+	min-height: 4%;
 	text-align: center;
+}
+
+.botbar {
+	background-color: orange;
+	text-align: center;
+	min-height: 5%;
+
+
 }
 
 .fizzHead {
