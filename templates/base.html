@@ -2,11 +2,18 @@
 <html>
   <head>
   	<title>Carlsite {% block title %}{% endblock %}</title>
-  	
+  	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
   </head>
   <body>
-  	<div class="outer">
-    <h1 style="background-color: #ddd; color: #888; margin: 0 height: 50px">Carlsite {% block header%}{% endblock %}</h1>
+  	<div class="topbar">
+  		<a href="/">Carlsite</a> {% block route %}{% endblock %} |
+  		<a class="toptext2" href="/helloworld">Hello World!</a>
+  		<a class="toptext2" href="/ascii">ascii</a>
+  		<a class="toptext2" href="/blog">blog</a>
+  		<a class="toptext2" href="/">Home!</a>
+  	</div>
+  	<div class="content">
+    <h1 class="fizzHead">Carlsite {% block header%}{% endblock %}</h1>
     {% block content %}
     {% endblock %}
     <h3> This is part of my base template </h3>

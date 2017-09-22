@@ -7,6 +7,11 @@ fizzBuzz
 fizzBuzz
 {% endblock %}
 
+{% block route %}
+ - <a href="/fizzbuzz"> fizzPrompt</a>
+ - <a href="/fizzbuzz?n={{n}}">fizzbuzz</a>
+{% endblock %}
+
 {% block content %}
 
 {% if n %}
@@ -28,7 +33,6 @@ fizzBuzz
 {% endif %}
   {% block footer %}
   {{super()}}
-  asdf
   {% endblock %}
 
 {% endblock %}

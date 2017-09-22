@@ -4,9 +4,14 @@
 fizzprompt
 {% endblock %} 
 
+{% block route %}
+ - <a href="/fizzbuzz">fizzPrompt</a>
+{% endblock %}
+
  {% block header %}
 fizzprompt
 {% endblock %} 
+
 
 {% block content %}
 	<h1>Welcome to F1ZZBUzz</h1>
@@ -17,5 +22,5 @@ fizzprompt
   {% block footer %}
   {{super()}}
   {% endblock %}
-  
+
 {% endblock %}
