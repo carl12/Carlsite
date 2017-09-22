@@ -3,15 +3,8 @@
 import webapp2
 import cgi
 import codecs
+from handlers import Handler
 
-form = """
-<p2>Enter rot13 below</p2>
-<form method="post">
-  <textarea name="text">%(message)s</textarea>
-  <br />
-  <input type="submit"/>
-</form>
-"""
 # lim = [65,90,97,122]
 # split = [(lim[0]+lim[1]+0.0)/2,(lim[2]+lim[3]+0.0)/2]
 
@@ -34,22 +27,24 @@ def escape_html(s):
     return cgi.escape(s,quote = True)
 
 
-class ROT13(webapp2.RequestHandler):
+class ROT13(Handler):
 
     def write_form(self, message=""):
         self.response.out.write(form % {"message":escape_html(message)})
 
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
-        self.write_form()
+        self.render('rot13.html')
 
     def post(self):
         self.response.headers['Content-Type'] = 'text/html'
         a = self.request.get("text")
         if a:
-            self.write_form(rot13(a))
+            # self.write_form(rot13(a))
+            self.render('rot13.html',message=rot13(a))
         else:
-            self.write_form(rot13())
+            # self.write_form(rot13())
+            self.render('rot13.html')
 
 
 pages = [('/rot13',ROT13)]

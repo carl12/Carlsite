@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block path %}
+- <a href="/rot13">rot13</a>
+{% endblock %}
+{% block title %}
+ROT13
+{% endblock %}
+{% block heading %}
+ROT13
+{% endblock %}
+
+{% block content %}
+<p2>Enter rot13 below</p2>
+<form method="post">
+  <textarea name="text">{{message}}</textarea>
+  <br />
+  <input type="submit"/>
+</form>
+{% endblock %}
