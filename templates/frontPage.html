@@ -1,10 +1,17 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
 	<title>Welcome To My Website!!</title>
 </head>
-<body>
-	<h1>Welcome To My Website!</h1>
+<body> -->
+	{% extends 'base.html' %}
+	{% block title %}
+	Carlsite!
+	{% endblock%}
+	{% block heading %}
+	Welcome to Carlsite!
+	{% endblock %}
+	{% block content %}
 	<div> There are several projects for you to enjoy!</div>
 	<div><a href="/blog">Blog</a></div>
 	<div><a href="/ascii">Ascii Chan</a></div>
@@ -12,5 +19,4 @@
 	<div><a href="/fizzbuzz">FizzBuzz</a></div>
 	<div><a href="/rot13">ROT13</a></div>
 	<div><a href="/helloworld">Hello World!</a></div>
-</body>
-</html>
+	{% endblock %}

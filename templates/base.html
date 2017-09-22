@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-  	<title>Carlsite {% block title %}{% endblock %}</title>
+  	<title> {% block title %}{% endblock %}</title>
   	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
   </head>
   <body>
   	<div class="topbar">
+      <img class="icon" src="images/headshotsquare.jpg">
   		<a href="/">Carlsite</a> {% block route %}{% endblock %} |
   		<a class="toptext2" href="/helloworld">Hello World!</a>
   		<a class="toptext2" href="/ascii">ascii</a>
@@ -13,7 +14,7 @@
   		<a class="toptext2" href="/">Home!</a>
   	</div>
   	<div class="content">
-    <h1 class="fizzHead">Carlsite {% block header%}{% endblock %}</h1>
+    <h1 class="fizzHead">{% block heading%}{% endblock %}</h1>
     {% block content %}
     {% endblock %}
     <h3> This is part of my base template </h3>

@@ -19,38 +19,66 @@
 
 .content {
 	margin: 0 auto;
-	border: 5px solid blue;
+	/*border: 5px solid blue;*/
 	max-width: 700px;
 	width: 80%;
-	min-height: 90%;
+	/*min-height: 90%;*/
+	padding-top: 20px;
+	padding-bottom: 20px;
+
+}
+h1 {
+	background-color: #ddd; 
+	color: #888; 
+	padding: 10px;
+	border-radius: 5px;
+	margin: 10px;
 
 }
 
-html,body { height:97%; }
+html {
+
+	height:100%; 
+	/*background-color: pink;*/
+}
+
 body {
-	border: pink 10px solid;
+	/*border: pink 10px solid;*/
+	height:100%;
+
+
 	background-color: green;
 	margin: 0px;
-	padding: 0;
+
 }
 
 .topbar {
 	background-color: orange;
-	min-height: 4%;
+	padding: 3px;
 	text-align: center;
 }
 
 .botbar {
 	background-color: orange;
+	padding: 10px;
+	/*border: 20px;*/
 	text-align: center;
-	min-height: 5%;
+	
+
 
 
 }
+.icon {
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
 
+}
+/*
 .fizzHead {
 	background-color: #ddd; 
 	color: #888; 
-	margin: 0 
-	height: 50px
-}
+	padding: 10px;
+	border-radius: 5px
+	margin: 10px;
+}*/

@@ -1,8 +1,23 @@
 {% extends "base.html" %}
 
+{% block title %}
+Shopping List
+{% endblock %}
+
+{% block route %}
+    
+- <a href="/shoppinglist?{% for item in items %}food={{item}}&{%endfor%}">Shopping List</a>
+    
+{% endblock %}
+
+{% block heading %}
+Shopping List
+{% endblock %}
+
 {% block content %}
 <form>
-  <h2>Enter a food</h2>
+    
+  <h2>Enter a food:</h2>
   <input type="text" name="food">
   <br>
   <br>
