@@ -3,15 +3,18 @@
   <head>
   	<title> {% block title %}{% endblock %}</title>
   	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
   </head>
   <body>
   	<div class="topbar">
-      <img class="icon" src="images/headshotsquare.jpg">
-  		<a href="/">Carlsite</a> {% block route %}{% endblock %} |
-  		<a class="toptext2" href="/helloworld">Hello World!</a>
-  		<a class="toptext2" href="/ascii">ascii</a>
-  		<a class="toptext2" href="/blog">blog</a>
-  		<a class="toptext2" href="/">Home!</a>
+      
+  		<a href="/"><img class="icon" src="images/headshotsquare.jpg">Carlsite</a> {% block route %}{% endblock %} |
+
+      <a class="toptext2" href="/blog">Blog</a>
+      <a class="toptext2" href="/fizzbuzz">Fizzbuzz</a>
+      <a class="toptext2" href="/shoppinglist">Shopping List</a>
+      <a class="toptext2" href="/ascii">Ascii</a>
+      <a class="toptext2" href="/helloworld">Hello World!</a>
   	</div>
   	<div class="content">
     <h1 class="fizzHead">{% block heading%}{% endblock %}</h1>
