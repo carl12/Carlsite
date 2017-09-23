@@ -1,14 +1,27 @@
 <!-- TODO: make sure that posts wrap so they don't escape the box! -->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>You found a blog!</title>
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/stylesheets/blog.css"/>
-  </head>
-  <body>
 
+  {% extends 'base.html' %}
+
+  {% block title %}
+  Blog Signup
+  {% endblock %}
+
+  {% block style %}
+      <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/blog.css"/>
+  {% endblock %}
+
+  {% block route%}
+  > <a href="/blog">Blog</a>
+  > <a href="/blog/{{id}}">{{post.title}}</a>
+  {%endblock%}
+  
+  {%block heading %}
+ {{post.title}}
+  {%endblock%}
+
+  {%block content%}
+  <div class="blogContent">
     <div class="post">
       <div class="post-title">
         {{post.title}}
@@ -20,6 +33,6 @@
     <br>
     Created: {{post.created}} <br />
     Last Modified: {{post.last_modified}}
+  </div>
+  {%endblock%}
 
-  </body>
-</html>

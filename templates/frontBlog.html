@@ -1,14 +1,18 @@
 <!-- TODO: Preserve line returns from posts so that they will stay when displayed-->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Blog Home Page</title>
-
+  {% extends 'base.html' %}
+   {% block title %}Blog Home Page{% endblock %}
+    {% block style %}
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/stylesheets/blog.css"/>
-  </head>
-  <body>
+    {% endblock %}
+
+    {%block route %}
+    > <a href="/blog">Blog</a>
+    {%endblock%}
+  
+    {% block heading %}Welcome to my Blog!{% endblock %}
+  {% block content %}
+    <div class="blogContent">
     {% if user: %}
       You are logged in as {{user.username}}
       <a href="{{path}}/logout">Logout</a>
@@ -21,7 +25,6 @@
 
     {% endif %}
 
-    <h1>Welcome to my Blog!</h1>
 
     <hr />
     {% for post in posts %}
@@ -34,6 +37,7 @@
       {{post.text}}
     </div>
     {% endfor %}
+  </div>
+  {% endblock %}
+  
 
-  </body>
-</html>

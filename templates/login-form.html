@@ -1,16 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Login Here!</title>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/blog.css"/>
-</head>
-<body>
-	<h1>Login</h1>
+
+	{% extends 'base.html' %}
+
+	{% block title %}
+	Blog Login
+	{% endblock %}
+
+	{% block route%}
+	> <a href="/blog">Blog</a>
+	> <a href="/blog/login">Login</a>
+	{%endblock%}
+	
+	{%block heading %}
+	Login
+	{%endblock%}
+	{%block content%}
 	<form method="post">
 		<tag>Username: <input type="text" name="username"></tag><br>
 		<tag>Password: <input type="password" name="password"></tag><br>
 		<div class="error">{{error}}</div>
 		<button>Submit</button>
 	</form>
-</body>
-</html>
+	{%endblock%}

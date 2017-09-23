@@ -4,6 +4,7 @@
   	<title> {% block title %}{% endblock %}</title>
   	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
+    {% block style %}{% endblock %}
   </head>
   <body>
   	<div class="topbar">
@@ -17,7 +18,7 @@
       <a class="toptext2" href="/helloworld">Hello World!</a>
   	</div>
   	<div class="content">
-    <h1 class="fizzHead">{% block heading%}{% endblock %}</h1>
+    <h1 class="mainHead">{% block heading%}{% endblock %}</h1>
     {% block content %}
     {% endblock %}
     <h3> This is part of my base template </h3>

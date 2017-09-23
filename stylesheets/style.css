@@ -27,9 +27,10 @@
 	padding-bottom: 20px;
 
 }
-h1 {
+.mainHead {
 	background-color: #8D8329;  
 	padding: 10px;
+	padding-left: 30px;
 	border-radius: 5px;
 	margin: 10px;
 
@@ -97,7 +98,7 @@ a {
 .line {
 }
 
-form {
+.asciiForm {
 	/*width: 300px;*/
 	margin: 0px;
 	float: left;

@@ -117,8 +117,9 @@ class NewPost(BlogHandler):
 class PostPage(BlogHandler):
     def get(self, post_id):
         p = Post.get_by_id(int(post_id))
+
         if p:
-            self.render("permalink.html", post = p)
+            self.render("permalink.html", post = p, id = post_id)
         else:
             self.error(404)
 

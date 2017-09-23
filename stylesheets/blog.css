@@ -1,4 +1,4 @@
-body {
+.blogContent {
   width: 80%;
   max-width: 800px;
   background-color: white;
@@ -6,7 +6,10 @@ body {
   margin: 0 auto;
   margin-top: 20px;
   padding: 20px;
-  font-family: "Source sans pro"
+  font-family: "Source sans pro";
+  color: black;
+  border-radius: 2px
+
 
 }
 
