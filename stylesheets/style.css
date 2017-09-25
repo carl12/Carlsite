@@ -59,20 +59,16 @@ form {
 }
 
 .topA{
-	/*text-transform: uppercase;*/
   border: none;
   background: none;
   height: 100%;
-  /*font-weight: 700;*/
   color: #8D8329;
-  /*letter-spacing: 1px;*/
-  /*font-size: inherit;*/
   transition: all 0.6s;
   -webkit-transition: all 0.6;
   -moz-transition: all 0.6;
-  /*font-family: 'PT Sans Narrow', sans-serif;*/
   outline: none;
-  /*border-radius: 3px;*/
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
 }
 
 .topA:hover{

@@ -54,7 +54,8 @@
   color: white;
 }
 
-button {
+.colorPB {
+  margin-bottom: -10px; /*Seems backwards, but it works*/
   text-transform: uppercase;
   border: none;
   background: none;
@@ -68,9 +69,10 @@ button {
   -moz-transition: all 0.6;
   font-family: 'PT Sans Narrow', sans-serif;
   outline: none;
+
 }
 
-button:hover {
+.colorPB:hover {
   color: white;
   background: steelblue;
 }

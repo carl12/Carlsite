@@ -8,13 +8,15 @@
   </head>
   <body>
   	<div class="topbar">
-      
-  		<a class="topA" href="/"><img class="icon" src="/images/headshotsquare.jpg">Carlsite</a> {% block route %}{% endblock %} |
-      <form class="topForm" action="/blog"><button class="topA" href="/blog">Blog</button></form>
-      <form class="topForm" action="/blog"><button class="topA" href="/blog">FizzBuzz</button></form>
-      <form class="topForm" action="/blog"><button class="topA" href="/blog">Shopping List</button></form>
-      <form class="topForm" action="/blog"><button class="topA" href="/blog">Ascii</button></form>
-      <form class="topForm" action="/blog"><button class="topA" href="/blog">Hello World!</button></form>
+      <form class="topForm" action="/"><button class="topA">
+        <img class="icon" src="/images/headshotsquare.jpg">Carlsite</a>
+      </button></form>
+       {% block route %}{% endblock %} |
+      <form class="topForm" action="/blog"><button class="topA">Blog</button></form>
+      <form class="topForm" action="/fizzbuzz"><button class="topA">FizzBuzz</button></form>
+      <form class="topForm" action="/shoppinglist"><button class="topA">Shopping List</button></form>
+      <form class="topForm" action="/ascii"><button class="topA">Ascii</button></form>
+      <form class="topForm" action="/helloworld"><button class="topA" >Hello World!</button></form>
 <!--       <a class="topA" href="/blog">Blog</a>
       <a class="topA" href="/fizzbuzz">Fizzbuzz</a>
       <a class="topA" href="/shoppinglist">Shopping List</a>
