@@ -53,16 +53,40 @@ body {
 	font-family: 'Roboto Condensed', sans-serif;
 
 }
-.topbar > a {
-	color: #8D8329;
+
+form {
+	display: inline;
 }
+
+.topA{
+	/*text-transform: uppercase;*/
+  border: none;
+  background: none;
+  height: 100%;
+  /*font-weight: 700;*/
+  color: #8D8329;
+  /*letter-spacing: 1px;*/
+  /*font-size: inherit;*/
+  transition: all 0.6s;
+  -webkit-transition: all 0.6;
+  -moz-transition: all 0.6;
+  /*font-family: 'PT Sans Narrow', sans-serif;*/
+  outline: none;
+  /*border-radius: 3px;*/
+}
+
+.topA:hover{
+	color: #CCE1DB;
+	background: #6096A3;
+}
+
 a {
 	color: #CCE1DB;
 }
 
 .topbar {
 	background-color: #20586C;
-	padding: 3px;
+	height:30px;
 	text-align: center;
 	color: #8D8329;
 }

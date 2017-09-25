@@ -9,13 +9,17 @@
   <body>
   	<div class="topbar">
       
-  		<a href="/"><img class="icon" src="/images/headshotsquare.jpg">Carlsite</a> {% block route %}{% endblock %} |
-
-      <a class="toptext2" href="/blog">Blog</a>
-      <a class="toptext2" href="/fizzbuzz">Fizzbuzz</a>
-      <a class="toptext2" href="/shoppinglist">Shopping List</a>
-      <a class="toptext2" href="/ascii">Ascii</a>
-      <a class="toptext2" href="/helloworld">Hello World!</a>
+  		<a class="topA" href="/"><img class="icon" src="/images/headshotsquare.jpg">Carlsite</a> {% block route %}{% endblock %} |
+      <form class="topForm" action="/blog"><button class="topA" href="/blog">Blog</button></form>
+      <form class="topForm" action="/blog"><button class="topA" href="/blog">FizzBuzz</button></form>
+      <form class="topForm" action="/blog"><button class="topA" href="/blog">Shopping List</button></form>
+      <form class="topForm" action="/blog"><button class="topA" href="/blog">Ascii</button></form>
+      <form class="topForm" action="/blog"><button class="topA" href="/blog">Hello World!</button></form>
+<!--       <a class="topA" href="/blog">Blog</a>
+      <a class="topA" href="/fizzbuzz">Fizzbuzz</a>
+      <a class="topA" href="/shoppinglist">Shopping List</a>
+      <a class="topA" href="/ascii">Ascii</a>
+      <a class="topA" href="/helloworld">Hello World!</a> -->
   	</div>
   	<div class="content">
     <h1 class="mainHead">{% block heading%}{% endblock %}</h1>
@@ -26,7 +30,7 @@
     {% block footer %}
     Here we are in a fouter
     {% endblock %}
-	</div>
+	 </div>
 	<div class = botbar>Thank you for visiting!</div>
   </body>
     
