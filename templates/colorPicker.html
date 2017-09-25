@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Color Guessing Game
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/stylesheets/colorPicker.css" />
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="pickerContent">
+      <h1>The Great <br />
+      <span class="color">Loading</span> <br />
+      Guessing Game</h1>
+
+    <div class="inputBar">
+      <button id="reset">New Colors</button>
+      <span id="response"></span>
+
+      <button class="mode">Easy</button>
+      <button class="mode selected">Hard</button>
+
+    </div>
+    <div class="bottomBar">
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+    </div>
+    <script type="text/javascript" src="javascript/colorPicker.js"></script>
+  </div>
+{% endblock %}
+
+<!-- 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Color Picker!</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/colorPicker.css" />
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow" rel="stylesheet">
+  </head>
+  <body>
+    <div class="pickerContent">
+      <h1>The Great <br />
+      <span class="color">Loading</span> <br />
+      Guessing Game</h1>
+
+    <div class="inputBar">
+      <button id="reset">New Colors</button>
+      <span id="response"></span>
+
+      <button class="mode">Easy</button>
+      <button class="mode selected">Hard</button>
+
+    </div>
+    <div class="bottomBar">
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+      <div class="colorSquare"></div>
+    </div>
+    <script type="text/javascript" src="javascript/colorPicker.js"></script>
+  </div>
+  </body>
+</html>
+ -->

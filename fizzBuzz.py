@@ -22,6 +22,11 @@ class FizzBuzz(Handler):
         else:
             self.render("fizzPrompt.html")
 
+class ColorPicker(Handler):
+    def get(self):
+        self.render("colorPicker.html")
+
 
 pages = [('/shoppinglist', ShoppingList),
-         ('/fizzbuzz',FizzBuzz)]
+         ('/fizzbuzz',FizzBuzz),
+         ('/colorpicker',ColorPicker)]

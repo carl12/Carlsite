@@ -1,0 +1,97 @@
+.pickerContent {
+  margin: 0;
+  border: 0;
+  align-items: center;
+  text-transform: uppercase;
+  font-family: 'PT Sans Narrow', sans-serif;
+  /*background-color: #232323;*/
+}
+.colorSquare {
+  width: 30%;
+  padding-bottom: 30%;
+  float: left;
+  margin: 1.66%;
+  border-radius: 40%;
+  transition: background 0.6s;
+  -webkit-transition: background 0.6;
+  -moz-transition: background 0.6;
+}
+
+.topBar {
+  margin: 0;
+  padding: 0;
+  background-color: steelblue;
+  text-align: center;
+}
+
+.inputBar {
+  background-color: white;
+  height: 30px;
+  text-align: center;
+  color: steelblue;
+
+  font-weight: 700;
+  color: steelblue;
+  letter-spacing: 1px;
+  font-size: inherit;
+  font-family: 'PT Sans Narrow', sans-serif;
+
+}
+
+.bottomBar {
+  width: 100%;
+  max-width: 700px;
+  align-self: center;
+  margin: 20px auto;
+  /*background-color: black;*/
+}
+
+
+
+
+.selected {
+  background-color: steelblue;
+  color: white;
+}
+
+button {
+  text-transform: uppercase;
+  border: none;
+  background: none;
+  height: 100%;
+  font-weight: 700;
+  color: steelblue;
+  letter-spacing: 1px;
+  font-size: inherit;
+  transition: all 0.6s;
+  -webkit-transition: all 0.6;
+  -moz-transition: all 0.6;
+  font-family: 'PT Sans Narrow', sans-serif;
+  outline: none;
+}
+
+button:hover {
+  color: white;
+  background: steelblue;
+}
+
+#response {
+  display: inline-block;
+  width: 20%;
+}
+
+ .color {
+   font-size: 200%;
+ }
+
+ h1 {
+   color: white;
+   line-height: 1.1;
+   padding: 20px 0;
+   background-color: steelblue;
+   text-align: center;
+   margin: 0;
+   transition: background 0.6s;
+   -webkit-transition: background 0.6;
+   -moz-transition: background 0.6;
+ }
