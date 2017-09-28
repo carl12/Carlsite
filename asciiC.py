@@ -8,7 +8,7 @@ from handlers import Handler
 
 IP_URL ="http://freegeoip.net/xml/"
 def get_coords(ip):
-    ip = '50.193.21.147'
+    # ip = '50.193.21.147'
     url = IP_URL + ip
     content = None
     try:
