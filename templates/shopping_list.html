@@ -4,10 +4,9 @@
 Shopping List
 {% endblock %}
 
-{% block route %}
-    
-- <a href="/shoppinglist?{% for item in items %}food={{item}}&{%endfor%}">Shopping List</a>
-    
+{% block route %}    
+> <form class="topForm" action="/shoppinglist?{% for item in items %}food={{item}}&{%endfor%}">
+  <button class="topA">Shopping List</button></form>
 {% endblock %}
 
 {% block heading %}

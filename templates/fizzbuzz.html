@@ -8,8 +8,9 @@ fizzBuzz
 
 
 {% block route %}
- > <a href="/fizzbuzz"> fizzPrompt</a>
- > <a href="/fizzbuzz?n={{n}}">fizzbuzz</a>
+
+ > <form class="topForm" action="/fizzbuzz"><button class="topA">FizzPrompt</button></form>
+ > <form class="topForm" action="/fizzbuzz?n={{n}}"><button class="topA">FizzBuzz</button></form>
 {% endblock %}
 
 {% block content %}

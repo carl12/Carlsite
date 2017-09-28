@@ -5,7 +5,7 @@ AsciiChan!
 {% endblock %}
 
 {% block route %}
-- <a href="/ascii">AsciiChan</a>
+> <form class="topForm" action="/ascii"><button class="topA">Ascii Chan</button></form>
 {% endblock %}
 
 {% block heading %}
@@ -16,14 +16,14 @@ AsciiChan!
     <form class="asciiForm" method="post">
       <label>
         <div> title </div>
-        <input type="text" name="title" value="{{title}}"/>
+        <input  type="text" name="title" value="{{title}}"/>
       </label>
 
       <lable>
         <div>
           art
         </div>
-        <textarea name="art" >{{art}}</textarea>
+        <textarea class="asciiBox" name="art" >{{art}}</textarea>
       </lable>
       <div class="error"> {{error}} </div>
       <input class="submit" type="submit" />
