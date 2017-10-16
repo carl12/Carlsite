@@ -1,0 +1,23 @@
+  {% extends 'base.html' %}
+   {% block title %}RSS Reader{% endblock %}
+
+    {%block route %}
+    > <form class="topForm" action="/rss"><button class="topA">RSS</button></form>
+    {%endblock%}
+  
+    {% block heading %}RSS Reader!{% endblock %}
+  {% block content %}
+
+
+
+    <hr />
+    {% for article in articles %}
+    <div class="post">
+      <div>
+        {{article.title}}
+        {{article.link}}
+      </div>
+    </div>
+    {% endfor %}
+
+  {% endblock %}
