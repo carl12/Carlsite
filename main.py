@@ -6,6 +6,7 @@ import fizzBuzz
 import asciiC
 import rot13
 import rss
+import about
 from handlers import Handler
 
 
@@ -22,7 +23,7 @@ class FrontPage(Handler):
 
 
 front_page = [('/', FrontPage)]
-all_pages = front_page + blog.pages + helloWorld.pages + fizzBuzz.pages + asciiC.pages + rot13.pages +rss.pages
+all_pages = front_page + blog.pages + helloWorld.pages + fizzBuzz.pages + asciiC.pages + rot13.pages +rss.pages + about.pages
 
 
 app = webapp2.WSGIApplication(all_pages, debug=True)
