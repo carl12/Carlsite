@@ -14,8 +14,10 @@
     {% for article in articles %}
     <div class="post">
       <div style="background: green">
-       <br>
-        <img src="{{article.image}}">
+        <br>
+        {% if article.image %}
+          <img src="{{article.image}}">
+        {% endif %}
         <a href="{{article.link}}"> {{article.title}}</a> {{article.date}} <br>
         {{article.description}}
 ]

@@ -16,6 +16,35 @@ class FeedSet(db.Model):
     links = db.ListProperty(str,required = True)
     priority = db.IntegerProperty()
 
+class Feed:
+    def __init__(self, name, link):
+        self.name = name
+        self.link = link
+        self.articles = None
+
+    def load_links(self):
+        self.articles = []
+        p = urllib2.urlopen(self.link)
+        c = p.read()
+        domo = minidom.parseString(c)
+        items = domo.getElementsByTagName('item')
+        articles = []
+        # self.write('asdf')
+        for item in items:
+            title = item.getElementsByTagName('title')[0].childNodes[0].nodeValue
+            link = item.getElementsByTagName('link')[0].childNodes[0].nodeValue
+            img_el = item.getElementsByTagName('media:content')
+            image = img_el[0].getAttribute('url') if img_el else None
+            description = item.getElementsByTagName('description')[0].childNodes[0].nodeValue
+            date = item.getElementsByTagName('pubDate')[0].childNodes[0].nodeValue
+            self.articles.append(Article(title,link,date,image,description))
+
+    def get_articles(self):
+        if not self.articles:
+            self.load_links()
+        return self.articles
+
+
 
 class Article():
     def __init__(self, title, link, date, image=None, description=''):
@@ -24,6 +53,8 @@ class Article():
         self.date = date
         self.image = image
         self.description = description
+
+
 #     @classmethod
 #     def by_id(cls, uid):
 #         return User.get_by_id(uid, parent=users_key())
@@ -37,27 +68,12 @@ class Article():
 
 class MainPage(Handler):
     def get(self):
-        feed = db.GqlQuery("SELECT * FROM FeedSet")
+        feeds = db.GqlQuery("SELECT * FROM FeedSet")
 
         feed1 = FeedSet(title='feed1',links=['http://rss.nytimes.com/services/xml/rss/nyt/Africa.xml','https://www.bing.com'],priority=2)
         
-        p = urllib2.urlopen('http://rss.nytimes.com/services/xml/rss/nyt/Africa.xml')
-
-        c = p.read()
-        domo = minidom.parseString(c)
-        items = domo.getElementsByTagName('item')
-        articles = []
-        # self.write('asdf')
-        for item in items:
-            title = item.getElementsByTagName('title')[0].childNodes[0].nodeValue
-            link = item.getElementsByTagName('link')[0].childNodes[0].nodeValue
-            img_el = item.getElementsByTagName('media:content')
-            image = img_el[0].getAttribute('url') if img_el else None
-            description = item.getElementsByTagName('description')[0].childNodes[0].nodeValue
-            date = item.getElementsByTagName('pubDate')[0].childNodes[0].nodeValue
-            # self.write('asdf')
-            articles.append(Article(title,link,date,image,description))
-    
+        feed = Feed('NY Times: Africa','http://rss.nytimes.com/services/xml/rss/nyt/Africa.xml')
+        articles = feed.get_articles()
         self.render('rss.html',articles=articles)
 
     def post(self):
