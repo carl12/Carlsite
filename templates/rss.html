@@ -13,10 +13,14 @@
     <hr />
     {% for article in articles %}
     <div class="post">
-      <div>
-        {{article.title}}
-        {{article.link}}
+      <div style="background: green">
+       <br>
+        <img src="{{article.image}}">
+        <a href="{{article.link}}"> {{article.title}}</a> {{article.date}} <br>
+        {{article.description}}
+]
       </div>
+      <br>
     </div>
     {% endfor %}
 

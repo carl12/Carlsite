@@ -1,5 +1,7 @@
 import logging
 import webapp2
+import urllib2
+from xml.dom import minidom
 from google.appengine.ext import db
 from lib import myHash
 from handlers import Handler
@@ -11,8 +13,17 @@ rss_path='/rss'
 
 class FeedSet(db.Model):
     title = db.StringProperty(required = True)
-    link = db.ListProperty(str,required = True)
+    links = db.ListProperty(str,required = True)
+    priority = db.IntegerProperty()
 
+
+class Article():
+    def __init__(self, title, link, date, image=None, description=''):
+        self.title = title
+        self.link = link
+        self.date = date
+        self.image = image
+        self.description = description
 #     @classmethod
 #     def by_id(cls, uid):
 #         return User.get_by_id(uid, parent=users_key())
@@ -20,18 +31,33 @@ class FeedSet(db.Model):
 # def users_key(group = 'default'):
 #     return db.Key.from_path('users',group)
 
-class Article:
-    def __init__(self, title, link, image=None, blurb=None):
-        self.title = title
-        self.link = link
+
 
 
 
 class MainPage(Handler):
     def get(self):
         feed = db.GqlQuery("SELECT * FROM FeedSet")
-        articles = [Article('asdf','asdf')]
 
+        feed1 = FeedSet(title='feed1',links=['http://rss.nytimes.com/services/xml/rss/nyt/Africa.xml','https://www.bing.com'],priority=2)
+        
+        p = urllib2.urlopen('http://rss.nytimes.com/services/xml/rss/nyt/Africa.xml')
+
+        c = p.read()
+        domo = minidom.parseString(c)
+        items = domo.getElementsByTagName('item')
+        articles = []
+        # self.write('asdf')
+        for item in items:
+            title = item.getElementsByTagName('title')[0].childNodes[0].nodeValue
+            link = item.getElementsByTagName('link')[0].childNodes[0].nodeValue
+            img_el = item.getElementsByTagName('media:content')
+            image = img_el[0].getAttribute('url') if img_el else None
+            description = item.getElementsByTagName('description')[0].childNodes[0].nodeValue
+            date = item.getElementsByTagName('pubDate')[0].childNodes[0].nodeValue
+            # self.write('asdf')
+            articles.append(Article(title,link,date,image,description))
+    
         self.render('rss.html',articles=articles)
 
     def post(self):
