@@ -204,7 +204,7 @@ class Welcome(BlogHandler):
             if user:
                 self.write("Welcome! "+ user)
                 return
-        self.redirect("signup")
+        self.redirect("signup") 
 
 
 pages = [
