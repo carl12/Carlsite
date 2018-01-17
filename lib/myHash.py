@@ -73,6 +73,7 @@ password="hunter2"
 pw_hash = make_pw_hash(name, password)
 # new_user = User(username = username, pw_hash = pw_hash)
 # new_user.put()
+
 print(pw_hash)
 
 

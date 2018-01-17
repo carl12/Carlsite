@@ -169,7 +169,7 @@ class UserSignup(BlogHandler):
 
 class UserLogin(BlogHandler):
     def get(self):
-        self.render('login-form.html')
+        self.render('login-form.html',extra="asdf")
 
     def post(self):
         #gather info from header
@@ -181,7 +181,7 @@ class UserLogin(BlogHandler):
             self.login(u)
             self.redirect('/blog')
         else: 
-            self.render('login-form.html', error='Invalid login')
+            self.render('login-form.html', error='Invalid login', extra='asdf')
 
         #check password against hash
 
@@ -202,7 +202,7 @@ class Welcome(BlogHandler):
         if cookie:
             user = myHash.check_secure_val(cookie)
             if user:
-                self.write("Welcome! "+ user)
+                self.render('welcomeUser.html',userName=user)
                 return
         self.redirect("signup") 
 

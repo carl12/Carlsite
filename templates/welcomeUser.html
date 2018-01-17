@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+User Welcome
+{% endblock %}
+
+{% block route%}
+> <form class="topForm" action="/blog"> <button class="topA">Blog</button></form>
+> <form class="topForm" action="/blog/welcome"> <button class="topA">Welcome</button></form>
+{%endblock%}
+
+{%block heading %}
+Welcome
+{%endblock%}
+{%block content%}
+
+Welcome {{userName}}!
+
+{%endblock%}
+
+
