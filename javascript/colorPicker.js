@@ -9,8 +9,7 @@ var colorSquares = document.querySelectorAll(".colorSquare");
 var response = document.querySelector("#response");
 var resetButton = document.querySelector("#reset");
 var titleColor = document.querySelector(".color");
-var titleSection = document.querySelector("#title");
-console.log(document.querySelector("#title"))
+var titleSection = document.querySelector("#title");1
 var modeButtons = document.querySelectorAll(".mode");
 
 
