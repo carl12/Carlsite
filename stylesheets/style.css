@@ -139,6 +139,12 @@ a {
 	margin-right: 20px;
 	float: right;
 }
+.notSelectable{
+	-webkit-user-select: none;        
+	-moz-user-select: none; 
+	-ms-user-select: none; 
+	user-select: none;
+}
 /*
 .fizzHead {
 	background-color: #ddd; 

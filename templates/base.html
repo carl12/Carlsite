@@ -7,11 +7,13 @@
     {% block style %}{% endblock %}
   </head>
   <body>
-  	<div class="topbar">
+
+  	<div class="topbar notSelectable">
       <form class="topForm" action="/"><button class="topA">
         <img class="icon" src="/images/headshotsquare.jpg">Carlsite</a>
       </button></form>
-       {% block route %}{% endblock %} |
+       {% block route %}{% endblock %} 
+      |
       <form class="topForm" action="/blog"><button class="topA">Blog</button></form>
       <form class="topForm" action="/ascii"><button class="topA">Ascii</button></form>
       <form class="topForm" action="/colorpicker"><button class="topA">Color Picker</button></form>
@@ -22,6 +24,7 @@
 
 
   	</div>
+
   	<div class="content">
     <h1 class="mainHead">{% block heading%}{% endblock %}</h1>
     {% block content %}
