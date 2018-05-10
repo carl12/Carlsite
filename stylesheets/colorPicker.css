@@ -25,6 +25,10 @@
   text-align: center;
 }
 
+.mainHead{
+  display: none;
+}
+
 .inputBar {
   background-color: white;
   height: 30px;

@@ -9,7 +9,8 @@ var colorSquares = document.querySelectorAll(".colorSquare");
 var response = document.querySelector("#response");
 var resetButton = document.querySelector("#reset");
 var titleColor = document.querySelector(".color");
-var titleSection = document.querySelector("h1");
+var titleSection = document.querySelector("#title");
+console.log(document.querySelector("#title"))
 var modeButtons = document.querySelectorAll(".mode");
 
 
@@ -84,7 +85,9 @@ function win(colorIn){
     colorSquares[i].style.backgroundColor = colorIn;
   }
   titleSection.style.backgroundColor = colorIn;
+  
   response.textContent ="Correct!"
+
   resetButton.textContent = "Play Again?";
 }
 
