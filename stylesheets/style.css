@@ -139,7 +139,7 @@ a {
 	margin-right: 20px;
 	float: right;
 }
-.notSelectable{
+.not-selectable{
 	-webkit-user-select: none;        
 	-moz-user-select: none; 
 	-ms-user-select: none; 
