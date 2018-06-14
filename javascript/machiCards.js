@@ -20,50 +20,6 @@ rewards={
 	per_build:reward_func
 }
 
-class Card{
-	constructor(name,cost){
-		this.name = name
-		this.cost = cost
-	}
-}
-
-class Establishment extends Card {
-	constructor(name, cost, turn, roll, basic, reward){
-		super(name,cost)
-		this.turn = turn
-		this.basic = basic
-		this.roll = roll
-		this.category = 0
-		this.reward = reward
-	}
-}
-
-class BlueCard extends Card {
-	constructor(name,cost,roll,reward){
-		super(name, cost, triggers.blue, roll, true, reward)
-	}
-}
-
-class WheatField extends BlueCard {
-	constructor(){
-		super('Wheat Field',1,[1],1)
-		this.category = 1
-	}
-}
-
-class Ranch extends BlueCard {
-	constructor(){
-		super('Ranch',1,[2],1)
-		this.category = 1
-	}
-}
-
-class Forest extends BlueCard {
-	constructor(){
-		super('Forest',3,[5],1)
-		this.category = 1
-	}
-}
 
 
 Cards = {
@@ -164,7 +120,47 @@ Cards = {
 	}
 }
 
-module.exports = {
-  Cards:Cards
+// class Card{
+// 	constructor(name,cost){
+// 		this.name = name
+// 		this.cost = cost
+// 	}
+// }
 
-};
+// class Establishment extends Card {
+// 	constructor(name, cost, turn, roll, basic, reward){
+// 		super(name,cost)
+// 		this.turn = turn
+// 		this.basic = basic
+// 		this.roll = roll
+// 		this.category = 0
+// 		this.reward = reward
+// 	}
+// }
+
+// class BlueCard extends Card {
+// 	constructor(name,cost,roll,reward){
+// 		super(name, cost, triggers.blue, roll, true, reward)
+// 	}
+// }
+
+// class WheatField extends BlueCard {
+// 	constructor(){
+// 		super('Wheat Field',1,[1],1)
+// 		this.category = 1
+// 	}
+// }
+
+// class Ranch extends BlueCard {
+// 	constructor(){
+// 		super('Ranch',1,[2],1)
+// 		this.category = 1
+// 	}
+// }
+
+// class Forest extends BlueCard {
+// 	constructor(){
+// 		super('Forest',3,[5],1)
+// 		this.category = 1
+// 	}
+// }

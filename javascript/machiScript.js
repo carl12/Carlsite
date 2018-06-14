@@ -4,11 +4,11 @@ pr = print = console.log
 // var CardFile = require('./test2.js');
 // pr(tools);
 
-console.log(Cards)
+// console.log(Cards)
 class Player{
 
-	constructor(){
-		this.name = 'asdf'
+	constructor(name){
+		this.name = name
 		this.money = 0,
 		this.cards = []
 		this.landmarks = [false,false,false,false]
@@ -16,8 +16,8 @@ class Player{
 }
 
 class AIPlayer extends Player {
-	constructor(){
-		super()
+	constructor(name){
+		super(name)
 		this.is_human = false
 	}
 }
@@ -40,12 +40,20 @@ Game = {
 
 	// list of players
 	// list of cards
-
+	genericNames:['Aaron','Bob','Carl','Devon'],
+	
 	init:function(){
-		this.cards = []
+	
+		this.cards = Cards
+		print(Cards.WheatField)
+		this.numPlayers = 4
 		this.players = []
+		for(var i = 0; i < this.numPlayers; i++){
+			this.players.push(new AIPlayer(this.genericNames[i]))
+		}
+		
 
-
+		pr(this.players)
 	},
 
 	playGame:function(){
