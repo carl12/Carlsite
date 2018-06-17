@@ -1,4 +1,5 @@
 console.log('hello world!');
+console.log('hello world!');
 pr = print = console.log
 
 var canvas = document.getElementById('tutorial');
@@ -26,25 +27,53 @@ class ImageWrapper{
 		this.src = src
 		this.x = x
 		this.y = y
+
+		this.currStep = 0
+		this.totalStep = 0
+		this.moving = false
+		this.dx = 0
+		this.dy = 0
+
 		this.img = new Image();
 		this.img.src = src;
 		var img = this.img
 		this.ctx = ctx
-		this.img.onload = function(){
-			print('on load')
-			print(this)
-			print(x)
-			ctx.drawImage(img, x, y)
-		}
-
+		// this.img.onload = function(){
+		// 	print('on load')
+		// 	print(this)
+		// 	print(this.x)
+		// 	ctx.drawImage(img, x, y)
+		// }
 	}
-	redraw(){
-		this.ctx.drawImage(this.img,this.x,this.y)
+
+	draw(){
+		if(this.moving){
+			this.x += this.dx;
+			this.y += this.dy;
+			this.currentStep++;
+			this.moving = this.currStep < this.totalStep;
+			
+		}
+		print(this.x)
+		print('draw called')
+
+		this.ctx.drawImage(this.img, this.x, this.y)
+	}
+
+	startAnimation(x,y,steps){
+		this.dx = (x-this.x)/steps;
+		this.dy = (y-this.y)/steps;
+		this.currStep = 0;
+		this.totalStep = steps;
+		this.moving = true;
 	} 
+
 	animateTo(x,y,steps){
 	var dx = (x-this.x)/steps;
 	var dy = (y-this.y)/steps;
 	var currStep = 0;
+
+
 	var myself = this
 	function transition(){
 		myself.ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -62,86 +91,57 @@ class ImageWrapper{
 	}
 }
 
-d1 = new ImageWrapper('images/d1.jpg',ctx, 101,201);
+class CanvasManager {
+	constructor(ctx) {
+		this.ctx = ctx
+		this.images = []
 
-
-
-y = 50;
-x = 50;
-var img = new Image();   // Create new img element
-img.src = 'images/AmusementPark-right.png'; // Set source path
-img.x = x
-img.y = y
-img.onload = function(){
-	ctx.drawImage(img, x,y);
-}
-
-
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);  // clear canvas
-  ctx.drawImage(img, img.x, img.y);                       // draw image at current position
-  img.x -= 4;
-  if (x > 0) requestAnimationFrame(animate)        // loop
-}
-
-
-
-function moveImgTo(imgToMove,x1,y1,x2,y2){
-	timeSteps = 50;
-	dx = (x2-x1)/timeSteps;
-	dy = (y2-y1)/timeSteps;
-
-	curr_x = x1
-	curr_y = y1
-	var iasdf = 0;
-
-	print('asdf')
-	function transition(){
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.drawImage(imgToMove, curr_x, curr_y);
-		print(curr_x)
-		print(dx)
-		curr_x+=dx;
-		curr_y += dy;
-		iasdf++;
-		if(iasdf < timeSteps) {
-			requestAnimationFrame(transition)
-		}
-		// print(curr_x);
 	}
-	requestAnimationFrame(transition)
 
-
-
-}
-
-function moveImgTo2(wrapImg,x2,y2){
-	var timeSteps = 50;
-	var dx = (x2-wrapImg.x)/timeSteps;
-	var dy = (y2-wrapImg.y)/timeSteps;
-
-	var currStep = 0;
-	function transition(){
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		wrapImg.redraw()
-		wrapImg.x+=dx;
-		wrapImg.y += dy;
-		currStep++;
-		if(currStep < timeSteps) {
-			requestAnimationFrame(transition)
+	draw(){
+		var animating = false
+		for(var i in this.images){
+			print(this.images[i])
+			this.images[i].draw();
+			if(this.images[i].moving){
+				print('one is animating')
+				animating = true;
+			}
 		}
-		// print(curr_x);
+		if(animating){
+			print('requested draw again')
+			requestAnimationFrame(this.draw)
+		}
 	}
-	requestAnimationFrame(transition)
 
-
-
+	addNewImage(src,x,y){
+		this.images.push(new ImageWrapper(src,this.ctx,x,y));
+	}
 }
+
+// myManager = new CanvasManager(ctx);
+// myManager.addNewImage('images/d1.jpg',400,401);
+// myManager.draw();
+
+// d1 = new ImageWrapper('images/d1.jpg',ctx, 101,201);
+// d1.draw();
+
+manage = new CanvasManager(ctx);
+manage.addNewImage('images/d1.jpg', 101,201);
+manage.addNewImage('images/d1.jpg', 0,0);
+manage.images[1].startAnimation(50,50,50);
+print(manage.images[1].moving)
+
+
+
+
 print('aasdf')
 canvas.addEventListener('mouseover', function(e) {
 	print('asdf')
+	manage.draw();
+	// d1.draw();
 	// moveImgTo2(d1,300,300);
-	d1.animateTo(300,300,50);
+	// d1.animateTo(300,300,50);
 	// moveImgTo(img, x,y,200,200);
   // raf = window.requestAnimationFrame(animate);
 });
@@ -152,7 +152,6 @@ canvas.addEventListener('mouseover', function(e) {
 
 // console.log(Cards)
 class Player{
-
 	constructor(name){
 		this.name = name
 		this.money = 0,
