@@ -1,14 +1,12 @@
-console.log('hello world!');
-console.log('hello world!');
 pr = print = console.log
 
 var canvas = document.getElementById('tutorial');
 canvas.setAttribute('height','400px');
 canvas.setAttribute('width','400px');
-// canvas.style.height="500px";
+
 canvas.style.outline="3px solid black";
 
-// canvas.stl
+
 var ctx = canvas.getContext('2d');
 ctx.fillStyle = 'rgb(200, 0, 0)';
 ctx.fillRect(10, 10, 50, 50);
@@ -38,25 +36,17 @@ class ImageWrapper{
 		this.img.src = src;
 		var img = this.img
 		this.ctx = ctx
-		// this.img.onload = function(){
-		// 	print('on load')
-		// 	print(this)
-		// 	print(this.x)
-		// 	ctx.drawImage(img, x, y)
-		// }
 	}
 
 	draw(){
 		if(this.moving){
 			this.x += this.dx;
 			this.y += this.dy;
-			this.currentStep++;
+			this.currStep++;
 			this.moving = this.currStep < this.totalStep;
-			
+			print(this.totalStep)
+			print(this.currStep)	
 		}
-		print(this.x)
-		print('draw called')
-
 		this.ctx.drawImage(this.img, this.x, this.y)
 	}
 
@@ -68,27 +58,7 @@ class ImageWrapper{
 		this.moving = true;
 	} 
 
-	animateTo(x,y,steps){
-	var dx = (x-this.x)/steps;
-	var dy = (y-this.y)/steps;
-	var currStep = 0;
 
-
-	var myself = this
-	function transition(){
-		myself.ctx.clearRect(0, 0, canvas.width, canvas.height);
-		myself.redraw()
-		myself.x+=dx;
-		myself.y += dy;
-		currStep++;
-		if(currStep < steps) {
-			requestAnimationFrame(transition)
-		}
-		// print(curr_x);
-	}
-	requestAnimationFrame(transition)
-
-	}
 }
 
 class CanvasManager {
@@ -99,18 +69,17 @@ class CanvasManager {
 	}
 
 	draw(){
+		this.ctx.clearRect(0, 0, 500, 500);
 		var animating = false
 		for(var i in this.images){
-			print(this.images[i])
 			this.images[i].draw();
 			if(this.images[i].moving){
-				print('one is animating')
 				animating = true;
 			}
 		}
 		if(animating){
 			print('requested draw again')
-			requestAnimationFrame(this.draw)
+			requestAnimationFrame(canvasPaintCaller)
 		}
 	}
 
@@ -119,17 +88,18 @@ class CanvasManager {
 	}
 }
 
-// myManager = new CanvasManager(ctx);
-// myManager.addNewImage('images/d1.jpg',400,401);
-// myManager.draw();
 
-// d1 = new ImageWrapper('images/d1.jpg',ctx, 101,201);
-// d1.draw();
+
 
 manage = new CanvasManager(ctx);
+
+function canvasPaintCaller(){
+	manage.draw();	
+}
 manage.addNewImage('images/d1.jpg', 101,201);
 manage.addNewImage('images/d1.jpg', 0,0);
 manage.images[1].startAnimation(50,50,50);
+manage.images[0].startAnimation(150,0,10);
 print(manage.images[1].moving)
 
 
@@ -139,18 +109,10 @@ print('aasdf')
 canvas.addEventListener('mouseover', function(e) {
 	print('asdf')
 	manage.draw();
-	// d1.draw();
-	// moveImgTo2(d1,300,300);
-	// d1.animateTo(300,300,50);
-	// moveImgTo(img, x,y,200,200);
-  // raf = window.requestAnimationFrame(animate);
+
 });
 
-// var tools = require('./tools.js');
-// var CardFile = require('./test2.js');
-// pr(tools);
 
-// console.log(Cards)
 class Player{
 	constructor(name){
 		this.name = name
@@ -174,8 +136,6 @@ class HumanPlayer extends Player {
 	}
 }
 
-
-// pr(CardFile.Cards.Ranch)
 
 function rollDice(){
 	return Math.floor(Math.random() * 6) + 1
