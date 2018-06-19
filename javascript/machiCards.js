@@ -1,19 +1,25 @@
 
-console.log('cards loaded')
-triggers={
-	red:[false,true],
-	blue:[true,true],
-	purple:[true,false],
-	green:[true,false]
+// console.log('cards loaded')
+trigger={
+	red:(isTurn)=> !isTurn,
+	blue:()=>true,
+	purple:(isTurn)=> isTurn,
+	green:(isTurn) => isTurn
 }
 
 category=['none','farm','animal','food','natural','factory','business']
 
-function reward_func(){
+function reward_func(player){
 	console.log('implement reward function')
 }
-
+function basicReward(player){
+	if(this.category == 3 && player.landmarks[1]){
+		player.money++;
+	}
+	player.money+=this.rewardVal;
+}
 rewards={
+	basicReward:basicReward,
 	steal1:reward_func,
 	stealAll:reward_func,
 	trade1:reward_func,
@@ -21,146 +27,116 @@ rewards={
 }
 
 
-
 Cards = {
 	WheatField:{
 		name:"Wheat Field",
 		cost:1,
-		turn:triggers.blue,
-		trigger:[1],
+		triggersOn:trigger.blue,
+		triggers:[1],
 		fixed:true,
-		reward:1,
-		remain:6
+		rewardVal:1,
+		reward:rewards.basicReward,
+		remain:6,
+		category:1
 	},
 	Ranch:{
 		name:"Ranch",
 		cost:1,
-		turn:triggers.blue,
-		trigger:[2],
+		triggersOn:trigger.blue,
+		triggers:[2],
 		fixed:true,
-		reward:1,
-		remain:6
+		rewardVal:1,
+		reward:rewards.basicReward,
+		remain:6,
+		category:2
 	},
 	Bakery:{
 		name:"Bakery",
 		cost:1,
-		turn:triggers.green,
-		trigger:[2,3],
+		triggersOn:trigger.green,
+		triggers:[2,3],
 		fixed:true,
-		reward:1,
-		remain:6
+		rewardVal:1,
+		reward:rewards.basicReward,
+		remain:6,
+		category:3
 	},
 	Cafe:{
 		name:"Cafe",
 		cost:2,
-		turn:triggers.red,
-		trigger:[3],
+		triggersOn:trigger.red,
+		triggers:[3],
 		fixed:false,
-		reward_func:rewards.steal1,
-		reward:1,
-		remain:6
+		rewardVal:1,
+		reward:rewards.steal1,
+		remain:6,
+		category:3
 	},
 	ConvStore:{
 		name:"Convenience Store",
 		cost:2,
-		turn:triggers.green,
-		trigger:[4],
+		triggersOn:trigger.green,
+		triggers:[4],
 		fixed:true,
-		reward:3,
-		remain:6
+		rewardVal:3,
+		reward:rewards.basicReward,
+		remain:6,
+		category:3
 	},
 	Forest:{
 		name:"Forest",
 		cost:3,
-		turn:triggers.blue,
-		trigger:[5],
+		triggersOn:trigger.blue,
+		triggers:[5],
 		fixed:true,
-		reward:6,
-		remain:6
+		rewardVal:6,
+		reward:rewards.basicReward,
+		remain:6,
+		category:4
 	},
 	Stadium:{
 		name:"Stadium",
 		cost:6,
-		turn:triggers.purple,
-		trigger:[6],
+		triggersOn:trigger.purple,
+		triggers:[6],
 		fixed:false,
-		reward_func:rewards.stealAll,
-		reward:2,
-		remain:6
+		rewardVal:2,
+		reward:rewards.stealAll,
+		remain:6,
+		category:6
 	},
 	TVStation:{
 		name:"TV Station",
 		cost:7,
-		turn:triggers.purple,
-		trigger:[6],
+		triggersOn:trigger.purple,
+		triggers:[6],
 		fixed:false,
-		reward_func:rewards.steal1,
-		reward:6,
-		remain:6
+		rewardVal:6,
+		reward:rewards.steal1,
+		remain:6,
+		category:6
 	},
 	BusinessCenter:{
 		name:"Business Center",
 		cost:8,
-		turn:triggers.purple,
-		trigger:[6],
+		triggersOn:trigger.purple,
+		triggers:[6],
 		fixed:false,
-		reward_func:rewards.trade1,
-		reward:0,
-		remain:6
+		rewardVal:0,
+		reward:rewards.trade1,
+		remain:6,
+		category:6
 	},
 	CheeseFactory:{
 		name:"Cheese Factory",
 		cost:5,
-		turn:triggers.blue,
-		trigger:[7],
+		triggersOn:trigger.blue,
+		triggers:[7],
 		fixed:false,
-		reward_func:rewards.per_build,
-		reward:3,
-		remain:6
+		rewardVal:3,
+		reward:rewards.per_build,
+		remain:6,
+		category:5
 	}
 }
 
-// class Card{
-// 	constructor(name,cost){
-// 		this.name = name
-// 		this.cost = cost
-// 	}
-// }
-
-// class Establishment extends Card {
-// 	constructor(name, cost, turn, roll, basic, reward){
-// 		super(name,cost)
-// 		this.turn = turn
-// 		this.basic = basic
-// 		this.roll = roll
-// 		this.category = 0
-// 		this.reward = reward
-// 	}
-// }
-
-// class BlueCard extends Card {
-// 	constructor(name,cost,roll,reward){
-// 		super(name, cost, triggers.blue, roll, true, reward)
-// 	}
-// }
-
-// class WheatField extends BlueCard {
-// 	constructor(){
-// 		super('Wheat Field',1,[1],1)
-// 		this.category = 1
-// 	}
-// }
-
-// class Ranch extends BlueCard {
-// 	constructor(){
-// 		super('Ranch',1,[2],1)
-// 		this.category = 1
-// 	}
-// }
-
-// class Forest extends BlueCard {
-// 	constructor(){
-// 		super('Forest',3,[5],1)
-// 		this.category = 1
-// 	}
-// }
