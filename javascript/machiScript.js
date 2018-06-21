@@ -105,7 +105,7 @@ manage.images[0].startAnimation(150,0,10);
 
 
 canvas.addEventListener('mouseover', function(e) {
-	print('mouseovered')
+	print('mouseovered');
 	Game.init();
 	Game.playGame();
 	// manage.draw();

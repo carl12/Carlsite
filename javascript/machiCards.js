@@ -7,10 +7,10 @@ trigger={
 	green:(isTurn) => isTurn
 }
 
-category=['none','farm','animal','food','natural','factory','business']
+category=['none','farm','animal','food','natural','factory','business'];
 
 function reward_func(player){
-	console.log('implement reward function')
+	console.log('implement reward function');
 }
 function basicReward(player){
 	if(this.category == 3 && player.landmarks[1]){
@@ -138,5 +138,5 @@ Cards = {
 		remain:6,
 		category:5
 	}
-}
+};
 
