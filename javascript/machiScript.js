@@ -18,29 +18,19 @@ ctx.fillStyle = 'rgba(0, 200, 0, 0.5)';
 ctx.fillRect(200, 500, 1000, 800);
 
 ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
-ctx.fillRect(1000, 400, 200, 100);
+ctx.fillRect(1050, 0, 150, 75);
 
 ctx.fillStyle = 'black';         // explicitly sets the text color to (default) 'black'
-ctx.font = '50px monospace';
-ctx.fillText ("Hello world!", 0, 50);  
-ctx.fillText ("This is a longer string that is limited to 750 pixel.", 0, 100, 750);  
-ctx.fillText ("This is a longer string that is limited to 300 pixel.", 0, 150, 300);  
+// ctx.font = '50px monospace';
+// ctx.fillText("Hello world!", 0, 50);  
+// ctx.fillText("This is a longer string that is limited to 750 pixel.", 0, 100, 750);  
+// ctx.fillText("This is a longer string that is limited to 300 pixel.", 0, 150, 300);  
 
-// ctx.strokeStyle = 'navy'; // set the strokeStyle color to 'navy' (for the stroke() call below)
-// ctx.lineWidth = 3.0;      // set the line width to 3 pixels
-// ctx.beginPath();          // start a new path
-// ctx.moveTo (150,30);      // set (150,20) to be the starting point
-// ctx.lineTo (270,120);     // line from (150,30) to (270,120)
-// // ctx.lineTo (30,120);      // horizontal line from (270,120) to (30,120)
-// // ctx.lineTo (150,30);      // line back to the starting point (we could have called closePath() instead)
-// ctx.stroke();             // actually draw the triangle shape in 'navy' color and 3 pixel wide lines
-for(var i = 1; i < 7; i++){
-	drawLine(200+i*150,50,200+i*150,500);
-}
+ctx.fillText("1",575,170)
 
-for(var j = 0; j < 6; j++){
-	drawLine(200,50+j*150,1200,50+j*150);
-}
+
+
+
 
 function drawLine(x1,y1,x2,y2){
 	ctx.save();
@@ -110,7 +100,7 @@ class CanvasManager {
 	}
 
 	draw(){
-		this.ctx.clearRect(0, 0, 500, 500);
+		// this.ctx.clearRect(0, 0, 500, 500);
 		var animating = false
 		for(var i in this.images){
 			this.images[i].draw();
@@ -131,16 +121,48 @@ class CanvasManager {
 
 manage = new CanvasManager(ctx);
 
+function drawBox(){
+
+	var top = 75;
+	var bottom = 500;
+
+	var left = 200;
+	var right = 1200;
+	
+	var width = (right-left)/7;
+	var height = (bottom - top)/2;
+
+	for(var i = 0; i < 7; i++){
+		ctx.font = '14px monospace';
+		var currLeft = left+i*width;
+
+		drawLine(currLeft,top,currLeft,bottom);
+		ctx.fillText('Card '+i,currLeft+20,top+20);
+		
+		// ctx.fillRect(left+i*width+10,top+40,100,100);
+		manage.addNewImage('images/RadioTower.jpg',currLeft+10,top+20);
+
+		ctx.fillText('Card '+(i+7),left+i*width+20,top+height+20);
+		ctx.fillRect(left+i*width+10,top+height+40,100,100);
+	}
+
+	for(var j = 0; j < 3; j++){
+		drawLine(left,top+j*height,right,top+j*height);
+	}
+	
+}
+
+drawBox();
+
 function canvasPaintCaller(){
 	manage.draw();	
 }
 
 
 
+manage.addNewImage('images/RadioTower.jpg',0+10,top+20);
 manage.addNewImage('images/d1.jpg', 101,201);
 manage.addNewImage('images/d1.jpg', 0,0);
-manage.images[1].startAnimation(50,50,50);
-manage.images[0].startAnimation(150,0,10);
 
 
 
@@ -149,7 +171,7 @@ canvas.addEventListener('mouseover', function(e) {
 	// print('mouseovered');
 	// Game.init();
 	// Game.playGame();
-	// manage.draw();
+	manage.draw();
 
 });
 
