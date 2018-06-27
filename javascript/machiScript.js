@@ -8,28 +8,6 @@ canvas.style.outline="3px solid black";
 
 
 var ctx = canvas.getContext('2d');
-ctx.fillStyle = 'rgb(200, 0, 0)';
-ctx.fillRect(0,0, 200, 700);
-
-ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
-ctx.fillRect(1200, 0, 200, 700);
-
-ctx.fillStyle = 'rgba(0, 200, 0, 0.5)';
-ctx.fillRect(200, 500, 1000, 800);
-
-ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
-ctx.fillRect(1050, 0, 150, 75);
-
-ctx.fillStyle = 'black';         // explicitly sets the text color to (default) 'black'
-// ctx.font = '50px monospace';
-// ctx.fillText("Hello world!", 0, 50);  
-// ctx.fillText("This is a longer string that is limited to 750 pixel.", 0, 100, 750);  
-// ctx.fillText("This is a longer string that is limited to 300 pixel.", 0, 150, 300);  
-
-ctx.fillText("1",575,170)
-
-
-
 
 
 function drawLine(x1,y1,x2,y2){
@@ -45,14 +23,21 @@ function drawLine(x1,y1,x2,y2){
 	ctx.restore();
 }
 
-ctx.beginPath();
-ctx.moveTo(75, 50);
-ctx.lineTo(100, 75);
-ctx.lineTo(100, 25);
-ctx.fill();
+class LineWrapper{
+	constructor(x1,y1,x2,y2){
+		this.x1 = x1;
+		this.y1 = y1;
+		this.x2 = x2;
+		this.y2 = y2;
+	}
+	draw(){
+		drawLine(this.x1,this.y1,this.x2,this.y2);
+	}
+
+}
 
 class ImageWrapper{
-	constructor(src,ctx, x,y){
+	constructor(src, x,y){
 		this.src = src
 		this.x = x
 		this.y = y
@@ -66,10 +51,9 @@ class ImageWrapper{
 		this.img = new Image();
 		this.img.src = src;
 		var img = this.img
-		this.ctx = ctx
 	}
 
-	draw(){
+	draw(ctx){
 		if(this.moving){
 			this.x += this.dx;
 			this.y += this.dy;
@@ -78,7 +62,8 @@ class ImageWrapper{
 			print(this.totalStep)
 			print(this.currStep)	
 		}
-		this.ctx.drawImage(this.img, this.x, this.y)
+
+		ctx.drawImage(this.img, this.x, this.y, 100, 100)
 	}
 
 	startAnimation(x,y,steps){
@@ -96,17 +81,35 @@ class CanvasManager {
 	constructor(ctx) {
 		this.ctx = ctx
 		this.images = []
+		this.lines = []
 
 	}
 
 	draw(){
 		// this.ctx.clearRect(0, 0, 500, 500);
+		this.ctx.clearRect(0,0,canvas.width,canvas.height);
+
+		this.ctx.fillStyle = 'rgb(200, 0, 0)';
+		this.ctx.fillRect(0,0, 200, 700);
+
+		this.ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
+		this.ctx.fillRect(1200, 0, 200, 700);
+
+		this.ctx.fillStyle = 'rgba(0, 200, 0, 0.5)';
+		this.ctx.fillRect(200, 500, 1000, 800);
+
+		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
+		this.ctx.fillRect(1050, 0, 150, 75);
+
 		var animating = false
 		for(var i in this.images){
-			this.images[i].draw();
+			this.images[i].draw(this.ctx);
 			if(this.images[i].moving){
 				animating = true;
 			}
+		}
+		for(var i in this.lines){
+			this.lines[i].draw(this.ctx);
 		}
 		if(animating){
 			print('requested draw again')
@@ -115,7 +118,11 @@ class CanvasManager {
 	}
 
 	addNewImage(src,x,y){
-		this.images.push(new ImageWrapper(src,this.ctx,x,y));
+		this.images.push(new ImageWrapper(src,x,y));
+	}
+
+	addNewLine(x1,y1,x2,y2){
+		this.lines.push(new LineWrapper(x1,y1,x2,y2));
 	}
 }
 
@@ -136,18 +143,18 @@ function drawBox(){
 		ctx.font = '14px monospace';
 		var currLeft = left+i*width;
 
-		drawLine(currLeft,top,currLeft,bottom);
 		ctx.fillText('Card '+i,currLeft+20,top+20);
-		
+		manage.addNewLine(currLeft,top,currLeft,bottom)
 		// ctx.fillRect(left+i*width+10,top+40,100,100);
 		manage.addNewImage('images/RadioTower.jpg',currLeft+10,top+20);
 
-		ctx.fillText('Card '+(i+7),left+i*width+20,top+height+20);
+		ctx.fillText('Card ' + (i+7),left+i*width+20,top+height+20);
+		
 		ctx.fillRect(left+i*width+10,top+height+40,100,100);
 	}
 
 	for(var j = 0; j < 3; j++){
-		drawLine(left,top+j*height,right,top+j*height);
+		manage.addNewLine(left,top+j*height,right,top+j*height);
 	}
 	
 }
@@ -160,9 +167,9 @@ function canvasPaintCaller(){
 
 
 
-manage.addNewImage('images/RadioTower.jpg',0+10,top+20);
-manage.addNewImage('images/d1.jpg', 101,201);
-manage.addNewImage('images/d1.jpg', 0,0);
+manage.addNewImage('images/RadioTower.jpg', 0 + 10, top + 20);
+manage.addNewImage('images/d1.jpg', 101, 201);
+manage.addNewImage('images/d1.jpg', 0, 0);
 
 
 
