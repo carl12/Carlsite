@@ -10,7 +10,7 @@ canvas.style.outline="3px solid black";
 var ctx = canvas.getContext('2d');
 
 
-function drawLine(x1,y1,x2,y2){
+function drawLine(x1,y1,x2,y2){ 
 	ctx.save();
 	ctx.strokeStyle = 'navy'; // set the strokeStyle color to 'navy' (for the stroke() call below)
 	ctx.lineWidth = 3.0;      // set the line width to 3 pixels
@@ -128,7 +128,7 @@ class CanvasManager {
 
 manage = new CanvasManager(ctx);
 
-function drawBox(){
+function initCanvas(){
 
 	var top = 75;
 	var bottom = 500;
