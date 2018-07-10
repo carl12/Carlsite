@@ -18,6 +18,8 @@ class Player{
 		}
 	}
 	buyCard(game){
+
+		
 		if(!this.landmarks[1] && this.money >= 10){
 			this.money -= 10;
 			this.landmarks[1]=true;
@@ -62,8 +64,6 @@ class Player{
 				print('bought conv');
 			}
 		}
-
-		print(this.strat);
 	}
 }
 
@@ -74,7 +74,7 @@ class AIPlayer extends Player {
 	}
 }
 
-class HumanPlayer extends Player {
+class HumanPlayer extends Player{
 	constructor(){
 		super();
 		this.is_human = true;
@@ -91,14 +91,9 @@ function allTrue(value){
 }
 
 Game = {
-
-	// list of players
-	// list of cards
 	genericNames:['Aaron','Bob','Carl','Devon'],
 	
 	init:function(){
-	
-		// this.cards = Cards
 		this.numPlayers = 3;
 		this.players = [];
 		this.roll = 0;
@@ -106,8 +101,6 @@ Game = {
 		for(var i = 0; i < this.numPlayers; i++){
 			this.players.push(new AIPlayer(this.genericNames[i]));
 		}
-		
-
 	},
 
 	playGame:function(){
@@ -127,7 +120,9 @@ Game = {
 
 	playTurn:function(){
 		this.nextPlayer();
+		print(this.players[this.currPlayer].name+"'s Turn!")
 		secondTurn = this.rollPhase();
+		print('roll is ' + this.roll);
 		this.rewardPhase();
 		this.buyPhase();
 		if(secondTurn){
@@ -135,14 +130,15 @@ Game = {
 			this.rewardPhase();
 			this.buyPhase();
 		}
+		print('------')
 		return this.checkWinner();
+
 	},
 	nextPlayer:function(){
 		this.currPlayer < this.players.length - 1 ? this.currPlayer++ : this.currPlayer = 0;
 	},
 	rollPhase:function(){
 		this.roll = rollDice();
-		console.log('roll is ' + this.roll);
 	},
 	rewardPhase:function(){
 		for(var i in this.players){
@@ -157,7 +153,7 @@ Game = {
 		var winner = -1;
 		for(var i in this.players){
 			if(this.players[i].landmarks.every(allTrue)){
-				winner = i;
+				winner = parseInt(i);
 				print('Add tie-breaking logic');
 				break;
 			}
@@ -166,10 +162,9 @@ Game = {
 	},
 
 	updateBoard:function(){}
-
 }
 
-// Game.init()
+// Game.init();
 // console.log(Game.players)
 // console.log(Game.players.length)
 // console.log(Game.checkWinner())

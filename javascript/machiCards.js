@@ -37,7 +37,8 @@ Cards = {
 		rewardVal:1,
 		reward:rewards.basicReward,
 		remain:6,
-		category:1
+		category:1,
+		position:0
 	},
 	Ranch:{
 		name:"Ranch",
@@ -48,7 +49,8 @@ Cards = {
 		rewardVal:1,
 		reward:rewards.basicReward,
 		remain:6,
-		category:2
+		category:2,
+		position:1
 	},
 	Bakery:{
 		name:"Bakery",
@@ -59,7 +61,8 @@ Cards = {
 		rewardVal:1,
 		reward:rewards.basicReward,
 		remain:6,
-		category:3
+		category:3,
+		position:2
 	},
 	Cafe:{
 		name:"Cafe",
@@ -70,7 +73,8 @@ Cards = {
 		rewardVal:1,
 		reward:rewards.steal1,
 		remain:6,
-		category:3
+		category:3,
+		position:3
 	},
 	ConvStore:{
 		name:"Convenience Store",
@@ -81,7 +85,8 @@ Cards = {
 		rewardVal:3,
 		reward:rewards.basicReward,
 		remain:6,
-		category:3
+		category:3,
+		position:4
 	},
 	Forest:{
 		name:"Forest",
@@ -92,7 +97,8 @@ Cards = {
 		rewardVal:6,
 		reward:rewards.basicReward,
 		remain:6,
-		category:4
+		category:4,
+		position:5
 	},
 	Stadium:{
 		name:"Stadium",
@@ -103,7 +109,8 @@ Cards = {
 		rewardVal:2,
 		reward:rewards.stealAll,
 		remain:6,
-		category:6
+		category:6,
+		position:6
 	},
 	TVStation:{
 		name:"TV Station",
@@ -114,7 +121,8 @@ Cards = {
 		rewardVal:6,
 		reward:rewards.steal1,
 		remain:6,
-		category:6
+		category:6,
+		position:7
 	},
 	BusinessCenter:{
 		name:"Business Center",
@@ -125,7 +133,8 @@ Cards = {
 		rewardVal:0,
 		reward:rewards.trade1,
 		remain:6,
-		category:6
+		category:6,
+		position:8
 	},
 	CheeseFactory:{
 		name:"Cheese Factory",
@@ -136,7 +145,8 @@ Cards = {
 		rewardVal:3,
 		reward:rewards.per_build,
 		remain:6,
-		category:5
+		category:5,
+		position:9
 	}
 };
 

@@ -21,6 +21,14 @@ function drawLine(x1,y1,x2,y2){
 	ctx.restore();
 }
 
+function printCards(cards){
+	var str = "";
+	for(i in cards){
+		str += cards[i].name + " ";
+	}
+	return str;
+}
+
 class LineWrapper{
 	constructor(x1,y1,x2,y2){
 		this.x1 = x1;
@@ -31,7 +39,6 @@ class LineWrapper{
 	draw(){
 		drawLine(this.x1,this.y1,this.x2,this.y2);
 	}
-
 }
 
 class ImageWrapper{
@@ -71,12 +78,10 @@ class ImageWrapper{
 		this.totalStep = steps;
 		this.moving = true;
 	} 
-
-
 }
 
-class CanvasManager {
-	constructor(ctx) {
+class CanvasManager{
+	constructor(ctx){
 		this.ctx = ctx
 		this.images = []
 		this.lines = []
@@ -87,20 +92,19 @@ class CanvasManager {
 		this.left = 200;
 		this.right = 1200;
 		
-		this.width = (this.right - this.left)/7;
-		this.height = (this.bottom - this.top)/2;
+		this.boxWidth = (this.right - this.left) /7;
+		this.boxHeight = (this.bottom - this.top) /2;
 
 		for(var i = 0; i < 7; i++){
-			var currLeft = this.left + i * this.width;
+			var currLeft = this.left + i * this.boxWidth;
 
 			this.addNewLine(currLeft, this.top, currLeft, this.bottom);
 			this.addNewImage('images/RadioTower.jpg', currLeft+10, this.top+20);
 		}
 
 		for(var j = 0; j < 3; j++){
-			this.addNewLine(this.left, this.top+j*this.height, this.right, this.top+j* this.height);
+			this.addNewLine(this.left, this.top + j * this.boxHeight, this.right, this.top + j * this.boxHeight);
 		}
-
 	}
 
 	draw(){
@@ -119,17 +123,39 @@ class CanvasManager {
 		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
 		this.ctx.fillRect(1050, 0, 150, 75);
 
+		var cardList = Object.values(Cards);
+		for(var i = 0; i < 7; i++){
+			var currCard = cardList[i];
+			var currLeft = this.left + currCard.position * this.boxWidth;
+
+			ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+20, this.top+20);
+
+		}
+
+		
+		ctx.fillText(Game.players[0].money, 10, 20);
+		ctx.fillText(printCards(Game.players[0].cards), 10, 30);
+		
+		ctx.fillText(Game.players[1].money, this.left+10, this.bottom+20);
+		ctx.fillText(printCards(Game.players[1].cards), this.left+10, this.bottom+30);
+		
+		ctx.fillText(Game.players[2].money, this.right+10,20);
+		ctx.fillText(printCards(Game.players[2].cards), this.right+10,30);
+		// Game.players[1].money
+		// Game.players[2].money
+
 
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		for(var i = 0; i < 7; i++){
 			ctx.font = '14px monospace';
-			var currLeft = this.left+i*this.width;
+			var currLeft = this.left + i * this.boxWidth;
 
-			ctx.fillText('Card ' + i, currLeft+20, this.top+20);
+			// ctx.fillText('Card ' + i, currLeft+20, this.top+20);
 
-			ctx.fillText('Card ' + (i+7), this.left + i*this.width+20, this.top + this.height+20);
+
+			ctx.fillText('Card ' + (i+7), this.left + i*this.boxWidth+20, this.top + this.boxHeight+20);
 			
-			ctx.fillRect(this.left+i*this.width+10,this.top + this.height + 40, 100, 100);
+			ctx.fillRect(this.left+i*this.boxWidth+10,this.top + this.boxHeight + 40, 100, 100);
 		}
 
 
@@ -159,6 +185,7 @@ class CanvasManager {
 	}
 }
 
+Game.init();
 manage = new CanvasManager(ctx);
 
 
@@ -168,15 +195,27 @@ function canvasPaintCaller(){
 
 
 
-manage.addNewImage('images/RadioTower.jpg', 0 + 10, top + 20);
-manage.addNewImage('images/d1.jpg', 101, 201);
-manage.addNewImage('images/d1.jpg', 0, 0);
+// manage.addNewImage('images/RadioTower.jpg', 0 + 10, top + 20);
+// manage.addNewImage('images/d1.jpg', 101, 201);
+// manage.addNewImage('images/d1.jpg', 0, 0);
 
 
-
+manage.draw();
 
 canvas.addEventListener('mouseover', function(e) {
 	manage.draw();
 
 });
 
+var counter = 0;
+var gameLoop = setInterval(function(){
+	counter++;
+    Game.playTurn();
+	manage.draw();
+	if(Game.checkWinner() >= 0){
+		clearInterval(gameLoop);
+		print(counter);
+		print('all done');
+
+	}
+}, 500);
