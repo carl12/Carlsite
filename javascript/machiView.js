@@ -185,7 +185,7 @@ class CanvasManager{
 	}
 }
 
-Game.init();
+
 manage = new CanvasManager(ctx);
 
 
@@ -220,5 +220,3 @@ canvas.addEventListener('mouseover', function(e) {
 // 	}
 // }, 500);
 
-var a = readline('asdf');
-print(a);

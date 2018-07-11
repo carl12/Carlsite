@@ -92,8 +92,11 @@ function allTrue(value){
 
 Game = {
 	genericNames:['Aaron','Bob','Carl','Devon'],
+
 	
 	init:function(){
+		this.turnPhases = [this.rollPhase,this.startRewardPhase,this.inputRewardPhase,this.buyPhase,this.nextPlayer];
+		this.turnState = {'playerTurn':-1,'phase':this.turnPhases[4],'takingSecond':false,'isSecond':false,'rewardResponse':-1,'gameOver':false};
 		this.numPlayers = 3;
 		this.players = [];
 		this.roll = 0;
@@ -118,36 +121,50 @@ Game = {
 		}
 	},
 
-	playTurn:function(){
-		this.nextPlayer();
-		print(this.players[this.currPlayer].name+"'s Turn!")
-		secondTurn = this.rollPhase();
-		print('roll is ' + this.roll);
-		this.rewardPhase();
-		this.buyPhase();
-		if(secondTurn){
-			this.rollPhase();
-			this.rewardPhase();
-			this.buyPhase();
-		}
-		print('------')
-		return this.checkWinner();
+	// playTurn:function(){
+	// 	this.nextPlayer();
+	// 	secondTurn = this.rollPhase();
+	// 	this.rewardPhase();
+	// 	this.buyPhase();
+	// 	if(secondTurn){
+	// 		this.rollPhase();
+	// 		this.rewardPhase();
+	// 		this.buyPhase();
+	// 	}
+	// 	print('------')
+	// 	return this.checkWinner();
 
-	},
+	// },
 	nextPlayer:function(){
+		this.checkWinner();
+		if(!this.turnState.gameOver){
 		this.currPlayer < this.players.length - 1 ? this.currPlayer++ : this.currPlayer = 0;
+		}
+		else{
+			print('game over!')
+		}
 	},
-	rollPhase:function(){
+	rollPhase:function(input){
+		//TODO - enable station to roll second die
 		this.roll = rollDice();
+		//TODO - set go again for amusement park
+		//TODO - check for radio tower and then set state to reroll phase
+		this.turnState.phase = this.startRewardPhase;
 	},
-	rewardPhase:function(){
+	rerollPhase:(input)=>{
+		//TODO - take input on whether to reroll or keep
+	},
+	startRewardPhase:function(){
 		for(var i in this.players){
 			this.players[i].rewards(this.roll, this.currPlayer == i);
 		}
 
 	},
-	buyPhase:function(){
-		this.players[this.currPlayer].buyCard(this);
+	inputRewardPhase:(input)=>{
+
+	},
+	buyPhase:function(input){
+		this.players[this.currPlayer].buyCard(input);
 	},
 	checkWinner:function(){
 		var winner = -1;
@@ -158,7 +175,9 @@ Game = {
 				break;
 			}
 		}
-		return winner;
+		if(winner >= 0){
+			this.turnState.gameOver = true;
+		}
 	},
 
 	updateBoard:function(){}
@@ -169,3 +188,4 @@ Game = {
 // console.log(Game.players.length)
 // console.log(Game.checkWinner())
 // print(Game.players)
+
