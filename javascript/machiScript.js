@@ -207,15 +207,18 @@ canvas.addEventListener('mouseover', function(e) {
 
 });
 
-var counter = 0;
-var gameLoop = setInterval(function(){
-	counter++;
-    Game.playTurn();
-	manage.draw();
-	if(Game.checkWinner() >= 0){
-		clearInterval(gameLoop);
-		print(counter);
-		print('all done');
+// var counter = 0;
+// var gameLoop = setInterval(function(){
+// 	counter++;
+//     Game.playTurn();
+// 	manage.draw();
+// 	if(Game.checkWinner() >= 0){
+// 		clearInterval(gameLoop);
+// 		print(counter);
+// 		print('all done');
 
-	}
-}, 500);
+// 	}
+// }, 500);
+
+var a = readline('asdf');
+print(a);
