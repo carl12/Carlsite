@@ -17,53 +17,60 @@ class Player{
 			}
 		}
 	}
-	buyCard(game){
 
-		
-		if(!this.landmarks[1] && this.money >= 10){
-			this.money -= 10;
-			this.landmarks[1]=true;
-			print('bought shopping mall');
+	buyCard(card){
+		card.remain -= 1;
+		this.money -= card.cost;
+		if(card.isLandmark){
+			this.landmarks[card.position] = true;
+		} else {
+			this.cards.push(card)
 		}
-		else if(!this.landmarks[3] && this.money >= 24){
-			this.money -= 24;
-			this.landmarks[3]=true;
-			print('bought radio');
-		}else if(!this.landmarks[2] && this.money >= 16){
-			this.money -= 16;
-			this.landmarks[2]=true;
-			print('bought amusement');
-		}
-		else if(!this.landmarks[0] && this.money >= 10){
-			this.money -= 4;
-			this.landmarks[0]=true;
-			print('bought station');
-		} 
-		else if(this.strat == 1){
-			if(Cards.WheatField.remain > 0 && this.money >= 1){
-				var toBuy = Cards.WheatField;
-				this.money-=toBuy.cost;
-				toBuy.remain--;
-				this.cards.push(toBuy);
-				print('bought wheat');
-			}
-		}else if(this.strat == 2){
-			if(Cards.Ranch.remain > 0 && this.money >= 1){
-				var toBuy = Cards.Ranch;
-				this.money-=toBuy.cost;
-				toBuy.remain--;
-				this.cards.push(toBuy);
-				print('bought ranch');
-			}
-		}else if(this.strat == 3){
-			if(Cards.ConvStore.remain > 0 && this.money >= 2){
-				var toBuy = Cards.ConvStore;
-				this.money-=toBuy.cost;
-				toBuy.remain--;
-				this.cards.push(toBuy);
-				print('bought conv');
-			}
-		}
+
+		// if(!this.landmarks[1] && this.money >= 10){
+		// 	this.money -= 10;
+		// 	this.landmarks[1]=true;
+		// 	print('bought shopping mall');
+		// }
+		// else if(!this.landmarks[3] && this.money >= 24){
+		// 	this.money -= 24;
+		// 	this.landmarks[3]=true;
+		// 	print('bought radio');
+		// }else if(!this.landmarks[2] && this.money >= 16){
+		// 	this.money -= 16;
+		// 	this.landmarks[2]=true;
+		// 	print('bought amusement');
+		// }
+		// else if(!this.landmarks[0] && this.money >= 10){
+		// 	this.money -= 4;
+		// 	this.landmarks[0]=true;
+		// 	print('bought station');
+		// } 
+		// else if(this.strat == 1){
+		// 	if(Cards.WheatField.remain > 0 && this.money >= 1){
+		// 		var toBuy = Cards.WheatField;
+		// 		this.money-=toBuy.cost;
+		// 		toBuy.remain--;
+		// 		this.cards.push(toBuy);
+		// 		print('bought wheat');
+		// 	}
+		// }else if(this.strat == 2){
+		// 	if(Cards.Ranch.remain > 0 && this.money >= 1){
+		// 		var toBuy = Cards.Ranch;
+		// 		this.money-=toBuy.cost;
+		// 		toBuy.remain--;
+		// 		this.cards.push(toBuy);
+		// 		print('bought ranch');
+		// 	}
+		// }else if(this.strat == 3){
+		// 	if(Cards.ConvStore.remain > 0 && this.money >= 2){
+		// 		var toBuy = Cards.ConvStore;
+		// 		this.money-=toBuy.cost;
+		// 		toBuy.remain--;
+		// 		this.cards.push(toBuy);
+		// 		print('bought conv');
+		// 	}
+		// }
 	}
 }
 
@@ -93,99 +100,137 @@ function allTrue(value){
 Game = {
 	genericNames:['Aaron','Bob','Carl','Devon'],
 
-	
 	init:function(){
-		this.turnPhases = [this.rollPhase,this.startRewardPhase,this.inputRewardPhase,this.buyPhase,this.nextPlayer];
-		this.turnState = {'playerTurn':-1,'phase':this.turnPhases[4],'takingSecond':false,'isSecond':false,'rewardResponse':-1,'gameOver':false};
-		this.numPlayers = 3;
-		this.players = [];
-		this.roll = 0;
-		this.currPlayer = -1;
-		for(var i = 0; i < this.numPlayers; i++){
-			this.players.push(new AIPlayer(this.genericNames[i]));
+		Game.winner = -1;
+		Game.turnPhases = [Game.rollPhase,Game.rerollPhase,Game.startRewardPhase,Game.inputRewardPhase,Game.buyPhase,Game.nextPlayer];
+		Game.turnState = {'playerTurn':0,'phase':0,'amuseDoubles':false,'isSecond':false,'rewardResponse':-1,'gameOver':false};
+		Game.numPlayers = 3;
+		Game.players = [];
+		Game.roll = 0;
+		Game.currPlayer = -1;
+		for(var i = 0; i < Game.numPlayers; i++){
+			Game.players.push(new AIPlayer(Game.genericNames[i]));
 		}
 	},
 
-	playGame:function(){
-		for(var i = 0; i < 50; i++){
-			print('--------------------------');
-			print('turn '+i+" starting");
-			for(var j = 0; j < this.players.length; j++){
-				var win = this.playTurn();
-				if(win >= 0){
-					print('player '+win+' won!');
-					return win;
+	// playGame:function(){
+	// 	for(var i = 0; i < 50; i++){
+	// 		print('--------------------------');
+	// 		print('turn '+i+" starting");
+	// 		for(var j = 0; j < Game.players.length; j++){
+	// 			var win = Game.playTurn();
+	// 			if(win >= 0){
+	// 				print('player '+win+' won!');
+	// 				return win;
 
-				}
-			}
-		}
-	},
+	// 			}
+	// 		}
+	// 	}
+	// },
 
 	// playTurn:function(){
-	// 	this.nextPlayer();
-	// 	secondTurn = this.rollPhase();
-	// 	this.rewardPhase();
-	// 	this.buyPhase();
+	// 	Game.nextPlayer();
+	// 	secondTurn = Game.rollPhase();
+	// 	Game.rewardPhase();
+	// 	Game.buyPhase();
 	// 	if(secondTurn){
-	// 		this.rollPhase();
-	// 		this.rewardPhase();
-	// 		this.buyPhase();
+	// 		Game.rollPhase();
+	// 		Game.rewardPhase();
+	// 		Game.buyPhase();
 	// 	}
 	// 	print('------')
-	// 	return this.checkWinner();
-
+	// 	return Game.checkWinner();
 	// },
-	nextPlayer:function(){
-		this.checkWinner();
-		if(!this.turnState.gameOver){
-		this.currPlayer < this.players.length - 1 ? this.currPlayer++ : this.currPlayer = 0;
+
+	next:function (input){
+		if(!Game.turnState.gameOver){
+
+		Game.turnPhases[Game.turnState.phase](input);
+		} else {
+			print('game is over, go home!')
 		}
-		else{
-			print('game over!')
-		}
+		
 	},
+
 	rollPhase:function(input){
+		// print(Game.turnState)
 		//TODO - enable station to roll second die
-		this.roll = rollDice();
+		Game.roll = rollDice();
 		//TODO - set go again for amusement park
 		//TODO - check for radio tower and then set state to reroll phase
-		this.turnState.phase = this.startRewardPhase;
+		Game.turnState.phase += 2;
 	},
+
 	rerollPhase:(input)=>{
 		//TODO - take input on whether to reroll or keep
 	},
+
 	startRewardPhase:function(){
-		for(var i in this.players){
-			this.players[i].rewards(this.roll, this.currPlayer == i);
+		//TODO - check if reward cards require player input then move to input reward phase
+		for(var i in Game.players){
+			Game.players[i].rewards(Game.roll, Game.currPlayer == i);
 		}
+		Game.turnState.phase+=2;
 
 	},
+
 	inputRewardPhase:(input)=>{
+		//TODO - make this function
+	},
 
-	},
 	buyPhase:function(input){
-		this.players[this.currPlayer].buyCard(input);
+		if(input !== undefined && input.card !== undefined){
+			card = input.card;
+		//check card is valid
+		currPlayer = Game.players[Game.turnState.playerTurn];
+
+		if(card.cost <= currPlayer.money && card.remain > 0){
+			Game.players[Game.currPlayer].buyCard(card);
+		} else {
+			print('Card purchase failed, either insufficient money or none remain');
+		}
+	} else {
+		print('Buy input failed');
+	}
+	Game.turnState.phase += 1;
+		
 	},
+
 	checkWinner:function(){
-		var winner = -1;
-		for(var i in this.players){
-			if(this.players[i].landmarks.every(allTrue)){
-				winner = parseInt(i);
+		for(var i in Game.players){
+			if(Game.players[i].landmarks.every(allTrue)){
+				Game.winner = parseInt(i);
 				print('Add tie-breaking logic');
 				break;
 			}
 		}
-		if(winner >= 0){
-			this.turnState.gameOver = true;
+		if(Game.winner >= 0){
+			Game.turnState.gameOver = true;
+		}
+	},
+
+	nextPlayer:function(){
+		Game.checkWinner();
+		if(!Game.turnState.gameOver){
+			Game.turnState.playerTurn < Game.players.length - 1 ? Game.turnState.playerTurn++ : Game.turnState.playerTurn = 0;
+			Game.turnState.phase = 0;
+		}
+		else{
+			print('game over!')
 		}
 	},
 
 	updateBoard:function(){}
 }
 
-// Game.init();
-// console.log(Game.players)
-// console.log(Game.players.length)
-// console.log(Game.checkWinner())
-// print(Game.players)
+Game.init();
+// print(Game.turnState.phase)
+Game.next();
+Game.next();
+Game.next();
+Game.next();
+print(Game.turnState)
+
+
+
 
