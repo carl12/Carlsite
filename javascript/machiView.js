@@ -1,6 +1,6 @@
 pr = print = console.log
 
-var canvas = document.getElementById('tutorial');
+var canvas = document.getElementById('myCanvas');
 canvas.setAttribute('height','700px');
 canvas.setAttribute('width','1400px');
 
@@ -42,20 +42,22 @@ class LineWrapper{
 }
 
 class ImageWrapper{
-	constructor(src, x,y){
-		this.src = src
-		this.x = x
-		this.y = y
+	constructor(src, x, y){
+		this.src = src;
+		this.x = x;
+		this.y = y;
+		this.width = 100;
+		this.height = 120;
 
-		this.currStep = 0
-		this.totalStep = 0
-		this.moving = false
-		this.dx = 0
-		this.dy = 0
+		this.currStep = 0;
+		this.totalStep = 0;
+		this.moving = false;
+		this.dx = 0;
+		this.dy = 0;
 
 		this.img = new Image();
 		this.img.src = src;
-		var img = this.img
+		var img = this.img;
 	}
 
 	draw(ctx){
@@ -68,7 +70,7 @@ class ImageWrapper{
 			print(this.currStep)	
 		}
 
-		ctx.drawImage(this.img, this.x, this.y, 100, 100)
+		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 	}
 
 	startAnimation(x,y,steps){
@@ -77,7 +79,26 @@ class ImageWrapper{
 		this.currStep = 0;
 		this.totalStep = steps;
 		this.moving = true;
-	} 
+	}
+
+	contains(x,y){
+		if(x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.width){
+			return true;
+		}
+	}
+}
+
+class cardImageWrapper extends ImageWrapper{
+	constructor(name, x, y){
+		super(Cards.name.src, x, y);
+		this.cardType = name;
+	}
+
+	getTypeIfContains(x,y){
+		if(clicked(x,y)){
+			return this.name;
+		}
+	}
 }
 
 class CanvasManager{
@@ -99,7 +120,7 @@ class CanvasManager{
 			var currLeft = this.left + i * this.boxWidth;
 
 			this.addNewLine(currLeft, this.top, currLeft, this.bottom);
-			this.addNewImage('images/RadioTower.jpg', currLeft+10, this.top+20);
+			this.addNewImage('images/AmusementPark.jpg', currLeft+10, this.top+20);
 		}
 
 		for(var j = 0; j < 3; j++){
@@ -182,6 +203,16 @@ class CanvasManager{
 
 	addNewLine(x1,y1,x2,y2){
 		this.lines.push(new LineWrapper(x1,y1,x2,y2));
+	}
+
+	checkImageClicked(x,y){
+		for(var i in this.images){
+			if(this.images[i].contains(x,y)){
+				return true;
+			}
+		}
+		return false;
+
 	}
 }
 

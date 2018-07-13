@@ -77,14 +77,14 @@ class Player{
 class AIPlayer extends Player {
 	constructor(name){
 		super(name);
-		this.is_human = false;
+		this.isHuman = false;
 	}
 }
 
 class HumanPlayer extends Player{
 	constructor(){
 		super();
-		this.is_human = true;
+		this.isHuman = true;
 	}
 }
 
@@ -220,16 +220,21 @@ Game = {
 		}
 	},
 
+	currIsHuman:function(){
+		var curr = Game.turnState.playerTurn;
+		return Game.players[curr].isHuman;
+	}
+
 	updateBoard:function(){}
 }
 
-Game.init();
-// print(Game.turnState.phase)
-Game.next();
-Game.next();
-Game.next();
-Game.next();
-print(Game.turnState)
+// Game.init();
+// // print(Game.turnState.phase)
+// Game.next();
+// Game.next();
+// Game.next();
+// Game.next();
+// print(Game.turnState)
 
 
 
