@@ -217,7 +217,6 @@ class CanvasManager{
 }
 
 
-manage = new CanvasManager(ctx);
 
 
 function canvasPaintCaller(){
@@ -230,8 +229,6 @@ function canvasPaintCaller(){
 // manage.addNewImage('images/d1.jpg', 101, 201);
 // manage.addNewImage('images/d1.jpg', 0, 0);
 
-
-manage.draw();
 
 canvas.addEventListener('mouseover', function(e) {
 	manage.draw();

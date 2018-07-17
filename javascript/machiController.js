@@ -4,6 +4,8 @@ var canvas = document.getElementById('myCanvas');
 var canvasLeft = canvas.offsetLeft;
 var canvasTop = canvas.offsetTop;
 
+
+
 canvas.addEventListener("click", (event)=>{
 	var x = event.pageX - canvasLeft;
 	var y = event.pageY - canvasTop;
@@ -14,6 +16,16 @@ canvas.addEventListener("click", (event)=>{
 });
 
 Game.init();
-if(!Game.currIsHuman){
-	
+manage = new CanvasManager(ctx);
+manage.draw();
+
+function runGame(){
+	while(!Game.requireInput()){
+		Game.next();
+	}
+	print(Game.turnState)
 }
+
+runGame();
+
+
