@@ -19,9 +19,7 @@ Game.init();
 manage = new CanvasManager(ctx);
 manage.draw();
 
-manage.addNewImage('images/RadioTower.jpg', 0 + 10, top + 20);
-manage.addNewImage('images/d1.jpg', 101, 201);
-manage.addNewImage('images/d1.jpg', 0, 0);
+
 
 
 

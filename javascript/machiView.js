@@ -194,7 +194,6 @@ class CanvasManager{
 		if(animating){
 			print('requested draw again')
 			requestAnimationFrame(this.draw.bind(this))
-			// this.draw.bind(this)
 		}
 	}
 
@@ -216,14 +215,6 @@ class CanvasManager{
 
 	}
 }
-
-
-
-
-function canvasPaintCaller(){
-	manage.draw();	
-}
-
 
 
 // manage.addNewImage('images/RadioTower.jpg', 0 + 10, top + 20);
