@@ -193,7 +193,8 @@ class CanvasManager{
 		}
 		if(animating){
 			print('requested draw again')
-			requestAnimationFrame(canvasPaintCaller)
+			requestAnimationFrame(this.draw.bind(this))
+			// this.draw.bind(this)
 		}
 	}
 
