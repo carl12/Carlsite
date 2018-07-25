@@ -22,9 +22,7 @@ manage.draw();
 
 
 
- var i = 0;
 function runGame(){
-	i++;
 	while(!Game.requireInput() ){
 		Game.next();
 		if (Game.winner != -1){
@@ -43,7 +41,7 @@ function runGame(){
 		response = inputType.player.takeInput(inputType);
 	}
 	result = Game.next(response);
-	if(result && i < 100){
+	if(result){
 		manage.draw();
 		setTimeout(runGame,100);
 	} else {

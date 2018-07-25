@@ -9,6 +9,7 @@ trigger={
 }
 
 category=['none','farm','animal','food','natural','factory','business'];
+firstLandmarkLoc = 15;
 
 function reward_func(player){
 	console.log('implement reward function');
@@ -28,7 +29,7 @@ function basicReward(player){
 	if(this.category == 3 && player.landmarks[1]){
 		player.money++;
 	}
-	player.money+=this.rewardVal;
+	return this.rewardVal;
 }
 
 
@@ -194,7 +195,7 @@ Cards = {
 		remain:6,
 		category:5,
 		isLandmark:false,
-		position:9,
+		position:10,
 		src:''
 	},
 	Mine:{
@@ -208,7 +209,7 @@ Cards = {
 		remain:6,
 		category:4,
 		isLandmark:false,
-		position:5,
+		position:11,
 		src:''
 	},
 

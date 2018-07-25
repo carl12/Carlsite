@@ -11,7 +11,7 @@ class Player{
 		for(var i in this.cards){
 			var c = this.cards[i];
 			if(c.triggers.includes(roll) && c.triggersOn(isTurn)){
-				c.reward(this);
+				this.money += c.reward(this);
 			}
 		}
 	}
@@ -57,47 +57,106 @@ class Player{
 class AIPlayer extends Player {
 	constructor(name){
 		super(name);
+		this.stratBuyFunc = [this.basicStrat.bind(this), this.ranchStrat.bind(this), 
+			this.basicStrat.bind(this), this.basicStrat.bind(this), this.convStoreStrat.bind(this)];
 		this.isHuman = false;
-		var version = Math.floor(Math.random() * 4);
-		if(version == 3){
-			this.strat = 4;
+		var version = Math.floor(Math.random()*2);
+		if(version == 0){
+			this.strat = 1;
 		} else {
-			this.strat = version;
+			this.strat = 4;
 		}
+		
+		
+
 
 	}
-	takeInput(input){
+	takeInput(input) {
 		var num = input.phase;
-		var output = {};
+		
 		if(num == 0){
-			output.numDice = 1;
-		} else if (num == 4){
-			//TODO - buy other things sometimes
-			if(!this.landmarks[1] && this.money >= 10){
-			this.money -= 10;
-			this.landmarks[1]=true;
-			print('bought shopping mall');
-		}
-		else if(!this.landmarks[3] && this.money >= 24){
-			this.money -= 24;
-			this.landmarks[3]=true;
-			print('bought radio');
-		}else if(!this.landmarks[2] && this.money >= 16){
-			this.money -= 16;
-			this.landmarks[2]=true;
-			print('bought amusement');
-		}
-		else if(!this.landmarks[0] && this.money >= 10){
-			this.money -= 4;
-			this.landmarks[0]=true;
-			print('bought station');
-		} 
-			output.card = indexedCards[this.strat];
+			var output = {};
+			//TODO - add more logic here, might have just bought station to get to win
+			if(this.strat == 1){
+				output.rollTwo = this.landmarks[0];
+			} else {
+				output.rollTwo = false;
+			}
+			return output;
+		} else if (num == 4) { 
+
+			return this.stratBuyFunc[this.strat]();
 		} else {
 			// TODO - implement other logic
 			throw "Not Implemented: providing input for other phases";
 		}
+	}
+
+	canBuy(listOfBuildings){
+		var buildLoc;
+		var building;
+		for(var i in listOfBuildings){
+			buildLoc = listOfBuildings[i];
+			building = indexedCards[buildLoc];
+			if(building.isLandmark){
+				if(!this.landmarks[buildLoc - firstLandmarkLoc] && this.money >= building.cost){
+					return buildLoc;
+				}
+			} else {
+				if(building.remain > 0 && this.money >= building.cost){
+					return buildLoc;
+				}
+			}
+		}
+		return -1;
+
+	}
+
+	basicStrat(){
+		var output = {};
+		//TODO - buy other things sometimes
+		var num = this.canBuy([16,18,17,15]);
+		if(num !== -1){
+			output.card = indexedCards[num];
+			
+			return output;
+		}
+		// if(indexedCards[this.strat].remain == 0){
+		// 	var nextNum = [1, 2, 4, 4, 0];
+		// 	var newStrat = this.strat;
+		// 	for(var i = 0; i < nextNum.length; i++){
+		// 		var newStrat = nextNum[newStrat]
+		// 		if(indexedCards[newStrat].remain > 0){
+		// 			this.strat = newStrat;
+		// 			break;
+		// 		}
+		// 	}
+		// 	console.log('new strat is ', indexedCards[this.strat].name);
+		// 	output.card = indexedCards[this.strat];
+		// } 
+		else {
+			output.card = indexedCards[this.strat];
+		} 
+		
 		return output;
+	}
+	convStoreStrat(){
+		var output= {};
+		var num = this.canBuy([4, 16, 18, 17, 15]);
+		if (num !== -1){
+			output.card = indexedCards[num];
+		} 
+		return output;
+	}
+
+	ranchStrat(){
+		var output= {};
+		var num = this.canBuy([1, 15, 18, 17, 16, 9]);
+		if (num !== -1){
+			output.card = indexedCards[num];
+		} 
+		return output;
+
 	}
 }
 

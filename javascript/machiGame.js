@@ -15,11 +15,12 @@ Game = {
 	genericNames:['Aaron','Bob','Carl','Devon'],
 
 	init:function(){
+		Game.turn = 0;
 		Game.winner = -1;
 		Game.turnPhases = [Game.rollPhase, Game.rerollPhase, Game.startRewardPhase,
 								Game.inputRewardPhase, Game.buyPhase, Game.nextPlayer];
 
-		Game.phaseRequiresInput = [false, true, false, true, true, false]
+		Game.phaseRequiresInput = [true, true, false, true, true, false]
 		Game.phaseStrings = ['roll', 'reroll', 'start reward', 
 								'reward input', 'buy', 'ending turn']
 
@@ -28,6 +29,7 @@ Game = {
 
 		Game.numPlayers = 3;
 		Game.players = [];
+		Game.rollDist = new Array(12).fill(0);
 		Game.roll = 0;
 		for(var i = 0; i < Game.numPlayers; i++){
 			Game.players.push(new AIPlayer(Game.genericNames[i]));
@@ -68,13 +70,31 @@ Game = {
 	},
 
 	rollPhase:function(input){
-		// print(Game.turnState)
-		//TODO - enable station to roll second die
-		Game.roll = rollDice();
-		//TODO - set go again for amusement park
-		//TODO - check for radio tower and then set state to reroll phase
-		Game.turnState.phase += 2;
-		return true;
+		if(input !== undefined && input.rollTwo !== undefined){
+			var a = 0;
+			var b = 0;
+			var currPlayer = Game.players[Game.turnState.playerTurn]
+			if (input.rollTwo && currPlayer.landmarks[0]){
+				a = rollDice();
+				b = rollDice();
+			} else {
+				a = rollDice();
+				Game.rollDist[Game.roll-1] ++;	
+			}
+
+			//TODO - check for radio tower for reroll
+
+			if(currPlayer.landmarks[2] && a === b){
+				//TODO - add go again functionality
+			}
+
+			Game.roll = a + b;
+			Game.turnState.phase += 2;
+			return true;
+		} else {
+			return false;
+		}
+		
 	},
 
 	rerollPhase:function(){
@@ -105,12 +125,13 @@ Game = {
 					Game.players[Game.turnState.playerTurn].buyCard(card);
 					print(card.name, ' bought');
 				} else {
-					print('Card purchase failed, either insufficient money or none remain');
+					// print('Card purchase failed, either insufficient money or none remain');
 					// print(card);
 					// print(card.cost);
 					// print(currPlayer.money);
 				}
 			} else {
+				print('trying to buy a landmark')
 				if(card.cost <= currPlayer.money && !currPlayer.landmarks[card.landmarkPosition]){
 					currPlayer.landmarks[card.landmarkPosition] = true;
 					print(card.name, ' bought!!!');
@@ -121,9 +142,7 @@ Game = {
 			}
 			
 		} else {
-			print('Buy input failed');
-			print(card.cost,currPlayer.money);
-			return false;
+			print('No card input');
 		}
 		Game.turnState.phase += 1;
 		return true;
@@ -147,6 +166,7 @@ Game = {
 		if(!Game.turnState.gameOver){
 			Game.turnState.playerTurn < Game.players.length - 1 ? Game.turnState.playerTurn++ : Game.turnState.playerTurn = 0;
 			Game.turnState.phase = 0;
+			Game.turn += 1;
 		}
 		else{
 			print('game over!')
