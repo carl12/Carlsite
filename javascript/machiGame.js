@@ -16,10 +16,16 @@ Game = {
 
 	init:function(){
 		Game.winner = -1;
-		Game.turnPhases = [Game.rollPhase,Game.rerollPhase,Game.startRewardPhase,Game.inputRewardPhase,Game.buyPhase,Game.nextPlayer];
+		Game.turnPhases = [Game.rollPhase, Game.rerollPhase, Game.startRewardPhase,
+								Game.inputRewardPhase, Game.buyPhase, Game.nextPlayer];
+
 		Game.phaseRequiresInput = [false, true, false, true, true, false]
-		Game.phaseStrings = ['roll', 'reroll', 'start reward', 'reward input', 'buy', 'ending turn']
-		Game.turnState = {'playerTurn':0,'phase':0,'amuseDoubles':false,'isSecond':false,'rewardResponse':-1,'gameOver':false};
+		Game.phaseStrings = ['roll', 'reroll', 'start reward', 
+								'reward input', 'buy', 'ending turn']
+
+		Game.turnState = {'playerTurn':0, 'phase':0, 'amuseDoubles':false, 'isSecond':false,
+							'rewardResponse':-1, 'gameOver':false};
+
 		Game.numPlayers = 3;
 		Game.players = [];
 		Game.roll = 0;
@@ -33,9 +39,10 @@ Game = {
 
 	next:function (input){
 		if(!Game.turnState.gameOver){
-			Game.turnPhases[Game.turnState.phase](input);
+			return Game.turnPhases[Game.turnState.phase](input);
 		} else {
 			print('game is over, go home!')
+			return false;
 		}
 		
 	},
@@ -45,6 +52,21 @@ Game = {
 		return Game.phaseRequiresInput[Game.turnState.phase]
 	},
 
+	getInputType:function(){
+		inputType={};
+		if(Game.turnPhases[Game.turnState.phase] !== Game.inputRewardPhase){
+			inputType.player = Game.players[Game.turnState.playerTurn];
+		} else {
+			inputType.player = Game.players[Game.turnState.rewardResponse];
+		}
+		inputType.phase = Game.turnState.phase;
+		if (inputType.phase == 3){
+			//TODO - fix
+			throw "Not impelmented: getInputType for inputRewardPhase"
+		}
+		return inputType;
+	},
+
 	rollPhase:function(input){
 		// print(Game.turnState)
 		//TODO - enable station to roll second die
@@ -52,9 +74,10 @@ Game = {
 		//TODO - set go again for amusement park
 		//TODO - check for radio tower and then set state to reroll phase
 		Game.turnState.phase += 2;
+		return true;
 	},
 
-	rerollPhase:(input)=>{
+	rerollPhase:function(){
 		//TODO - take input on whether to reroll or keep
 	},
 
@@ -67,26 +90,43 @@ Game = {
 
 	},
 
-	inputRewardPhase:(input)=>{
+	inputRewardPhase:function(input){
 		//TODO - make this function
+		return false;
 	},
 
 	buyPhase:function(input){
 		if(input !== undefined && input.card !== undefined){
 			card = input.card;
-		//check card is valid
-		currPlayer = Game.players[Game.turnState.playerTurn];
-
-		if(card.cost <= currPlayer.money && card.remain > 0){
-			Game.players[Game.turnState.playerTurn].buyCard(card);
+			//check card is valid
+			currPlayer = Game.players[Game.turnState.playerTurn];
+			if(!card.isLandmark){
+				if(card.cost <= currPlayer.money && card.remain > 0){
+					Game.players[Game.turnState.playerTurn].buyCard(card);
+					print(card.name, ' bought');
+				} else {
+					print('Card purchase failed, either insufficient money or none remain');
+					// print(card);
+					// print(card.cost);
+					// print(currPlayer.money);
+				}
+			} else {
+				if(card.cost <= currPlayer.money && !currPlayer.landmarks[card.landmarkPosition]){
+					currPlayer.landmarks[card.landmarkPosition] = true;
+					print(card.name, ' bought!!!');
+				} else {
+					print('Landmark purchase failed, either insufficient money or already own');
+					
+				}
+			}
+			
 		} else {
-			print('Card purchase failed, either insufficient money or none remain');
+			print('Buy input failed');
+			print(card.cost,currPlayer.money);
+			return false;
 		}
-	} else {
-		print('Buy input failed');
-	}
-	Game.turnState.phase += 1;
-		
+		Game.turnState.phase += 1;
+		return true;
 	},
 
 	checkWinner:function(){
@@ -121,6 +161,22 @@ Game = {
 	updateBoard:function(){}
 }
 
+Game.turnPhases = [Game.rollPhase, Game.rerollPhase, Game.startRewardPhase,
+						Game.inputRewardPhase, Game.buyPhase, Game.nextPlayer];
+
+turnPhases = [
+	{
+		name:'rollPhase',
+		func:Game.rollPhase.bind(Game),
+		input:'oneOrTwoDice'
+	},
+	{
+		name:'rerollPhase',
+				
+
+	},
+
+]
 
 
 

@@ -22,12 +22,35 @@ manage.draw();
 
 
 
-
+ var i = 0;
 function runGame(){
-	while(!Game.requireInput()){
+	i++;
+	while(!Game.requireInput() ){
 		Game.next();
+		if (Game.winner != -1){
+			print(Game.winner)
+			print(Game.players[Game.winner].cards);
+			return true;
+		}
 	}
-	print(Game.turnState)
+	inputType = Game.getInputType();
+	var response;
+	if (inputType.player.isHuman) {
+		//Enable listeners to receive input
+		//Enter message to prompt for input
+	} else { 
+		// Submit request to ai
+		response = inputType.player.takeInput(inputType);
+	}
+	result = Game.next(response);
+	if(result && i < 100){
+		manage.draw();
+		setTimeout(runGame,100);
+	} else {
+		print(i , ' is i')
+		print('had a problem')
+
+	}
 
 		
 	// Check whether need input from human or ai

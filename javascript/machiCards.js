@@ -1,10 +1,11 @@
-
+print = console.log
 // console.log('cards loaded')
 trigger={
 	red:(isTurn)=> !isTurn,
 	blue:()=>true,
 	purple:(isTurn)=> isTurn,
-	green:(isTurn) => isTurn
+	green:(isTurn) => isTurn,
+	none:()=> false
 }
 
 category=['none','farm','animal','food','natural','factory','business'];
@@ -12,18 +13,32 @@ category=['none','farm','animal','food','natural','factory','business'];
 function reward_func(player){
 	console.log('implement reward function');
 }
+
+function per_build_maker(buildingType){
+	return function(player){
+		count = 0;
+		player.cards.forEach((a)=>{if(a.category == buildingType){count+= this.rewardVal;}})
+		return count;
+	}
+	
+
+}
+
 function basicReward(player){
 	if(this.category == 3 && player.landmarks[1]){
 		player.money++;
 	}
 	player.money+=this.rewardVal;
 }
+
+
+
 rewards={
 	basicReward:basicReward,
 	steal1:reward_func,
 	stealAll:reward_func,
 	trade1:reward_func,
-	per_build:reward_func
+	per_build:per_build_maker
 }
 
 
@@ -104,7 +119,7 @@ Cards = {
 		triggersOn:trigger.blue,
 		triggers:[5],
 		fixed:true,
-		rewardVal:6,
+		rewardVal:1,
 		reward:rewards.basicReward,
 		remain:6,
 		category:4,
@@ -161,12 +176,76 @@ Cards = {
 		triggers:[7],
 		fixed:false,
 		rewardVal:3,
-		reward:rewards.per_build,
+		reward:rewards.per_build(2),
 		remain:6,
 		category:5,
 		isLandmark:false,
 		position:9,
 		src:''
-	}
-};
+	},
+	FurnitureFactory:{
+		name:"Furniture Factory",
+		cost:3,
+		triggersOn:trigger.green,
+		triggers:[8],
+		fixed:false,
+		rewardVal:3,
+		reward:rewards.per_build(4),
+		remain:6,
+		category:5,
+		isLandmark:false,
+		position:9,
+		src:''
+	},
+	Mine:{
+		name:"Mine",
+		cost:6,
+		triggersOn:trigger.blue,
+		triggers:[9],
+		fixed:true,
+		rewardVal:5,
+		reward:rewards.basicReward,
+		remain:6,
+		category:4,
+		isLandmark:false,
+		position:5,
+		src:''
+	},
 
+	Station:{
+		name:"Station",
+		cost:4,
+		isLandmark:true,
+		landmarkPosition:0,
+		position:15
+	},
+	ShoppingMall:{
+		name:"Shopping Mall",
+		cost:10,
+		isLandmark:true,
+		landmarkPosition:1,
+		position:16
+	},
+	AmusementPark:{
+		name:"Amusement Park",
+		cost:16,
+		isLandmark:true,
+		landmarkPosition:2,
+		position:17
+	},
+	RadioTower:{
+		name:"Radio Tower",		
+		cost:24,
+		isLandmark:true,
+		landmarkPosition:3,
+		position:18
+	}
+
+
+};
+indexedCards = [];
+Object.entries(Cards).forEach((key,val)=>{indexedCards[key[1].position] = key[1]});
+player = {
+	cards:[indexedCards[5], indexedCards[5],indexedCards[5],indexedCards[5],indexedCards[1]]
+}
+console.log(Cards.CheeseFactory.reward(player))
