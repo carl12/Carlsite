@@ -29,6 +29,17 @@ function printCards(cards){
 	return str;
 }
 
+function printLandmarks(landmarks){
+	var str = "";
+	for(i in landmarks){
+		if(landmarks[i]){
+
+			str += indexedCards[firstLandmarkLoc +parseInt(i)].name + " ";
+		}
+	}
+	return str;
+}
+
 class LineWrapper{
 	constructor(x1,y1,x2,y2){
 		this.x1 = x1;
@@ -156,12 +167,15 @@ class CanvasManager{
 		
 		ctx.fillText(Game.players[0].money, 10, 20);
 		ctx.fillText(printCards(Game.players[0].cards), 10, 30);
+		ctx.fillText(printLandmarks(Game.players[0].landmarks), 10, 40);
 		
 		ctx.fillText(Game.players[1].money, this.left+10, this.bottom+20);
 		ctx.fillText(printCards(Game.players[1].cards), this.left+10, this.bottom+30);
+		ctx.fillText(printLandmarks(Game.players[1].landmarks), this.left+10, this.bottom+40);
 		
 		ctx.fillText(Game.players[2].money, this.right+10,20);
 		ctx.fillText(printCards(Game.players[2].cards), this.right+10,30);
+		ctx.fillText(printLandmarks(Game.players[2].landmarks), this.right+10, 40);
 		// Game.players[1].money
 		// Game.players[2].money
 

@@ -12,7 +12,9 @@ category=['none','farm','animal','food','natural','factory','business'];
 firstLandmarkLoc = 15;
 
 function reward_func(player){
-	console.log('implement reward function');
+	//TODO - implement rewards that require input. 
+	// console.log('implement reward function');
+	return 0;
 }
 
 function per_build_maker(buildingType){
