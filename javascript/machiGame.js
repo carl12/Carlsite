@@ -87,13 +87,15 @@ Game = {
 
 			//TODO - check for radio tower for reroll
 
-			if(currPlayer.landmarks[2] && a === b){
-				//TODO - add go again functionality
-			}
-
 			Game.roll = a + b;
 			Game.turnState.phase += 2;
-			return true;
+			if(currPlayer.landmarks[2] && a === b){
+				Game.turnState.amuseDoubles = true;
+				//TODO - add go again functionality
+			} else {
+				return true;
+			}
+
 		} else {
 			return false;
 		}
@@ -196,12 +198,14 @@ Game = {
 	nextPlayer:function(){
 		Game.checkWinner();
 		if(!Game.turnState.gameOver){
-			Game.turnState.playerTurn < Game.players.length - 1 ? Game.turnState.playerTurn++ : Game.turnState.playerTurn = 0;
-			Game.turnState.phase = 0;
-			Game.turn += 1;
-			if(Game.turnState.playerTurn == 0){
-				// print('-----------'); 
+			if(Game.turnState.amuseDoubles && !Game.turnState.isSecond){
+				Game.turnState.isSecond = true;
+				print('woo taking another turn!!')
+			} else {
+				Game.turnState.playerTurn < Game.players.length - 1 ? Game.turnState.playerTurn++ : Game.turnState.playerTurn = 0;
+				Game.turn += 1;
 			}
+			Game.turnState.phase = 0;
 		}
 		else{
 			// print('game over!');
