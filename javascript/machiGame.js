@@ -29,7 +29,7 @@ Game = {
 
 		Game.turnState = {'playerTurn':0, 'phase':0, 'amuseDoubles':false, 'isSecond':false,
 							'rewardResponse':-1, 'gameOver':false};
-
+		Game.inputQueue = [];
 		Game.numPlayers = 4;
 		Game.players = [];
 		Game.rollDist = new Array(12).fill(0);
@@ -107,14 +107,42 @@ Game = {
 	startRewardPhase:function(){
 		//TODO - check if reward cards require player input then move to input reward phase
 		for(var i in Game.players){
-			Game.players[i].rewards(Game.roll, Game.turnState.playerTurn == i);
+			var p = Game.players[i];
+			var isTurn = Game.turnState.playerTurn == i;
+			var pre = p.money;
+			for(var j in p.cards){
+				var c = p.cards[j];
+				if(c.triggers.includes(Game.roll) && c.triggersOn(isTurn))
+				{
+					if(c.noInput){
+						if(c.triggersOn === trigger.red){
+							var currPlayer = Game.players[Game.turnState.playerTurn];
+							var moneyLost = Math.min(currPlayer.money, c.reward(p));
+							Game.players[Game.turnState.playerTurn].money -= moneyLost;
+							p.money += moneyLost;
+
+						} else {
+							p.money += c.reward(p);
+						}
+					} else {
+						print(c , ' requires input ');
+						Game.inputQueue.push([p, c, Game.roll]);
+					}
+				}
+			}
+			p.winnings.push(p.money - pre);
 		}
-		Game.turnState.phase += 2;
+		if(Game.inputQueue.length === 0){
+			Game.turnState.phase += 2;
+		} else {
+			Game.turnState.phase += 1;
+		}
 
 	},
 
 	inputRewardPhase:function(input){
-		//TODO - make this function
+		var resovling = Game.inputQueue.pop()
+
 		return false;
 	},
 

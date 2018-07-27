@@ -38,7 +38,7 @@ function genRandomStrat(){
 	var length = randInt(1,10);
 	var generated = [];
 	for(var i = 0; i < length; i++){
-		generated.push([randIntTwoRange(0,6,9,12),randInt(1,6)]);
+		generated.push([randIntTwoRange(0,6,9,14),randInt(1,6)]);
 
 	}
 	// console.log(generated);
@@ -59,14 +59,7 @@ class Player{
 	}
 
 	rewards(roll, isTurn){
-		var pre = this.money;
-		for(var i in this.cards){
-			var c = this.cards[i];
-			if(c.triggers.includes(roll) && c.triggersOn(isTurn)){
-				this.money += c.reward(this);
-			}
-		}
-		this.winnings.push(this.money - pre);
+
 	}
 
 	buyCard(card){
@@ -94,16 +87,16 @@ class AIPlayer extends Player {
 		this.doubles = false;
 		this.strat = [[16,1], [4,6], [18,1], [17,1], [15,1]];
 		if(this.name[0] == 'A'){
-			this.strat = [[5,5],[5,4],[18,1],[5,3],[5,4],[17,1],[16,1],[15,1],[0,5],[11,3],[5,1],[10,3]];
-			this.doubles = true;
+			this.strat = [[1,2],[0,5],[3,5],[16,1],[15,1],[18,1],[17,1]];
+			this.doubles = false;
 		} else if(this.name[0] == 'B'){
-			this.strat = [[1,1],[0,3],[1,3],[5,4],[17,1],[5,3],[18,1],[11,5],[11,5],[0,1],[15,1],[16,1]];
-			this.doubles = true;
 
+			this.strat = [[1,3],[17,1],[4,1],[18,1],[5,3],[0,1],[15,1],[12,1],[16,1],[4,5],[2,2]];
+			this.doubles = false;
 		} else {
-			this.strat = [[1,3],[1,4],[5,4],[11,2],[17,1],[18,1],[15,1],[16,1],[10,3],[4,4]];
-			this.doubles = true;
 			
+			this.strat = [[16,1],[0,4],[15,1],[1,4],[2,5],[18,1],[17,1]];
+			this.doubles = false;
 		}
 		
 		

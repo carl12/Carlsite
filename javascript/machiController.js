@@ -73,7 +73,7 @@ var iterations = 30;
 var maxGen = 5;
 var currGen = 1;
 var currMetaGen = 1;
-var maxMetaGen = 3;
+var maxMetaGen = 4;
 
 var bestScore = [-1];
 var bestScoreGene = [];
@@ -100,10 +100,11 @@ function runGeneration(){
 			currGen = 1;
 
 			setTimeout(genPopulation);
-			setTimeout(runGeneration)
-			print('~~~~~~~~~~~~~')
-			print('Running Meta Gen ', currMetaGen, ' of ' ,maxMetaGen);
-			print('~~~~~~~~~~~~~')
+			setTimeout(runGeneration);
+			setTimeout(print,0,'~~~~~~~~~~~~~');
+			setTimeout(print,0,'Running Meta Gen ', currMetaGen, ' of ' ,maxMetaGen);
+			setTimeout(print,0,'~~~~~~~~~~~~~');
+			
 
 		} else {
 			setTimeout(print,0,'------ All Finished! ------');

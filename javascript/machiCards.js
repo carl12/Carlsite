@@ -29,19 +29,21 @@ function per_build_maker(buildingType){
 
 function basicReward(player){
 	if(this.category == 3 && player.landmarks[1]){
-		player.money++;
+		return this.rewardVal + 1;
 	}
 	return this.rewardVal;
 }
 
 
 
+
 rewards={
 	basicReward:basicReward,
-	steal1:reward_func,
+	stealn:basicReward,
 	stealAll:reward_func,
 	trade1:reward_func,
 	per_build:per_build_maker
+
 }
 
 
@@ -51,7 +53,7 @@ Cards = {
 		cost:1,
 		triggersOn:trigger.blue,
 		triggers:[1],
-		fixed:true,
+		noInput:true,
 		rewardVal:1,
 		reward:rewards.basicReward,
 		remain:6,
@@ -65,7 +67,7 @@ Cards = {
 		cost:1,
 		triggersOn:trigger.blue,
 		triggers:[2],
-		fixed:true,
+		noInput:true,
 		rewardVal:1,
 		reward:rewards.basicReward,
 		remain:6,
@@ -79,7 +81,7 @@ Cards = {
 		cost:1,
 		triggersOn:trigger.green,
 		triggers:[2,3],
-		fixed:true,
+		noInput:true,
 		rewardVal:1,
 		reward:rewards.basicReward,
 		remain:6,
@@ -93,9 +95,9 @@ Cards = {
 		cost:2,
 		triggersOn:trigger.red,
 		triggers:[3],
-		fixed:false,
+		noInput:true,
 		rewardVal:1,
-		reward:rewards.steal1,
+		reward:rewards.stealn,
 		remain:6,
 		category:3,
 		isLandmark:false,
@@ -107,7 +109,7 @@ Cards = {
 		cost:2,
 		triggersOn:trigger.green,
 		triggers:[4],
-		fixed:true,
+		noInput:true,
 		rewardVal:3,
 		reward:rewards.basicReward,
 		remain:6,
@@ -121,7 +123,7 @@ Cards = {
 		cost:3,
 		triggersOn:trigger.blue,
 		triggers:[5],
-		fixed:true,
+		noInput:true,
 		rewardVal:1,
 		reward:rewards.basicReward,
 		remain:6,
@@ -135,7 +137,7 @@ Cards = {
 		cost:6,
 		triggersOn:trigger.purple,
 		triggers:[6],
-		fixed:false,
+		noInput:false,
 		rewardVal:2,
 		reward:rewards.stealAll,
 		remain:6,
@@ -149,9 +151,9 @@ Cards = {
 		cost:7,
 		triggersOn:trigger.purple,
 		triggers:[6],
-		fixed:false,
+		noInput:false,
 		rewardVal:6,
-		reward:rewards.steal1,
+		reward:rewards.stealn,
 		remain:6,
 		category:6,
 		isLandmark:false,
@@ -163,7 +165,7 @@ Cards = {
 		cost:8,
 		triggersOn:trigger.purple,
 		triggers:[6],
-		fixed:false,
+		noInput:false,
 		rewardVal:0,
 		reward:rewards.trade1,
 		remain:6,
@@ -177,7 +179,7 @@ Cards = {
 		cost:5,
 		triggersOn:trigger.green,
 		triggers:[7],
-		fixed:false,
+		noInput:true,
 		rewardVal:3,
 		reward:rewards.per_build(2),
 		remain:6,
@@ -191,7 +193,7 @@ Cards = {
 		cost:3,
 		triggersOn:trigger.green,
 		triggers:[8],
-		fixed:false,
+		noInput:true,
 		rewardVal:3,
 		reward:rewards.per_build(4),
 		remain:6,
@@ -205,7 +207,7 @@ Cards = {
 		cost:6,
 		triggersOn:trigger.blue,
 		triggers:[9],
-		fixed:true,
+		noInput:true,
 		rewardVal:5,
 		reward:rewards.basicReward,
 		remain:6,
@@ -214,7 +216,48 @@ Cards = {
 		position:11,
 		src:''
 	},
-
+	FamilyRestaurant:{
+		name:"Family Restaurant",
+		cost:3,
+		triggersOn:trigger.red,
+		triggers:[9,10],
+		noInput:true,
+		rewardVal:2,
+		reward:rewards.stealn,
+		remain:6,
+		category:3,
+		isLandmark:false,
+		position:12,
+		src:''
+	},
+	AppleOrchard:{
+		name:"Apple Orchard",
+		cost:3,
+		triggersOn:trigger.blue,
+		triggers:[10],
+		noInput:true,
+		rewardVal:3,
+		reward:rewards.basicReward,
+		remain:6,
+		category:1,
+		isLandmark:false,
+		position:13,
+		src:''
+	},
+	FruitAndVegetableMarket:{
+		name:"Fruit and Vegetable Market",
+		cost:2,
+		triggersOn:trigger.green,
+		triggers:[11,12],
+		noInput:true,
+		rewardVal:2,
+		reward:rewards.per_build(1),
+		remain:6,
+		category:0,
+		isLandmark:false,
+		position:14,
+		src:''
+	},
 	Station:{
 		name:"Station",
 		cost:4,
