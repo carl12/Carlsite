@@ -152,7 +152,7 @@ Game = {
 		if(input !== undefined && input.card !== undefined){
 			card = input.card;
 			//check card is valid
-			currPlayer = Game.players[Game.turnState.playerTurn];
+			var currPlayer = Game.players[Game.turnState.playerTurn];
 			if(!card.isLandmark){
 				if(card.cost <= currPlayer.money && card.remain > 0){
 					currPlayer.buyCard(card);
@@ -200,7 +200,7 @@ Game = {
 		if(!Game.turnState.gameOver){
 			if(Game.turnState.amuseDoubles && !Game.turnState.isSecond){
 				Game.turnState.isSecond = true;
-				print('woo taking another turn!!')
+				// print('woo taking another turn!!')
 			} else {
 				Game.turnState.playerTurn < Game.players.length - 1 ? Game.turnState.playerTurn++ : Game.turnState.playerTurn = 0;
 				Game.turn += 1;

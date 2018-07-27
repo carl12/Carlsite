@@ -77,27 +77,51 @@ class Player{
 		return this.winnings.reduce((a, b) => a + b, 0);
 	}
 }
+aiStratList = [
 
+[[[1,2],[17,1],[5,2],[15,1],[18,1],[9,2],[0,1],[16,1],[1,5],[3,2],[0,4]],1], //new guy on da block - bad in last place somehow
+
+[[[17,1],[18,1],[5,2],[0,2],[15,1],[16,1],[1,5],[5,5],[10,3],[1,2],[1,3],[2,1],[1,3]],1], //sketchy one - fixed by changing to 1
+[[[17,1],[16,1],[0,3],[2,5],[18,1],[3,4],[15,1],[5,2]], false],
+[[[5,4],[1,1],[18,1],[11,1],[15,1],[17,1],[1,3],[16,1],[10,2],[4,2],[10,4],[1,3]],true],
+
+
+
+//ousted first place, only got ~29%
+[[[0,4],[1,4],[18,1],[3,5],[16,1],[15,1],[17,1]],false],
+
+
+]
+
+numAiWins = [0,0,0,0,0]
+
+bTeam = [
+[[[5,2],[17,1],[1,3],[12,1],[11,1],[15,1],[0,1],[10,4],[16,1],[18,1],[1,2],[3,3]],0],
+
+]
 class AIPlayer extends Player {
 	constructor(name){
 		super(name);
 		
 		this.isHuman = false;
 		var version = Math.floor(Math.random()*2);
-		this.doubles = false;
-		this.strat = [[16,1], [4,6], [18,1], [17,1], [15,1]];
-		if(this.name[0] == 'A'){
-			this.strat = [[1,2],[0,5],[3,5],[16,1],[15,1],[18,1],[17,1]];
-			this.doubles = false;
-		} else if(this.name[0] == 'B'){
+		this.aiChoice = randInt(0,aiStratList.length);
 
-			this.strat = [[1,3],[17,1],[4,1],[18,1],[5,3],[0,1],[15,1],[12,1],[16,1],[4,5],[2,2]];
-			this.doubles = false;
-		} else {
-			
-			this.strat = [[16,1],[0,4],[15,1],[1,4],[2,5],[18,1],[17,1]];
-			this.doubles = false;
-		}
+		this.strat = aiStratList[this.aiChoice][0];
+		this.doubles = aiStratList[this.aiChoice][1];
+
+		// if(this.name[0] == 'A'){
+		// 	this.doubles = aiStratList[0][1];
+		// 	this.strat = aiStratList[0][0];
+		// } else if(this.name[0] == 'B'){
+
+		// 	this.strat = aiStratList[1][0];
+		// 	this.doubles = aiStratList[1][1];
+		// } else {
+		// 	this.strat = aiStratList[2][0];
+		// 	this.doubles = aiStratList[2][1];
+
+		// }
 		
 		
 		

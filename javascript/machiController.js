@@ -69,7 +69,7 @@ var scores = [];
 var winners;
 var scoreBreakpoint;
 
-var iterations = 30;
+var iterations = 1000;
 var maxGen = 5;
 var currGen = 1;
 var currMetaGen = 1;
@@ -78,6 +78,7 @@ var maxMetaGen = 4;
 var bestScore = [-1];
 var bestScoreGene = [];
 var bestScoreGen = [];
+var bestStratScores = [];
 
 var spotWinner = [0, 0, 0, 0];
 
@@ -131,7 +132,7 @@ function printFinalist(){
 	print(bestScore);
 	print(bestScoreGen);
 	print('-~-~-~-~-~-~-~');
-	print(JSON.stringify(bestScoreGene[bestScoreGene.length-1][0]))
+	print(JSON.stringify(bestScoreGene[bestScoreGene.length-1]))
 }
 
 function genPopulation(){
@@ -158,15 +159,24 @@ function runGames(){
 	}
 }
 
-function runOneStrat(i){
-	
+function runOneStrat(i, isRerun = false){
+
 	var score1 = 0;
+	var currStrat = pop[i];
+	var bestStrat = false;
+	var playLoc;
+
+	if(currStrat == bestScoreGene[bestScoreGene.length-1]){
+		bestStrat =true;
+	}
 	for(var j = 0; j < iterations; j++){
 		Game.init();
-		Game.players[2].strat = pop[i][0];
-		Game.players[2].doubles = pop[i][1];
+		playLoc = randInt(0,4);
+		Game.players[playLoc].strat = currStrat[0];
+		Game.players[playLoc].doubles = currStrat[0];
+		Game.players[playLoc].aiChoice = -1;
 		var k = 0; 
-		while(Game.winner === -1 && k < 600){
+		while(Game.winner === -1 && k < 1000){
 			k++;
 			while(!Game.requireInput() && Game.winner == -1){
 				Game.next();
@@ -181,9 +191,23 @@ function runOneStrat(i){
 		}
 		
 		spotWinner[Game.winner]+= 1;
-		if (Game.winner === 2){
-			score1 += 1;
+		for(var k = 0; k < Game.players.length; k++){
+			let p = Game.players[k];
+			if(Game.winner === k){
+				if(k === playLoc){
+					score1 += 1;
+				} else {
+					numAiWins[p.aiChoice] ++;
+				}
+
+			} 
+
 		}
+
+	}
+	if(bestStrat){
+		print('best strat scored ', score1);
+		bestStratScores.push(score1);
 	}
 	scores[i] = score1;	
 }
@@ -199,8 +223,12 @@ function getWinners() {
 		bestScore.push(sortedScores[0]);
 		bestScoreGene.push(pop[scores.indexOf(sortedScores[0])]);
 		bestScoreGen.push([currMetaGen, currGen]);
+		var bestScoreLoc = scores.indexOf(sortedScores[0]);
+		bestStratScores.push(sortedScores[0]);
+
 
 		print('New record! ', sortedScores[0]);
+		runOneStrat(bestScoreLoc, true);
 		print('Record setting gene: ', bestScoreGene);
 	}
 
@@ -238,6 +266,7 @@ function nextGeneration(){
 
 
 function outputWinners(){
+
 	// print('scores are ', scores);
 	// print('Population is ', pop);
 	// print('breakpoint is ', scoreBreakpoint);
