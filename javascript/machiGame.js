@@ -1,5 +1,5 @@
 pr = print = console.log
-print('blah')
+
 
 
 
@@ -30,7 +30,7 @@ Game = {
 		Game.turnState = {'playerTurn':0, 'phase':0, 'amuseDoubles':false, 'isSecond':false,
 							'rewardResponse':-1, 'gameOver':false};
 
-		Game.numPlayers = 3;
+		Game.numPlayers = 4;
 		Game.players = [];
 		Game.rollDist = new Array(12).fill(0);
 		Game.roll = 0;

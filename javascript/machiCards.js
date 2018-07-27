@@ -175,7 +175,7 @@ Cards = {
 	CheeseFactory:{
 		name:"Cheese Factory",
 		cost:5,
-		triggersOn:trigger.blue,
+		triggersOn:trigger.green,
 		triggers:[7],
 		fixed:false,
 		rewardVal:3,

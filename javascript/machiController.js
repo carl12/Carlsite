@@ -24,7 +24,7 @@ manage.draw();
 
 function runGame(){
 	var i =0;
-	while(i < 200){	
+	while(i < 1000){	
 		Game.init();
 		i++;
 		while(Game.winner === -1){
@@ -32,11 +32,6 @@ function runGame(){
 			
 			while(!Game.requireInput() && Game.winner == -1){
 				Game.next();
-				// if (Game.winner != -1){
-				// 	print(Game.winner)
-				// 	print(Game.players[Game.winner].cards);
-				// 	// return true;
-				// }
 			}
 			if(Game.winner != -1){
 				break;
@@ -51,22 +46,16 @@ function runGame(){
 				response = inputType.player.takeInput(inputType);
 			}
 			result = Game.next(response);
+			// manage.draw();
 		}
-		var score = 0;
-		for (var j = 0; j < 4; j++){
-			if(Game.players[2].landmarks[i]){
-				score += 0.25;
-				print(score)
-				print('blah1')
-			}
-		}
-		print(score);
-		if (score > 0){
-			print('asdf')
-			print('score is ',score)
+		// var score = 0;
+		
+		// print(Game.winner);
+		if (Game.winner == 2){
 			print(Game.players[2].income(), ' won by rando');
 			print(Game.players[2].strat);
 			print(Game.players[2].cards);
+			print('-------');
 		
 		}
 		// Game.init();
@@ -74,6 +63,191 @@ function runGame(){
 	print('done')
 }
 
-runGame();
+var pop = [];
+var popSize = 150;
+var scores = [];
+var winners;
+var scoreBreakpoint;
+
+var iterations = 30;
+var maxGen = 5;
+var currGen = 1;
+var currMetaGen = 1;
+var maxMetaGen = 3;
+
+var bestScore = [-1];
+var bestScoreGene = [];
+var bestScoreGen = [];
+
+var spotWinner = [0, 0, 0, 0];
+
+
+
+
+
+function runGeneration(){
+	print('--------------');
+	print('GENERATION ', currGen ,' OF ',maxGen);
+	print('--------------');
+	runGames();
+	setTimeout(getWinners);
+	setTimeout(nextGeneration);
+	setTimeout(outputWinners);
+	if(currGen++ < maxGen){
+		setTimeout(runGeneration);
+	} else {
+		if(currMetaGen++ < maxMetaGen){
+			currGen = 1;
+
+			setTimeout(genPopulation);
+			setTimeout(runGeneration)
+			print('~~~~~~~~~~~~~')
+			print('Running Meta Gen ', currMetaGen, ' of ' ,maxMetaGen);
+			print('~~~~~~~~~~~~~')
+
+		} else {
+			setTimeout(print,0,'------ All Finished! ------');
+			setTimeout(printFinalist)
+		}
+	}
+
+}
+function startGenetic(){
+	genPopulation();
+	runGeneration();
+	
+}
+
+function printFinalist(){
+
+	var total = spotWinner.reduce((a, b) => a + b, 0);
+	var b = spotWinner.map(x => x / total);
+
+	print('------------');
+	print(spotWinner);
+	print(b);
+	print('-~-~-~-~-~-~-~');
+	print(bestScore);
+	print(bestScoreGen);
+	print('-~-~-~-~-~-~-~');
+	print(JSON.stringify(bestScoreGene[bestScoreGene.length-1][0]))
+}
+
+function genPopulation(){
+	pop = [];
+	var builds = [];
+	var doubles;
+	var bestScoreGeneCopy = bestScoreGene.slice(0,bestScoreGene.length);
+	while(bestScoreGeneCopy.length > 0){
+		pop.push(bestScoreGeneCopy.pop());
+	}
+	for(var i = pop.length - 1; i < popSize; i++){
+		builds = genRandomStrat();
+		doubles = randInt(0,2);
+		pop.push([builds, doubles])
+	}
+}
+
+
+
+function runGames(){
+	for(var i = 0; i < popSize; i++){
+		var currGene = pop[i];
+		setTimeout(runOneStrat, 0, i);
+	}
+}
+
+function runOneStrat(i){
+	
+	var score1 = 0;
+	for(var j = 0; j < iterations; j++){
+		Game.init();
+		Game.players[2].strat = pop[i][0];
+		Game.players[2].doubles = pop[i][1];
+		var k = 0; 
+		while(Game.winner === -1 && k < 600){
+			k++;
+			while(!Game.requireInput() && Game.winner == -1){
+				Game.next();
+			}
+			if(Game.winner != -1) {
+				break;
+			}
+			inputType = Game.getInputType();
+			var response;
+			response = inputType.player.takeInput(inputType);
+			Game.next(response);
+		}
+		
+		spotWinner[Game.winner]+= 1;
+		if (Game.winner === 2){
+			score1 += 1;
+		}
+	}
+	scores[i] = score1;	
+}
+
+function getWinners() {
+	winners = [];
+	//sort from highest to lowest
+	var sortedScores = scores.slice(0,scores.length).sort((a,b)=>b-a);
+	var breakpoint = sortedScores.length/5;
+	// print('sorted scores' ,sortedScores)
+
+	if(sortedScores[0] > bestScore[bestScore.length-1]){
+		bestScore.push(sortedScores[0]);
+		bestScoreGene.push(pop[scores.indexOf(sortedScores[0])]);
+		bestScoreGen.push([currMetaGen, currGen]);
+
+		print('New record! ', sortedScores[0]);
+		print('Record setting gene: ', bestScoreGene);
+	}
+
+	var i = breakpoint;
+	while(sortedScores[i] < 1){
+		i--;
+	}
+	scoreBreakpoint = sortedScores[i];
+	// print('breakpoint for going forward is ', scoreBreakpoint)
+	for(var i = 0; i < scores.length; i++){
+		if(scores[i] >= scoreBreakpoint){
+			winners.push(i);
+		}
+	}
+	console.log('out of ',pop.length,' strats, we have ', winners.length, ' winners');
+	return i;
+}
+
+function nextGeneration(){
+	var numCopies = popSize/winners.length;
+	var newPop = [];
+	for(var i = 0; i < winners.length; i++){
+		var currGene = pop[winners[i]];
+		newPop.push(currGene);
+		for(var j = 1; i*numCopies + j < Math.floor(numCopies*(i+1)); j++){
+
+			newPop.push([shuffle(currGene[0]),currGene[1]]);
+		}
+	}
+	pop = newPop;
+	// print('we made a new pop with ', pop.length, ' which should be the same as ', popSize);
+	
+}
+
+
+
+function outputWinners(){
+	// print('scores are ', scores);
+	// print('Population is ', pop);
+	// print('breakpoint is ', scoreBreakpoint);
+}
+
+canvas.addEventListener('mouseover', function(e) {
+	manage.draw();
+
+});
+
+
+startGenetic();
 
 

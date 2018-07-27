@@ -236,10 +236,8 @@ class CanvasManager{
 // manage.addNewImage('images/d1.jpg', 0, 0);
 
 
-canvas.addEventListener('mouseover', function(e) {
-	manage.draw();
 
-});
+
 
 // var counter = 0;
 // var gameLoop = setInterval(function(){

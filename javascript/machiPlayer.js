@@ -1,6 +1,6 @@
-function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
-
+function shuffle(arrIn) {
+  var currentIndex = arrIn.length, temporaryValue, randomIndex;
+  var array = arrIn.slice(0,arrIn.length);
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
 
@@ -38,7 +38,7 @@ function genRandomStrat(){
 	var length = randInt(1,10);
 	var generated = [];
 	for(var i = 0; i < length; i++){
-		generated.push([randIntTwoRange(1,6,9,12),randInt(1,6)]);
+		generated.push([randIntTwoRange(0,6,9,12),randInt(1,6)]);
 
 	}
 	// console.log(generated);
@@ -92,15 +92,17 @@ class AIPlayer extends Player {
 		this.isHuman = false;
 		var version = Math.floor(Math.random()*2);
 		this.doubles = false;
+		this.strat = [[16,1], [4,6], [18,1], [17,1], [15,1]];
 		if(this.name[0] == 'A'){
-			this.strat = [[1,6], [15,1], [18,1], [17,1], [16,1], [9,3]];
+			this.strat = [[5,5],[5,4],[18,1],[5,3],[5,4],[17,1],[16,1],[15,1],[0,5],[11,3],[5,1],[10,3]];
 			this.doubles = true;
 		} else if(this.name[0] == 'B'){
-			this.strat = [[16,1], [4,6], [18,1], [17,1], [15,1]];
+			this.strat = [[1,1],[0,3],[1,3],[5,4],[17,1],[5,3],[18,1],[11,5],[11,5],[0,1],[15,1],[16,1]];
+			this.doubles = true;
 
 		} else {
-			this.strat = genRandomStrat();
-			this.doubles = randInt(0,2);
+			this.strat = [[1,3],[1,4],[5,4],[11,2],[17,1],[18,1],[15,1],[16,1],[10,3],[4,4]];
+			this.doubles = true;
 			
 		}
 		
@@ -109,6 +111,7 @@ class AIPlayer extends Player {
 
 
 	}
+
 	takeInput(input) {
 		var num = input.phase;
 		
