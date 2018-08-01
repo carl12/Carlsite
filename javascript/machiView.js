@@ -114,6 +114,7 @@ class cardImageWrapper extends ImageWrapper{
 
 class CanvasManager{
 	constructor(ctx){
+		this.messageText = "Starting messageText";
 		this.ctx = ctx
 		this.images = []
 		this.lines = []
@@ -164,7 +165,8 @@ class CanvasManager{
 
 		}
 
-		
+		ctx.fillText(this.messageText, 400, 30);
+
 		ctx.fillText(Game.players[0].money, 10, 20);
 		ctx.fillText(printCards(Game.players[0].cards), 10, 30);
 		ctx.fillText(printLandmarks(Game.players[0].landmarks), 10, 40);

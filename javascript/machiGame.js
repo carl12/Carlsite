@@ -4,7 +4,7 @@ pr = print = console.log
 
 
 function rollDice(){
-	return Math.ceil(Math.random() * 6);
+	return randInt(1,7);
 }
 
 function allTrue(value){
@@ -14,10 +14,11 @@ function allTrue(value){
 Game = {
 	genericNames:['Aaron','Bob','Carl','Devon'],
 
-	init:function(){
+	init:function(print = false){
 		for(var j in indexedCards){
 			indexedCards[j].remain = 6;
 		}
+		Game.print = print;
 		Game.turn = 0;
 		Game.winner = -1;
 		Game.turnPhases = [Game.rollPhase, Game.rerollPhase, Game.startRewardPhase,
@@ -85,11 +86,18 @@ Game = {
 				Game.rollDist[Game.roll-1] ++;	
 			}
 
+
 			//TODO - check for radio tower for reroll
 
 			Game.roll = a + b;
+			if(Game.print){
+				print(Game.roll ,' rolled');
+			}
 			Game.turnState.phase += 2;
 			if(currPlayer.landmarks[2] && a === b){
+				if(Game.print){
+					print(currPlayer.name,' takes a second turn!')
+				}
 				Game.turnState.amuseDoubles = true;
 				//TODO - add go again functionality
 			} else {
@@ -139,6 +147,9 @@ Game = {
 		} else {
 			Game.turnState.phase += 1;
 		}
+		if(Game.print){
+				print('reward phase over');
+		}
 
 	},
 
@@ -156,6 +167,9 @@ Game = {
 			if(!card.isLandmark){
 				if(card.cost <= currPlayer.money && card.remain > 0){
 					currPlayer.buyCard(card);
+					if(Game.print){
+						print(currPlayer.name , ' bought ', card.name);
+					}
 					// print(card.name, ' bought');
 				} else {
 					// print('Card purchase failed, either insufficient money or none remain');
@@ -167,6 +181,9 @@ Game = {
 				// print('trying to buy a landmark')
 				if(card.cost <= currPlayer.money && !currPlayer.landmarks[card.landmarkPosition]){
 					currPlayer.buyCard(card);
+					if(Game.print){
+						print(currPlayer.name , ' bought ', card.name, ' !!');
+					}
 					// print(card.name, ' bought!!!');
 				} else {
 					// print('Landmark purchase failed, either insufficient money or already own');
@@ -187,6 +204,9 @@ Game = {
 				Game.winner = parseInt(i);
 				//TODO - add tiebreaking logic
 				// print('Add tie-breaking logic');
+				if(Game.print){
+						print(Game.players[winner] , ' won!');
+				}
 				break;
 			}
 		}
@@ -204,6 +224,9 @@ Game = {
 			} else {
 				Game.turnState.playerTurn < Game.players.length - 1 ? Game.turnState.playerTurn++ : Game.turnState.playerTurn = 0;
 				Game.turn += 1;
+				if(Game.print){
+					print('It is now ', Game.players[Game.turnState.playerTurn].name,"'s turn!");
+				}
 			}
 			Game.turnState.phase = 0;
 		}
@@ -223,20 +246,8 @@ Game = {
 Game.turnPhases = [Game.rollPhase, Game.rerollPhase, Game.startRewardPhase,
 						Game.inputRewardPhase, Game.buyPhase, Game.nextPlayer];
 
-turnPhases = [
-	{
-		name:'rollPhase',
-		func:Game.rollPhase.bind(Game),
-		input:'oneOrTwoDice'
-	},
-	{
-		name:'rerollPhase',
-				
-
-	},
-
-]
-
+Game.turnPhaseNames = ['Roll Phase', 'Reroll Phase', 'Starting Reward Phase', 
+	'Input Reward Phase', 'Buy Phase', 'Next Player Phase'];
 
 
 

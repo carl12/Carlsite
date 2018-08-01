@@ -51,7 +51,8 @@ class Player{
 	constructor(name){
 		this.name = name;
 		this.money = 2;
-		this.cards = [];
+		this.cards = [indexedCards[0], indexedCards[2]];
+
 		this.landmarks = [false,false,false,false];
 		this.winnings = [];
 		this.buildingCount = new Array(19).fill(0);
@@ -78,24 +79,36 @@ class Player{
 	}
 }
 aiStratList = [
-
-[[[1,2],[17,1],[5,2],[15,1],[18,1],[9,2],[0,1],[16,1],[1,5],[3,2],[0,4]],1], //new guy on da block - bad in last place somehow
-
-[[[17,1],[18,1],[5,2],[0,2],[15,1],[16,1],[1,5],[5,5],[10,3],[1,2],[1,3],[2,1],[1,3]],1], //sketchy one - fixed by changing to 1
-[[[17,1],[16,1],[0,3],[2,5],[18,1],[3,4],[15,1],[5,2]], false],
-[[[5,4],[1,1],[18,1],[11,1],[15,1],[17,1],[1,3],[16,1],[10,2],[4,2],[10,4],[1,3]],true],
-
-
-
-//ousted first place, only got ~29%
-[[[0,4],[1,4],[18,1],[3,5],[16,1],[15,1],[17,1]],false],
-
-
+[[[16,1],[3,3],[4,4],[18,1],[0,2],[15,1],[0,1],[17,1],[2,3]],0],//335 avg 31%
+[[[5,3],[15,1],[10,2],[16,1],[0,3],[17,1],[18,1],[11,1]],1],//337
+[[[1,2],[16,1],[3,3],[1,2],[2,2],[3,5],[17,1],[1,5],[18,1],[5,2],[2,1],[15,1]],0],//401
+[[[1,3],[16,1],[3,4],[2,1],[18,1],[15,1],[17,1]],0],
+[[[1,1],[16,1],[17,1],[3,3],[18,1],[4,1],[0,5],[15,1]],0],//354
+[[[1,5],[0,3],[3,2],[16,1],[4,1],[0,2],[18,1],[15,1],[17,1]],0], //516?!?!
 ]
 
-numAiWins = [0,0,0,0,0]
+nWins = new Array(aiStratList.length).fill(0);
+expWins = new Array(aiStratList.length).fill(0);
+expLoss = new Array(aiStratList.length).fill(0);
+gamesPlayed = new Array(aiStratList.length).fill(0);
 
 bTeam = [
+[[[16,1],[17,1],[18,1],[0,3],[2,5],[2,5],[4,4],[15,1],[5,5]],0],//408
+[[[11,1],[17,1],[18,1],[16,1],[5,5],[15,1],[1,5],[5,4],[0,2],[1,4],[10,5],[2,5],[1,1]],1],
+[[[11,2],[5,3],[17,1],[1,3],[16,1],[0,2],[18,1],[15,1],[10,4],[0,1],[4,4]],1], //Scored a 429/1000 ?!?!
+
+[[[1,2],[18,1],[0,2],[16,1],[2,5],[5,1],[3,4],[2,2],[15,1],[17,1],[13,1]],0],
+//Above on patch where start with wheat field and bakery
+[[[1,1],[18,1],[16,1],[2,5],[17,1],[5,2],[12,3],[0,3],[15,1],[4,3],[2,5],[13,4],[2,4]],0],
+[[[1,4],[16,1],[2,5],[2,2],[12,1],[15,1],[17,1],[18,1],[3,1]],0], //439!
+[[[5,4],[1,1],[18,1],[11,1],[15,1],[17,1],[1,3],[16,1],[10,2],[4,2],[10,4],[1,3]],true],
+[[[5,3],[15,1],[17,1],[11,1],[16,1],[18,1],[1,4],[10,5],[3,4]],1], //scored a 395/1000!
+[[[1,2],[17,1],[5,2],[15,1],[18,1],[9,2],[0,1],[16,1],[1,5],[3,2],[0,4]],1], //new guy on da block - bad in last place somehow
+[[[17,1],[18,1],[5,2],[0,2],[15,1],[16,1],[1,5],[5,5],[10,3],[1,2],[1,3],[2,1],[1,3]],1], //sketchy one - fixed by changing to 1
+[[[17,1],[16,1],[0,3],[2,5],[18,1],[3,4],[15,1],[5,2]], false],
+
+//ousted first place, only got ~29% -- consistently last place in randomized game - getting demoted
+[[[0,4],[1,4],[18,1],[3,5],[16,1],[15,1],[17,1]],false], 
 [[[5,2],[17,1],[1,3],[12,1],[11,1],[15,1],[0,1],[10,4],[16,1],[18,1],[1,2],[3,3]],0],
 
 ]
@@ -154,10 +167,13 @@ class AIPlayer extends Player {
 		var buildLoc;
 		var building;
 		var quantity;
+	
 		for(var i in listOfBuildings){
+			
 			buildLoc = listOfBuildings[i][0];
 			quantity = listOfBuildings[i][1];
 			building = indexedCards[buildLoc];
+
 			if(building.isLandmark){
 				if(!this.landmarks[buildLoc - firstLandmarkLoc] && this.money >= building.cost){
 					return buildLoc;
@@ -167,6 +183,8 @@ class AIPlayer extends Player {
 					return buildLoc;
 				}
 			}
+
+			
 		}
 		return -1;
 
@@ -194,8 +212,8 @@ class AIPlayer extends Player {
 }
 
 class HumanPlayer extends Player{
-	constructor(){
-		super();
+	constructor(name){
+		super(name);
 		this.isHuman = true;
 	}
 }

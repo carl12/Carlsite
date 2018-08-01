@@ -22,45 +22,75 @@ Game.init();
 manage = new CanvasManager(ctx);
 manage.draw();
 
-function runGame(){
-	var i =0;
-	while(i < 1000){	
-		Game.init();
-		i++;
-		while(Game.winner === -1){
-			
-			
-			while(!Game.requireInput() && Game.winner == -1){
-				Game.next();
-			}
-			if(Game.winner != -1){
-				break;
-			}
-			inputType = Game.getInputType();
-			var response;
-			if (inputType.player.isHuman) {
-				//Enable listeners to receive input
-				//Enter message to prompt for input
-			} else { 
-				// Submit request to ai
-				response = inputType.player.takeInput(inputType);
-			}
-			result = Game.next(response);
-			// manage.draw();
-		}
-		// var score = 0;
-		
-		// print(Game.winner);
-		if (Game.winner == 2){
-			print(Game.players[2].income(), ' won by rando');
-			print(Game.players[2].strat);
-			print(Game.players[2].cards);
-			print('-------');
-		
-		}
-		// Game.init();
+var me;
+function initHumanGame(){
+
+	print('welcome to Machi Koro!');
+	var playLoc;
+	Game.init(true);
+	playLoc = randInt(0,3);
+	print('you are player ', playLoc);
+	Game.players[playLoc] = new HumanPlayer("Human!");
+	me = Game.players[playLoc];
+	var k = 0; 
+	runGameASDF();
+}
+
+function f(response){
+	var output = [];
+	if(Game.turnState.phase == 0){
+		output.rollTwo = response;
+
+	} else if(Game.turnState.phase == 4) {
+		if (response !== -1){
+			output.card = indexedCards[response];
+		} 
 	}
-	print('done')
+	Game.next(output);
+	runGameASDF();
+}
+function runGameASDF(){
+
+	var k = 0;
+	while(Game.winner === -1 && k < 1000){
+		k++;
+		while(!Game.requireInput() && Game.winner == -1){
+			Game.next();
+		}
+		if(Game.winner != -1) {
+			break;
+		}
+		inputType = Game.getInputType();
+		if(!Game.players[Game.turnState.playerTurn].isHuman){	
+			var response;
+			response = inputType.player.takeInput(inputType);
+			Game.next(response);
+		} else {
+			manage.messageText = Game.turnPhaseNames[inputType.phase];
+			manage.draw();
+			break;
+		}
+	}
+
+}
+
+function arrAdd(a, b, plus = 1){
+	var c = [];
+	var flip = plus ? 1 : -1;
+	for(var i = 0; i < a.length; i++)
+	{
+		c[i] = a[i] + flip * b[i];
+	}
+	return c;
+}
+
+function arrProd(a, b, times=1){
+	var c = [];
+	var flip = times ? 1: -1;
+	for(var i = 0; i < a.length; i++){
+		c[i] = a[i] * Math.pow(b[i],flip);
+	}
+	return c;
 }
 
 var pop = [];
@@ -72,8 +102,8 @@ var scoreBreakpoint;
 var iterations = 1000;
 var maxGen = 5;
 var currGen = 1;
-var currMetaGen = 1;
 var maxMetaGen = 4;
+var currMetaGen = 1;
 
 var bestScore = [-1];
 var bestScoreGene = [];
@@ -101,10 +131,10 @@ function runGeneration(){
 			currGen = 1;
 
 			setTimeout(genPopulation);
-			setTimeout(runGeneration);
 			setTimeout(print,0,'~~~~~~~~~~~~~');
 			setTimeout(print,0,'Running Meta Gen ', currMetaGen, ' of ' ,maxMetaGen);
 			setTimeout(print,0,'~~~~~~~~~~~~~');
+			setTimeout(runGeneration);
 			
 
 		} else {
@@ -122,17 +152,19 @@ function startGenetic(){
 
 function printFinalist(){
 
-	var total = spotWinner.reduce((a, b) => a + b, 0);
-	var b = spotWinner.map(x => x / total);
+	var total = nWins.reduce((a, b) => a + b, 0);
+	var b = nWins.map(x => x / total);
 
 	print('------------');
-	print(spotWinner);
+	print(nWins);
 	print(b);
+	var wonky = arrProd(arrAdd(wins,expWins, false),arrProd(arrAdd(total))
 	print('-~-~-~-~-~-~-~');
 	print(bestScore);
 	print(bestScoreGen);
 	print('-~-~-~-~-~-~-~');
 	print(JSON.stringify(bestScoreGene[bestScoreGene.length-1]))
+	alert('done!');
 }
 
 function genPopulation(){
@@ -149,8 +181,6 @@ function genPopulation(){
 		pop.push([builds, doubles])
 	}
 }
-
-
 
 function runGames(){
 	for(var i = 0; i < popSize; i++){
@@ -173,7 +203,7 @@ function runOneStrat(i, isRerun = false){
 		Game.init();
 		playLoc = randInt(0,4);
 		Game.players[playLoc].strat = currStrat[0];
-		Game.players[playLoc].doubles = currStrat[0];
+		Game.players[playLoc].doubles = currStrat[1];
 		Game.players[playLoc].aiChoice = -1;
 		var k = 0; 
 		while(Game.winner === -1 && k < 1000){
@@ -189,20 +219,32 @@ function runOneStrat(i, isRerun = false){
 			response = inputType.player.takeInput(inputType);
 			Game.next(response);
 		}
-		
+		let p;
 		spotWinner[Game.winner]+= 1;
+		var tmpExpLoss = new Array(nWins.length).fill(0);
+		var played = new Array(nWimns.length).fill(0);
 		for(var k = 0; k < Game.players.length; k++){
-			let p = Game.players[k];
-			if(Game.winner === k){
-				if(k === playLoc){
-					score1 += 1;
-				} else {
-					numAiWins[p.aiChoice] ++;
+			p = Game.players[k];
+			if(k !== playLoc){
+				if(tmpExpLoss[p.aiChoice] === 0){
+					tmpExpLoss[p.aiChoice] = 1;
+					played[p.aiChoice] = 1;
 				}
-
-			} 
-
+				tmpExpLoss[p.aiChoice] -= 1/Game.players.length;
+				expWin[p.aiChoice] += 1/Game.players.length;
+				if(Game.winner === k){
+					nWins[p.aiChoice] += 1;
+				}
+			} else {
+				if(Game.winner === k){
+					score1++;
+				}
+			}
 		}
+		for(var k = 0; k < tmpExpLoss.length; k++){
+			expLoss[k] += tmpExpLoss[k];
+		}
+
 
 	}
 	if(bestStrat){
@@ -237,7 +279,7 @@ function getWinners() {
 		i--;
 	}
 	scoreBreakpoint = sortedScores[i];
-	// print('breakpoint for going forward is ', scoreBreakpoint)
+	print('breakpoint for going forward is ', scoreBreakpoint)
 	for(var i = 0; i < scores.length; i++){
 		if(scores[i] >= scoreBreakpoint){
 			winners.push(i);
@@ -277,7 +319,8 @@ canvas.addEventListener('mouseover', function(e) {
 
 });
 
-
-startGenetic();
+// initHumanGame();
+// startGenetic();
+print('startGenetic or initHumanGame');
 
 
