@@ -99,10 +99,10 @@ var scores = [];
 var winners;
 var scoreBreakpoint;
 
-var iterations = 1000;
-var maxGen = 5;
+var iterations = 100;
+var maxGen = 4;
 var currGen = 1;
-var maxMetaGen = 4;
+var maxMetaGen = 5;
 var currMetaGen = 1;
 
 var bestScore = [-1];
@@ -117,9 +117,68 @@ var multiWins = new Array(aiStratList.length).fill(0);
 
 var spotWinner = [0,0,0,0];
 
+function testStrats(tests){
+	for(var j = 0; j < tests; j++){
+		setTimeout(runRandomStrats);
+		if(j % 30000 == 0){
+			setTimeout(print, 0, j, ' runs out of ', tests);
+		}
+	}
+	setTimeout(printAiPerformance);
+}
+
+function runRandomStrats(){
+	Game.init();
+	var k = 0; 
+	while(Game.winner === -1 && k < 1000){
+		k++;
+		while(!Game.requireInput() && Game.winner == -1){
+			Game.next();
+		}
+		if(Game.winner != -1) {
+			break;
+		}
+		inputType = Game.getInputType();
+		var response;
+		response = inputType.player.takeInput(inputType);
+		Game.next(response);
+	}
+	let p;
+	spotWinner[Game.winner]+= 1;
+
+	var aiCount = new Array(aiStratList.length).fill(0);
+	var winningAi = -1;
+	for(var k = 0; k < Game.players.length; k++){
+		p = Game.players[k];
+		
+		aiCount[p.aiChoice]++;
+		if(Game.winner == k){
+			var winningAi = p.aiChoice;
+			spotWinner[k] ++;
+		}
+		 
+	}
+	// print(aiCount);
+	for(var k = 0; k < aiCount.length; k++){
+		if(aiCount[k] > 1){
+			multiGames[k] ++;
+			if(k == winningAi){
+				multiWins[k] ++;
+			}
+		} else if(aiCount[k] > 0){
+			singleGames[k]++;
+			if(k == winningAi){
+				singleWins[k]++;
+			}
+		}
+	}
+}
 
 
-
+function startGenetic(){
+	genPopulation();
+	runGeneration();	
+}
 
 function runGeneration(){
 	print('--------------');
@@ -144,22 +203,13 @@ function runGeneration(){
 
 		} else {
 			setTimeout(print,0,'------ All Finished! ------');
+			setTimeout(printAiPerformance);
 			setTimeout(printFinalist)
 		}
 	}
-
-}
-function startGenetic(){
-	genPopulation();
-	runGeneration();
-	
 }
 
-function printFinalist(){
-
-	// var total = spotWinner.reduce((a, b) => a + b, 0);
-	// var b = nWins.map(x => x / total);
-
+function printAiPerformance(){
 	var singleWinrate = [];
 	var multiWinrate = [];
 	for(var i = 0; i < aiStratList.length; i++){
@@ -168,7 +218,16 @@ function printFinalist(){
 	}
 	print('------------');
 	print(singleWinrate);
-	print(multiWinrate);
+	// print(multiWinrate);
+	alert('done!');
+}
+
+function printFinalist(){
+
+	// var total = spotWinner.reduce((a, b) => a + b, 0);
+	// var b = nWins.map(x => x / total);
+
+
 	print('-~-~-~-~-~-~-~');
 	print(bestScore);
 	print(bestScoreGen);
