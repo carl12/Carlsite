@@ -99,10 +99,10 @@ var scores = [];
 var winners;
 var scoreBreakpoint;
 
-var iterations = 100;
+var iterations = 1000;
 var maxGen = 4;
 var currGen = 1;
-var maxMetaGen = 5;
+var maxMetaGen = 4;
 var currMetaGen = 1;
 
 var bestScore = [-1];
@@ -269,6 +269,7 @@ function runOneStrat(i, isRerun = false){
 		bestStrat =true;
 	}
 	for(var j = 0; j < iterations; j++){
+
 		Game.init();
 		playLoc = randInt(0,4);
 		Game.players[playLoc].strat = currStrat[0];
@@ -365,20 +366,35 @@ function getWinners() {
 			winners.push(i);
 		}
 	}
-	console.log('out of ',pop.length,' strats, we have ', winners.length, ' winners');
+	console.log('out of ', pop.length,' strats, we have ', winners.length, ' winners');
 	return i;
 }
 
 function nextGeneration(){
 	var numCopies = popSize/winners.length;
 	var newPop = [];
-	for(var i = 0; i < winners.length; i++){
-		var currGene = pop[winners[i]];
-		newPop.push(currGene);
-		for(var j = 1; i*numCopies + j < Math.floor(numCopies*(i+1)); j++){
 
-			newPop.push([shuffle(currGene[0]),currGene[1]]);
+	for(var i = 0; i < winners.length; i++){
+		
+			var currGene = pop[winners[i]];
+			newPop.push(currGene);
+			for(var j = 1; i*numCopies + j < Math.floor(numCopies*(i+1)); j++){
+
+				newPop.push([shuffle(currGene[0]),currGene[1]]);
+
 		}
+	}
+	print(newPop.length)
+	if(newPop.length !== popSize){
+		print(winners.length)
+		print(numCopies)
+		print(winners.length * numCopies)
+		print('~+~+~+~+~+~+~+~+~+~+~+~++~+~')
+		print('~+~+~+~+~+~+~+~+~+~+~+~++~+~')
+		print('~+~+~+~+~+~+~+~+~+~+~+~++~+~')
+		print('~+~+~+~+~+~+~+~+~+~+~+~++~+~')
+		print('~+~+~+~+~+~+~+~+~+~+~+~++~+~')
+		print('~+~+~+~+~+~+~+~+~+~+~+~++~+~')
 	}
 	pop = newPop;
 	// print('we made a new pop with ', pop.length, ' which should be the same as ', popSize);

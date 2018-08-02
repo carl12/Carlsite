@@ -35,6 +35,8 @@ Game = {
 		Game.players = [];
 		Game.rollDist = new Array(12).fill(0);
 		Game.roll = 0;
+		Game.d1Roll = 0;
+		Game.d2Roll = 0;
 		for(var i = 0; i < Game.numPlayers; i++){
 			Game.players.push(new AIPlayer(Game.genericNames[i]));
 		}
@@ -50,7 +52,6 @@ Game = {
 			print('game is over, go home!')
 			return false;
 		}
-		
 	},
 
 	requireInput:function(){
@@ -66,6 +67,10 @@ Game = {
 			inputType.player = Game.players[Game.turnState.rewardResponse];
 		}
 		inputType.phase = Game.turnState.phase;
+		if(Game.turnState.phase == 1){
+			inputType.currD1 = Game.d1Roll;
+			inputType.currD2 = Game.d2Roll;
+		}
 		if (inputType.phase == 3){
 			//TODO - fix
 			throw "Not impelmented: getInputType for inputRewardPhase"
@@ -74,44 +79,71 @@ Game = {
 	},
 
 	rollPhase:function(input){
-		if(input !== undefined && input.rollTwo !== undefined){
-			var a = 0;
-			var b = 0;
-			var currPlayer = Game.players[Game.turnState.playerTurn]
-			if (input.rollTwo && currPlayer.landmarks[0]){
-				a = rollDice();
-				b = rollDice();
-			} else {
-				a = rollDice();
-				Game.rollDist[Game.roll-1] ++;	
-			}
-
-
-			//TODO - check for radio tower for reroll
-
-			Game.roll = a + b;
+		Game.rollOneOrTwo(input);
+		if(Game.d1Roll > 0){
+			var currPlayer = Game.players[Game.turnState.playerTurn];
 			if(Game.print){
 				print(Game.roll ,' rolled');
 			}
-			Game.turnState.phase += 2;
-			if(currPlayer.landmarks[2] && a === b){
+			if(currPlayer.landmarks[3]){
+				Game.turnState.phase += 1;
+				return true;
+			} else {
+				input.reroll = false;
+				Game.turnState.phase += 1;
+				Game.rerollPhase(input);	
+			}
+		} else {
+			return false;
+		}
+	},
+
+	rerollPhase:function(input){
+		//TODO - take input on whether to reroll or keep
+		if(input !== undefined && input.reroll !== undefined){
+			var currPlayer = Game.players[Game.turnState.playerTurn];
+			if(input.reroll){
+				Game.rollOneOrTwo(input);
+				if(Game.d1Roll == 0){
+					return false;
+				} else {
+					if(Game.print){
+						print(Game.roll ,' re-rolled');
+					}
+				}
+			} 
+			if(currPlayer.landmarks[2] && Game.d1Roll === Game.d2Roll){
 				if(Game.print){
 					print(currPlayer.name,' takes a second turn!')
 				}
 				Game.turnState.amuseDoubles = true;
 				//TODO - add go again functionality
-			} else {
-				return true;
-			}
+			} 
+			Game.turnState.phase += 1;
 
+			return true;
 		} else {
 			return false;
 		}
-		
 	},
 
-	rerollPhase:function(){
-		//TODO - take input on whether to reroll or keep
+	rollOneOrTwo(input){
+		if(input !== undefined && input.rollTwo !== undefined){
+			var a = 0;
+			var b = 0;
+			var currPlayer = Game.players[Game.turnState.playerTurn]
+			if (input.rollTwo && currPlayer.landmarks[0]){
+				Game.d1Roll = rollDice();
+				Game.d2Roll = rollDice();
+			} else {
+				Game.d1Roll = rollDice();
+				Game.d2Roll = 0;
+			}
+		} else {
+			Game.d1Roll = 0;
+			Game.d2Roll = 0;
+		}
+		Game.roll = Game.d1Roll + Game.d2Roll;
 	},
 
 	startRewardPhase:function(){
@@ -136,7 +168,7 @@ Game = {
 						}
 					} else {
 						print(c , ' requires input ');
-						Game.inputQueue.push([p, c, Game.roll]);
+						// Game.inputQueue.push([p, c, Game.roll]);
 					}
 				}
 			}
@@ -150,7 +182,6 @@ Game = {
 		if(Game.print){
 				print('reward phase over');
 		}
-
 	},
 
 	inputRewardPhase:function(input){

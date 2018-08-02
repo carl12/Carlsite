@@ -1,3 +1,5 @@
+DOUBLE_ROLL_ODDS = [1/36, 2/36, 3/36, 4/36, 5/36, 6/36, 5/36, 4/36, 3/36, 2/36, 1/36];
+
 function shuffle(arrIn) {
   var currentIndex = arrIn.length, temporaryValue, randomIndex;
   var array = arrIn.slice(0,arrIn.length);
@@ -39,14 +41,9 @@ function genRandomStrat(){
 	var generated = [];
 	for(var i = 0; i < length; i++){
 		generated.push([randIntTwoRange(0,6,9,14),randInt(1,6)]);
-
 	}
-	// console.log(generated);
-	// console.log(base.concat(generated))
 	return shuffle(base.concat(generated));
-
 }
-
 class Player{
 	constructor(name){
 		this.name = name;
@@ -58,7 +55,6 @@ class Player{
 		this.buildingCount = new Array(19).fill(0);
 		
 	}
-
 	rewards(roll, isTurn){
 
 	}
@@ -78,30 +74,43 @@ class Player{
 		return this.winnings.reduce((a, b) => a + b, 0);
 	}
 }
+
+
+
+
 aiStratList = [
+[[[16,1],[1,4],[4,5],[18,1],[17,1],[15,1],[0,5]],0],
 [[[16,1],[3,3],[4,4],[18,1],[0,2],[15,1],[0,1],[17,1],[2,3]],0],//335 avg 31%
-[[[5,3],[15,1],[17,1],[11,1],[16,1],[18,1],[1,4],[10,5],[3,4]],1], //scored a 395/1000!
-[[[1,2],[16,1],[3,3],[1,2],[2,2],[3,5],[17,1],[1,5],[18,1],[5,2],[2,1],[15,1]],0],//401
 [[[5,3],[15,1],[10,2],[16,1],[0,3],[17,1],[18,1],[11,1]],1],//337
-[[[1,1],[16,1],[17,1],[3,3],[18,1],[4,1],[0,5],[15,1]],0],//354
-[[[1,5],[16,1],[4,5],[1,3],[18,1],[15,1],[17,1]],0],
-[[[5,4],[1,1],[18,1],[11,1],[15,1],[17,1],[1,3],[16,1],[10,2],[4,2],[10,4],[1,3]],true],
-[[[1,4],[16,1],[2,5],[2,2],[12,1],[15,1],[17,1],[18,1],[3,1]],0], //439!
-[[[1,3],[16,1],[3,4],[2,1],[18,1],[15,1],[17,1]],0],
-[[[1,5],[0,3],[3,2],[16,1],[4,1],[0,2],[18,1],[15,1],[17,1]],0], //516?!?!
-[[[11,2],[5,3],[17,1],[1,3],[16,1],[0,2],[18,1],[15,1],[10,4],[0,1],[4,4]],1], //Scored a 429/1000 ?!?!
-[[[5,3],[15,1],[10,1],[0,2],[17,1],[3,2],[16,1],[18,1]],1],
-[[[11,1],[17,1],[18,1],[16,1],[5,5],[15,1],[1,5],[5,4],[0,2],[1,4],[10,5],[2,5],[1,1]],1],
-[[[1,2],[17,1],[5,2],[15,1],[18,1],[9,2],[0,1],[16,1],[1,5],[3,2],[0,4]],1], //new guy on da block - bad in last place somehow
-
-
+[[[1,2],[16,1],[3,3],[1,2],[2,2],[3,5],[17,1],[1,5],[18,1],[5,2],[2,1],[15,1]],0],//401
+[[[1,3],[15,1],[18,1],[9,1],[17,1],[16,1]],1],
+[[[5,3],[15,1],[17,1],[11,1],[16,1],[18,1],[1,4],[10,5],[3,4]],1], //scored a 395/1000!
 
 ]
 
 
 bTeam = [
 
+
+[[[1,1],[16,1],[17,1],[3,3],[18,1],[4,1],[0,5],[15,1]],0],//354
+// --------
 [[[0,4],[1,4],[18,1],[3,5],[16,1],[15,1],[17,1]],false], 
+// --------
+[[[1,5],[0,3],[3,2],[16,1],[4,1],[0,2],[18,1],[15,1],[17,1]],0], //516?!?!
+// --------
+[[[1,5],[16,1],[4,5],[1,3],[18,1],[15,1],[17,1]],0],
+// --------
+[[[1,3],[16,1],[3,4],[2,1],[18,1],[15,1],[17,1]],0],
+// -------- 
+[[[5,4],[1,1],[18,1],[11,1],[15,1],[17,1],[1,3],[16,1],[10,2],[4,2],[10,4],[1,3]],true],
+[[[1,4],[16,1],[2,5],[2,2],[12,1],[15,1],[17,1],[18,1],[3,1]],0], //439!
+// ---------  ^ next round 
+[[[11,2],[5,3],[17,1],[1,3],[16,1],[0,2],[18,1],[15,1],[10,4],[0,1],[4,4]],1], //Scored a 429/1000 ?!?!
+[[[5,3],[15,1],[10,1],[0,2],[17,1],[3,2],[16,1],[18,1]],1],
+[[[11,1],[17,1],[18,1],[16,1],[5,5],[15,1],[1,5],[5,4],[0,2],[1,4],[10,5],[2,5],[1,1]],1],
+[[[1,2],[17,1],[5,2],[15,1],[18,1],[9,2],[0,1],[16,1],[1,5],[3,2],[0,4]],1], //new guy on da block - bad in last place somehow
+// ---------- ^ one round
+
 [[[17,1],[16,1],[0,3],[2,5],[18,1],[3,4],[15,1],[5,2]], false],
 [[[16,1],[17,1],[18,1],[0,3],[2,5],[2,5],[4,4],[15,1],[5,5]],0],//408
 [[[17,1],[18,1],[5,2],[0,2],[15,1],[16,1],[1,5],[5,5],[10,3],[1,2],[1,3],[2,1],[1,3]],1], //sketchy one - fixed by changing to 1
@@ -126,6 +135,7 @@ class AIPlayer extends Player {
 
 		this.strat = aiStratList[this.aiChoice][0];
 		this.doubles = aiStratList[this.aiChoice][1];
+		
 
 		// if(this.name[0] == 'A'){
 		// 	this.doubles = aiStratList[0][1];
@@ -149,7 +159,7 @@ class AIPlayer extends Player {
 	takeInput(input) {
 		var num = input.phase;
 		
-		if(num == 0){
+		if(num == 0 || num == 1){
 			var output = {};
 			//TODO - add more logic here, might have just bought station to get to win
 			if(this.doubles){
@@ -157,14 +167,61 @@ class AIPlayer extends Player {
 			} else {
 				output.rollTwo = false;
 			}
+			if(num == 1){
+				var income = this.evalIncome(input.currD1 + input.currD2);
+				var rollEv = this.getRollEv();
+
+				if(income > rollEv){
+					output.reroll = false;
+				} else if (this.landmarks[2] && input.currD1 == input.currD2 && income > rollEv/6){
+					output.reroll = false;
+				} else {
+					
+					output.reroll = true;
+				}
+			}
 			return output;
 		} else if (num == 4) { 
-
 			return this.basicStrat();
 		} else {
 			// TODO - implement other logic
 			throw "Not Implemented: providing input for other phases";
 		}
+	}
+
+	getRollEv(roll){
+		var income = 0; 
+		var c;
+		if(this.doubles && this.landmarks[0]){
+			for(var i = 0; i < this.cards.length; i++){
+				c = this.cards[i];
+				for(var j = 0; j < c.triggers.length && c.triggersOn(true); j++){
+					income += c.reward(this) * DOUBLE_ROLL_ODDS[c.triggers[j]];
+				}
+			}
+		} else {
+			for(var i = 0; i < this.cards.length; i++){
+				c = this.cards[i];
+				for(var j = 0; j < c.triggers.length && c.triggers[j] <= 6 && c.triggersOn(true); j++){
+					income += c.reward(this)/6;
+				}
+			}
+		}
+		return income;
+	}
+
+	evalIncome(roll){
+		var income = 0;
+		var c;
+			
+		for(var i = 0; i < this.cards.length; i++){
+			c = this.cards[i];
+
+			if(c.triggers.includes(roll) && c.triggersOn(true)) {
+				income += c.reward(this);
+			}
+		}
+		return income;
 	}
 
 	canBuy(listOfBuildings){
