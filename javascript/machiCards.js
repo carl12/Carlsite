@@ -60,7 +60,7 @@ Cards = {
 		category:1,
 		isLandmark:false,
 		position:0,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	Ranch:{
 		name:"Ranch",
@@ -74,7 +74,7 @@ Cards = {
 		category:2,
 		isLandmark:false,
 		position:1,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	Bakery:{
 		name:"Bakery",
@@ -88,7 +88,7 @@ Cards = {
 		category:3,
 		isLandmark:false,
 		position:2,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	Cafe:{
 		name:"Cafe",
@@ -102,7 +102,7 @@ Cards = {
 		category:3,
 		isLandmark:false,
 		position:3,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	ConvStore:{
 		name:"Convenience Store",
@@ -116,7 +116,7 @@ Cards = {
 		category:3,
 		isLandmark:false,
 		position:4,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	Forest:{
 		name:"Forest",
@@ -130,7 +130,7 @@ Cards = {
 		category:4,
 		isLandmark:false,
 		position:5,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	Stadium:{
 		name:"Stadium",
@@ -144,7 +144,7 @@ Cards = {
 		category:6,
 		isLandmark:false,
 		position:6,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	TVStation:{
 		name:"TV Station",
@@ -158,7 +158,7 @@ Cards = {
 		category:6,
 		isLandmark:false,
 		position:7,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	BusinessCenter:{
 		name:"Business Center",
@@ -172,7 +172,7 @@ Cards = {
 		category:6,
 		isLandmark:false,
 		position:8,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	CheeseFactory:{
 		name:"Cheese Factory",
@@ -186,7 +186,7 @@ Cards = {
 		category:5,
 		isLandmark:false,
 		position:9,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	FurnitureFactory:{
 		name:"Furniture Factory",
@@ -200,7 +200,7 @@ Cards = {
 		category:5,
 		isLandmark:false,
 		position:10,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	Mine:{
 		name:"Mine",
@@ -214,7 +214,7 @@ Cards = {
 		category:4,
 		isLandmark:false,
 		position:11,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	FamilyRestaurant:{
 		name:"Family Restaurant",
@@ -228,7 +228,7 @@ Cards = {
 		category:3,
 		isLandmark:false,
 		position:12,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	AppleOrchard:{
 		name:"Apple Orchard",
@@ -242,7 +242,7 @@ Cards = {
 		category:1,
 		isLandmark:false,
 		position:13,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	FruitAndVegetableMarket:{
 		name:"Fruit and Vegetable Market",
@@ -256,42 +256,44 @@ Cards = {
 		category:0,
 		isLandmark:false,
 		position:14,
-		src:''
+		src:'images/AmusementPark.jpg'
 	},
 	Station:{
 		name:"Station",
 		cost:4,
 		isLandmark:true,
 		landmarkPosition:0,
-		position:15
+		position:15,
+		src:'images/AmusementPark.jpg'
 	},
 	ShoppingMall:{
 		name:"Shopping Mall",
 		cost:10,
 		isLandmark:true,
 		landmarkPosition:1,
-		position:16
+		position:16,
+		src:'images/AmusementPark.jpg'
 	},
 	AmusementPark:{
 		name:"Amusement Park",
 		cost:16,
 		isLandmark:true,
 		landmarkPosition:2,
-		position:17
+		position:17,
+		src:'images/AmusementPark.jpg'
 	},
 	RadioTower:{
 		name:"Radio Tower",		
 		cost:24,
 		isLandmark:true,
 		landmarkPosition:3,
-		position:18
+		position:18,
+		src:'images/AmusementPark.jpg'
 	}
 
 
 };
-indexedCards = [];
+var indexedCards = [];
 Object.entries(Cards).forEach((key,val)=>{indexedCards[key[1].position] = key[1]});
-player = {
-	cards:[indexedCards[5], indexedCards[5],indexedCards[5],indexedCards[5],indexedCards[1]]
-}
-console.log(Cards.CheeseFactory.reward(player))
+
+var indexedEstablishments = indexedCards.slice(0, firstLandmarkLoc);

@@ -33,7 +33,7 @@ Game = {
 		Game.inputQueue = [];
 		Game.numPlayers = 4;
 		Game.players = [];
-		Game.rollDist = new Array(12).fill(0);
+		Game.rolls = [];
 		Game.roll = 0;
 		Game.d1Roll = 0;
 		Game.d2Roll = 0;
@@ -91,7 +91,7 @@ Game = {
 			} else {
 				input.reroll = false;
 				Game.turnState.phase += 1;
-				Game.rerollPhase(input);	
+				return Game.rerollPhase(input);	
 			}
 		} else {
 			return false;
@@ -106,11 +106,11 @@ Game = {
 				Game.rollOneOrTwo(input);
 				if(Game.d1Roll == 0){
 					return false;
-				} else {
-					if(Game.print){
-						print(Game.roll ,' re-rolled');
-					}
+				} 
+				if(Game.print){
+					print(Game.roll ,' re-rolled');
 				}
+				
 			} 
 			if(currPlayer.landmarks[2] && Game.d1Roll === Game.d2Roll){
 				if(Game.print){
@@ -120,7 +120,7 @@ Game = {
 				//TODO - add go again functionality
 			} 
 			Game.turnState.phase += 1;
-
+			Game.rolls.push(Game.roll);
 			return true;
 		} else {
 			return false;
@@ -236,7 +236,7 @@ Game = {
 				//TODO - add tiebreaking logic
 				// print('Add tie-breaking logic');
 				if(Game.print){
-						print(Game.players[winner] , ' won!');
+						print(Game.players[Game.winner] , ' won!');
 				}
 				break;
 			}

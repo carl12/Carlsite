@@ -73,6 +73,46 @@ class Player{
 	income(){
 		return this.winnings.reduce((a, b) => a + b, 0);
 	}
+
+	getRollEv(roll){
+		var income1D = 0; 
+		var income2D = 0; 
+		var c;
+		if(this.landmarks[0]){
+			for(var i = 0; i < this.cards.length; i++){
+				c = this.cards[i];
+				for(var j = 0; j < c.triggers.length && c.triggersOn(true); j++){
+					income2D += c.reward(this) * DOUBLE_ROLL_ODDS[c.triggers[j]];
+				}
+			}
+		} else {
+			for(var i = 0; i < this.cards.length; i++){
+				c = this.cards[i];
+				for(var j = 0; j < c.triggers.length && c.triggers[j] <= 6 && c.triggersOn(true); j++){
+					income1D += c.reward(this)/6;
+				}
+			}
+		}
+		if(income1D > income2D){
+			return [income1D, 1];
+		} else {
+			return [income2D, 2];
+		}
+	}
+
+	evalIncome(roll){
+		var income = 0;
+		var c;
+			
+		for(var i = 0; i < this.cards.length; i++){
+			c = this.cards[i];
+
+			if(c.triggers.includes(roll) && c.triggersOn(true)) {
+				income += c.reward(this);
+			}
+		}
+		return income;
+	}
 }
 
 
@@ -82,9 +122,9 @@ aiStratList = [
 [[[16,1],[1,4],[4,5],[18,1],[17,1],[15,1],[0,5]],0],
 [[[16,1],[3,3],[4,4],[18,1],[0,2],[15,1],[0,1],[17,1],[2,3]],0],//335 avg 31%
 [[[5,3],[15,1],[10,2],[16,1],[0,3],[17,1],[18,1],[11,1]],1],//337
+[[[5,3],[15,1],[17,1],[11,1],[16,1],[18,1],[1,4],[10,5],[3,4]],1], //scored a 395/1000!
 [[[1,2],[16,1],[3,3],[1,2],[2,2],[3,5],[17,1],[1,5],[18,1],[5,2],[2,1],[15,1]],0],//401
 [[[1,3],[15,1],[18,1],[9,1],[17,1],[16,1]],1],
-[[[5,3],[15,1],[17,1],[11,1],[16,1],[18,1],[1,4],[10,5],[3,4]],1], //scored a 395/1000!
 
 ]
 
@@ -169,7 +209,7 @@ class AIPlayer extends Player {
 			}
 			if(num == 1){
 				var income = this.evalIncome(input.currD1 + input.currD2);
-				var rollEv = this.getRollEv();
+				var rollEv = this.getRollEv()[0];
 
 				if(income > rollEv){
 					output.reroll = false;
@@ -189,40 +229,7 @@ class AIPlayer extends Player {
 		}
 	}
 
-	getRollEv(roll){
-		var income = 0; 
-		var c;
-		if(this.doubles && this.landmarks[0]){
-			for(var i = 0; i < this.cards.length; i++){
-				c = this.cards[i];
-				for(var j = 0; j < c.triggers.length && c.triggersOn(true); j++){
-					income += c.reward(this) * DOUBLE_ROLL_ODDS[c.triggers[j]];
-				}
-			}
-		} else {
-			for(var i = 0; i < this.cards.length; i++){
-				c = this.cards[i];
-				for(var j = 0; j < c.triggers.length && c.triggers[j] <= 6 && c.triggersOn(true); j++){
-					income += c.reward(this)/6;
-				}
-			}
-		}
-		return income;
-	}
 
-	evalIncome(roll){
-		var income = 0;
-		var c;
-			
-		for(var i = 0; i < this.cards.length; i++){
-			c = this.cards[i];
-
-			if(c.triggers.includes(roll) && c.triggersOn(true)) {
-				income += c.reward(this);
-			}
-		}
-		return income;
-	}
 
 	canBuy(listOfBuildings){
 		var buildLoc;

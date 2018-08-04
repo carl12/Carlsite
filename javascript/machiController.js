@@ -10,9 +10,17 @@ canvas.addEventListener("click", (event)=>{
 	var x = event.pageX - canvasLeft;
 	var y = event.pageY - canvasTop;
 
-	var imgClicked = manage.checkImageClicked(x,y);
-	print(imgClicked)
-	print(x,y);
+	var response = manage.checkClick(x,y);
+	if(response !== undefined){
+		if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
+			var success = f(response);
+			if(success){
+				manage.disableListeners();
+			}
+		}
+	}
+
+	// print(x,y);
 });
 
 
@@ -33,7 +41,7 @@ function initHumanGame(){
 	Game.players[playLoc] = new HumanPlayer("Human!");
 	me = Game.players[playLoc];
 	var k = 0; 
-	runGameASDF();
+	runHumanGame();
 }
 
 function f(response){
@@ -41,15 +49,26 @@ function f(response){
 	if(Game.turnState.phase == 0){
 		output.rollTwo = response;
 
+	} else if(Game.turnState == 1){
+		if(response.length != undefined){
+			if(response.length == 2){
+				print('rerolling in f')
+				output.reroll = response[0];
+				output.rollTwo = response[1];
+			}
+		}
 	} else if(Game.turnState.phase == 4) {
+
 		if (response !== -1){
 			output.card = indexedCards[response];
 		} 
+		// print(output);
 	}
-	Game.next(output);
-	runGameASDF();
+	setTimeout(runHumanGame);
+	return Game.next(output);
 }
-function runGameASDF(){
+
+function runHumanGame(){
 
 	var k = 0;
 	while(Game.winner === -1 && k < 1000){
@@ -66,12 +85,14 @@ function runGameASDF(){
 			response = inputType.player.takeInput(inputType);
 			Game.next(response);
 		} else {
-			manage.messageText = Game.turnPhaseNames[inputType.phase];
+			manage.takeHumanInput(inputType);
 			manage.draw();
+			if(Game.turnState.phase == 4){
+				print('You have $'+me.money);
+			}
 			break;
 		}
 	}
-
 }
 
 function arrAdd(a, b, plus = 1){
@@ -94,13 +115,13 @@ function arrProd(a, b, times=1){
 }
 
 var pop = [];
-var popSize = 150;
+var popSize = 200;
 var scores = [];
 var winners;
 var scoreBreakpoint;
 
 var iterations = 1000;
-var maxGen = 4;
+var maxGen = 7;
 var currGen = 1;
 var maxMetaGen = 4;
 var currMetaGen = 1;

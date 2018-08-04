@@ -9,6 +9,9 @@ canvas.style.outline="3px solid black";
 
 var ctx = canvas.getContext('2d');
 
+function clickInObj(objX, objY, width, height, clickX, clickY){
+	return clickX >= objX && clickX <= objX + width && clickY >= objY && clickY <= objY + height;	
+}
 
 function drawLine(x1,y1,x2,y2){ 
 	ctx.save();
@@ -77,7 +80,7 @@ class ImageWrapper{
 			this.y += this.dy;
 			this.currStep++;
 			this.moving = this.currStep < this.totalStep;
-			print(this.totalStep)
+			this.totalStep
 			print(this.currStep)	
 		}
 
@@ -93,21 +96,19 @@ class ImageWrapper{
 	}
 
 	contains(x,y){
-		if(x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.width){
-			return true;
-		}
+		return clickInObj(this.x, this.y, this.width, this.height, x, y);
 	}
 }
 
 class cardImageWrapper extends ImageWrapper{
-	constructor(name, x, y){
-		super(Cards.name.src, x, y);
-		this.cardType = name;
+	constructor(card, x, y){
+		super(card.src, x, y);
+		this.card = card;
 	}
 
-	getTypeIfContains(x,y){
-		if(clicked(x,y)){
-			return this.name;
+	getCardIndexIfContains(x,y){
+		if(this.contains(x,y)){
+			return this.card.position;
 		}
 	}
 }
@@ -117,6 +118,7 @@ class CanvasManager{
 		this.messageText = "Starting messageText";
 		this.ctx = ctx
 		this.images = []
+		this.establishmentImages = [];
 		this.lines = []
 
 		this.top = 75;	
@@ -125,15 +127,34 @@ class CanvasManager{
 		this.left = 200;
 		this.right = 1200;
 		
-		this.boxWidth = (this.right - this.left) /7;
-		this.boxHeight = (this.bottom - this.top) /2;
+		this.numCols = 8;
+		this.numRows = 2;
+		this.boxWidth = (this.right - this.left) /this.numCols;
+		this.boxHeight = (this.bottom - this.top) / this.numRows;
 
-		for(var i = 0; i < 7; i++){
-			var currLeft = this.left + i * this.boxWidth;
-
+		this.diceListening = false;
+		this.rerollListening = false;
+		this.buyListening = false;
+		this.playerListening = false;
+		this.stealListening = false;
+		for(var i = 0; i < indexedEstablishments.length; i++){
+			if(i < this.numCols){
+				var currLeft = this.left + (i) * this.boxWidth;
+				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.top+20);
+			} else {
+				var currLeft = this.left + (i-this.numCols) * this.boxWidth;
+				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.top+20 + this.boxHeight);
+			}
 			this.addNewLine(currLeft, this.top, currLeft, this.bottom);
-			this.addNewImage('images/AmusementPark.jpg', currLeft+10, this.top+20);
 		}
+		//1050, 0, 150, 75
+		this.addNewLine(1050+150/2, 0, 1050+150/2, 75);
+		// for(var i = 0; i < 7; i++){
+		// 	var currLeft = this.left + i * this.boxWidth;
+
+		// 	this.addNewLine(currLeft, this.top, currLeft, this.bottom);
+		// 	this.addNewImage('images/AmusementPark.jpg', currLeft+10, this.top+20);
+		// }
 
 		for(var j = 0; j < 3; j++){
 			this.addNewLine(this.left, this.top + j * this.boxHeight, this.right, this.top + j * this.boxHeight);
@@ -155,13 +176,19 @@ class CanvasManager{
 
 		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
 		this.ctx.fillRect(1050, 0, 150, 75);
+		drawLine
 
-		var cardList = Object.values(Cards);
-		for(var i = 0; i < 7; i++){
-			var currCard = cardList[i];
-			var currLeft = this.left + currCard.position * this.boxWidth;
-
-			ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+20, this.top+20);
+		
+		for(var i = 0; i < indexedEstablishments.length; i++){
+			var currCard = indexedEstablishments[i];
+			if(i < this.numCols){
+				var currLeft = this.left + currCard.position * this.boxWidth;
+				ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+20, this.top+20);
+			} else {
+				var currLeft = this.left + (currCard.position-this.numCols) * this.boxWidth;
+				var currUp = this.top + this.boxHeight;
+			ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+20, currUp + 20);
+			}
 
 		}
 
@@ -183,16 +210,16 @@ class CanvasManager{
 
 
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		for(var i = 0; i < 7; i++){
+		for(var i = 0; i < this.numCols; i++){
 			ctx.font = '14px monospace';
 			var currLeft = this.left + i * this.boxWidth;
 
 			// ctx.fillText('Card ' + i, currLeft+20, this.top+20);
 
 
-			ctx.fillText('Card ' + (i+7), this.left + i*this.boxWidth+20, this.top + this.boxHeight+20);
+			// ctx.fillText('Card ' + (i+7), this.left + i*this.boxWidth+20, this.top + this.boxHeight+20);
 			
-			ctx.fillRect(this.left+i*this.boxWidth+10,this.top + this.boxHeight + 40, 100, 100);
+			// ctx.fillRect(this.left+i*this.boxWidth+10,this.top + this.boxHeight + 40, 100, 100);
 		}
 
 
@@ -201,6 +228,12 @@ class CanvasManager{
 		for(var i in this.images){
 			this.images[i].draw(this.ctx);
 			if(this.images[i].moving){
+				animating = true;
+			}
+		}
+		for(var i in this.establishmentImages){
+			this.establishmentImages[i].draw(this.ctx);
+			if(this.establishmentImages[i].moving){
 				animating = true;
 			}
 		}
@@ -217,17 +250,74 @@ class CanvasManager{
 		this.images.push(new ImageWrapper(src,x,y));
 	}
 
+	addNewCardImage(card, x, y){
+		this.establishmentImages.push(new cardImageWrapper(card, x, y));
+
+	}
+
 	addNewLine(x1,y1,x2,y2){
 		this.lines.push(new LineWrapper(x1,y1,x2,y2));
 	}
 
-	checkImageClicked(x,y){
-		for(var i in this.images){
-			if(this.images[i].contains(x,y)){
+	checkClick(x,y){
+		if(this.diceListening){
+			var roll1 = clickInObj(1050, 0, 75, 75, x, y);
+			var roll2 = clickInObj(1050+75, 0, 75, 75, x, y);
+
+			if(roll1){
+				return false;
+			} else if(roll2){
 				return true;
 			}
 		}
-		return false;
+		if (this.rerollListening){
+			var roll1 = clickInObj(1050, 0, 75, 75, x, y);
+			var roll2 = clickInObj(1050+75, 0, 75, 75, x, y);
+			if(roll1 || roll2){
+				print('rerolling');
+				return [true, roll2];
+			} else {
+				return [false];
+			}
+
+		}
+		if(this.buyListening){
+			for(var i in this.establishmentImages){
+				if(this.establishmentImages[i].contains(x,y)){
+					return this.establishmentImages[i].card.position;
+				}
+			}
+		}
+		if(this.playerListening){
+			print('taking player input')
+		} else if(this.stealListening){
+			print('steal listening');
+		}
+
+
+
+	}
+	disableListeners(){
+		this.diceListening = false;
+		this.buyListening = false;
+		this.playerListening = false;
+		this.stealListening = false;
+	}
+
+	takeHumanInput(inputType){
+		print(inputType);
+		if(inputType.phase == 0){
+			this.messageText = "Roll Dice";
+			this.diceListening = true;
+		} else if (inputType.phase == 1){
+			this.messageText = "Roll Again?";
+			this.rerollListening = true;
+		} else if (inputType.phase == 3){
+			this.messageText = "Choose reward target phase";
+		} else if (inputType.phase == 4){
+			this.messageText = "Choose Purchase";
+			this.buyListening = true;
+		}
 
 	}
 }
