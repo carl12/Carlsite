@@ -60,7 +60,7 @@ Cards = {
 		category:1,
 		isLandmark:false,
 		position:0,
-		src:'images/AmusementPark.jpg'
+		src:'images/WheatField.jpg'
 	},
 	Ranch:{
 		name:"Ranch",
@@ -74,7 +74,7 @@ Cards = {
 		category:2,
 		isLandmark:false,
 		position:1,
-		src:'images/AmusementPark.jpg'
+		src:'images/Ranch.jpg'
 	},
 	Bakery:{
 		name:"Bakery",
@@ -88,7 +88,7 @@ Cards = {
 		category:3,
 		isLandmark:false,
 		position:2,
-		src:'images/AmusementPark.jpg'
+		src:'images/Bakery.jpg'
 	},
 	Cafe:{
 		name:"Cafe",
@@ -102,9 +102,9 @@ Cards = {
 		category:3,
 		isLandmark:false,
 		position:3,
-		src:'images/AmusementPark.jpg'
+		src:'images/Cafe.jpg'
 	},
-	ConvStore:{
+	ConvenienceStore:{
 		name:"Convenience Store",
 		cost:2,
 		triggersOn:trigger.green,
@@ -116,7 +116,7 @@ Cards = {
 		category:3,
 		isLandmark:false,
 		position:4,
-		src:'images/AmusementPark.jpg'
+		src:'images/ConvenienceStore.jpg'
 	},
 	Forest:{
 		name:"Forest",
@@ -130,7 +130,7 @@ Cards = {
 		category:4,
 		isLandmark:false,
 		position:5,
-		src:'images/AmusementPark.jpg'
+		src:'images/Forest.jpg'
 	},
 	Stadium:{
 		name:"Stadium",
@@ -144,7 +144,7 @@ Cards = {
 		category:6,
 		isLandmark:false,
 		position:6,
-		src:'images/AmusementPark.jpg'
+		src:'images/Stadium.jpg'
 	},
 	TVStation:{
 		name:"TV Station",
@@ -158,7 +158,7 @@ Cards = {
 		category:6,
 		isLandmark:false,
 		position:7,
-		src:'images/AmusementPark.jpg'
+		src:'images/TVStation.jpg'
 	},
 	BusinessCenter:{
 		name:"Business Center",
@@ -172,7 +172,7 @@ Cards = {
 		category:6,
 		isLandmark:false,
 		position:8,
-		src:'images/AmusementPark.jpg'
+		src:'images/BusinessCenter.jpg'
 	},
 	CheeseFactory:{
 		name:"Cheese Factory",
@@ -186,7 +186,7 @@ Cards = {
 		category:5,
 		isLandmark:false,
 		position:9,
-		src:'images/AmusementPark.jpg'
+		src:'images/CheeseFactory.jpg'
 	},
 	FurnitureFactory:{
 		name:"Furniture Factory",
@@ -200,7 +200,7 @@ Cards = {
 		category:5,
 		isLandmark:false,
 		position:10,
-		src:'images/AmusementPark.jpg'
+		src:'images/FurnitureFactory.jpg'
 	},
 	Mine:{
 		name:"Mine",
@@ -214,7 +214,7 @@ Cards = {
 		category:4,
 		isLandmark:false,
 		position:11,
-		src:'images/AmusementPark.jpg'
+		src:'images/Mine.jpg'
 	},
 	FamilyRestaurant:{
 		name:"Family Restaurant",
@@ -228,7 +228,7 @@ Cards = {
 		category:3,
 		isLandmark:false,
 		position:12,
-		src:'images/AmusementPark.jpg'
+		src:'images/FamilyRestaurant.jpg'
 	},
 	AppleOrchard:{
 		name:"Apple Orchard",
@@ -242,7 +242,7 @@ Cards = {
 		category:1,
 		isLandmark:false,
 		position:13,
-		src:'images/AmusementPark.jpg'
+		src:'images/AppleOrchard.jpg'
 	},
 	FruitAndVegetableMarket:{
 		name:"Fruit and Vegetable Market",
@@ -256,7 +256,7 @@ Cards = {
 		category:0,
 		isLandmark:false,
 		position:14,
-		src:'images/AmusementPark.jpg'
+		src:'images/FruitAndVegetableMarket.jpg'
 	},
 	Station:{
 		name:"Station",

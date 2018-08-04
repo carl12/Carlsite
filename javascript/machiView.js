@@ -60,8 +60,8 @@ class ImageWrapper{
 		this.src = src;
 		this.x = x;
 		this.y = y;
-		this.width = 100;
-		this.height = 120;
+		this.width = 105;
+		this.height = 168;
 
 		this.currStep = 0;
 		this.totalStep = 0;
@@ -140,10 +140,10 @@ class CanvasManager{
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			if(i < this.numCols){
 				var currLeft = this.left + (i) * this.boxWidth;
-				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.top+20);
+				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.top+21);
 			} else {
 				var currLeft = this.left + (i-this.numCols) * this.boxWidth;
-				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.top+20 + this.boxHeight);
+				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.top+21 + this.boxHeight);
 			}
 			this.addNewLine(currLeft, this.top, currLeft, this.bottom);
 		}
@@ -159,6 +159,7 @@ class CanvasManager{
 		for(var j = 0; j < 3; j++){
 			this.addNewLine(this.left, this.top + j * this.boxHeight, this.right, this.top + j * this.boxHeight);
 		}
+		// this.draw();
 	}
 
 	draw(){
@@ -183,16 +184,16 @@ class CanvasManager{
 			var currCard = indexedEstablishments[i];
 			if(i < this.numCols){
 				var currLeft = this.left + currCard.position * this.boxWidth;
-				ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+20, this.top+20);
+				ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+3, this.top+20, this.boxWidth-5);
 			} else {
 				var currLeft = this.left + (currCard.position-this.numCols) * this.boxWidth;
 				var currUp = this.top + this.boxHeight;
-			ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+20, currUp + 20);
+				ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+3, currUp + 20, this.boxWidth-5);
 			}
 
 		}
 
-		ctx.fillText(this.messageText, 400, 30);
+		ctx.fillText(this.messageText, 400, 50);
 
 		ctx.fillText(Game.players[0].money, 10, 20);
 		ctx.fillText(printCards(Game.players[0].cards), 10, 30);
