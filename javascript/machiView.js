@@ -314,7 +314,11 @@ class CanvasManager{
 			this.messageText = "Roll Again?";
 			this.rerollListening = true;
 		} else if (inputType.phase == 3){
-			this.messageText = "Choose reward target phase";
+			if(inputType.card == 7){
+				this.messageText = "Choose Target to Steal From";
+			} else {
+				this.messageText = "Choose Player to Trade With, Building and Your Building";
+			}
 		} else if (inputType.phase == 4){
 			this.messageText = "Choose Purchase";
 			this.buyListening = true;

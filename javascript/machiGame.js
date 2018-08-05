@@ -71,9 +71,8 @@ Game = {
 			inputType.currD1 = Game.d1Roll;
 			inputType.currD2 = Game.d2Roll;
 		}
-		if (inputType.phase == 3){
-			//TODO - fix
-			throw "Not impelmented: getInputType for inputRewardPhase"
+		else if (inputType.phase == 3){
+			inputType.card = Game.inputQueue[0][1];
 		}
 		return inputType;
 	},
@@ -100,6 +99,7 @@ Game = {
 
 	rerollPhase:function(input){
 		//TODO - take input on whether to reroll or keep
+		print(input)
 		if(input !== undefined && input.reroll !== undefined){
 			var currPlayer = Game.players[Game.turnState.playerTurn];
 			if(input.reroll){
@@ -147,8 +147,8 @@ Game = {
 	},
 
 	startRewardPhase:function(){
-		//TODO - check if reward cards require player input then move to input reward phase
-		for(var i in Game.players){
+
+		for(var i = 0; i < Game.players.length; i++){
 			var p = Game.players[i];
 			var isTurn = Game.turnState.playerTurn == i;
 			var pre = p.money;
@@ -163,12 +163,24 @@ Game = {
 							Game.players[Game.turnState.playerTurn].money -= moneyLost;
 							p.money += moneyLost;
 
+						} else if(c.position == 6){
+							var totalLost = 0;
+							var lost = 0;
+							for(var k = 0; k < Game.players.length; k++){
+								if(k != i){
+									lost = Math.min(Game.players[k].money, c.rewardVal);
+									Game.players[k].money -= lost;
+									totalLost += lost;
+								}
+							}
+							
+							p.money += moneyLost;
 						} else {
 							p.money += c.reward(p);
 						}
 					} else {
 						print(c , ' requires input ');
-						// Game.inputQueue.push([p, c, Game.roll]);
+						Game.inputQueue.push([i, c.position]);
 					}
 				}
 			}
@@ -177,7 +189,9 @@ Game = {
 		if(Game.inputQueue.length === 0){
 			Game.turnState.phase += 2;
 		} else {
+			Game.turnState.rewardResponse = Game.inputQueue[0][0];
 			Game.turnState.phase += 1;
+
 		}
 		if(Game.print){
 				print('reward phase over');
@@ -185,9 +199,58 @@ Game = {
 	},
 
 	inputRewardPhase:function(input){
-		var resovling = Game.inputQueue.pop()
+		var resovling = Game.inputQueue.pop();
+		var success = false;
+		if(resovling[1] == 7){
+			if(input !== undefined && input.targetPlayer !== undefined){
+				var steal = Math.min(Game.players[input.targetPlayer].money, 
+					indexedCards[resovling[1]].rewardVal);
+				print('stole ', steal);
+				Game.players[input.targetPlayer].money -= steal;
+				Game.players[resovling[0]].money += steal;
+				
+				if(Game.inputQueue.length == 0){
+					Game.turnState.rewardResponse = Game.inputQueue[0][0];
+					Game.turnState.phase += 1;
+				}
+				success = true;
+			}
+		} else {
+			// if(input !== undefined && input.targetPlayer !== undefined 
+			// 	&& input.targetBuilding !== undefined && input.myBuilding){
+			try {
+			var target = Game[input.targetPlayer];
+			var me = Game[Game.turnState.rewardResponse];
+			var targetBuilding = indexedCards[input.targetBuilding];
+			var myBuilding = indexedCards[input.myBuilding];
+			var targetLoc = target.cards.indexOf(targetBuilding);
+			var myLoc = target.cards.indexOf(myBuilding);
 
-		return false;
+			target.cards.splice(targetLoc,1);
+			me.cards.splice(targetLoc,1);
+
+			target.cards.push(myBuilding);
+			target.cards.push(targetBuilding);
+			success = true;
+			} catch(err){
+				print('Business center failed');
+				print(err);
+			}
+
+			// }
+
+		}
+
+		if(Game.inputQueue.length == 0){
+			Game.turnState.phase += 1;
+			Game.turnState.rewardResponse = -1;
+		} else {
+			Game.turnState.rewardResponse = Game.inputQueue[0][0];
+		}
+		if(!success){
+			print('something went wrong')
+		}
+		return success;
 	},
 
 	buyPhase:function(input){

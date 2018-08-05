@@ -42,7 +42,8 @@ rewards={
 	stealn:basicReward,
 	stealAll:reward_func,
 	trade1:reward_func,
-	per_build:per_build_maker
+	per_build:per_build_maker,
+	stealAll:basicReward,
 
 }
 
@@ -137,7 +138,7 @@ Cards = {
 		cost:6,
 		triggersOn:trigger.purple,
 		triggers:[6],
-		noInput:false,
+		noInput:true,
 		rewardVal:2,
 		reward:rewards.stealAll,
 		remain:6,

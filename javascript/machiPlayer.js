@@ -40,7 +40,7 @@ function genRandomStrat(){
 	var length = randInt(1,10);
 	var generated = [];
 	for(var i = 0; i < length; i++){
-		generated.push([randIntTwoRange(0,6,9,14),randInt(1,6)]);
+		generated.push([randIntTwoRange(0,7,9,15),randInt(1,6)]);
 	}
 	return shuffle(base.concat(generated));
 }
@@ -85,14 +85,14 @@ class Player{
 					income2D += c.reward(this) * DOUBLE_ROLL_ODDS[c.triggers[j]];
 				}
 			}
-		} else {
-			for(var i = 0; i < this.cards.length; i++){
-				c = this.cards[i];
-				for(var j = 0; j < c.triggers.length && c.triggers[j] <= 6 && c.triggersOn(true); j++){
-					income1D += c.reward(this)/6;
-				}
+		}
+		for(var i = 0; i < this.cards.length; i++){
+			c = this.cards[i];
+			for(var j = 0; j < c.triggers.length && c.triggers[j] <= 6 && c.triggersOn(true); j++){
+				income1D += c.reward(this)/6;
 			}
 		}
+		
 		if(income1D > income2D){
 			return [income1D, 1];
 		} else {

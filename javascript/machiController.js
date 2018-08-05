@@ -31,6 +31,7 @@ manage = new CanvasManager(ctx);
 manage.draw();
 
 var me;
+var humanInputType; 
 function initHumanGame(){
 
 	print('welcome to Machi Koro!');
@@ -49,13 +50,26 @@ function f(response){
 	if(Game.turnState.phase == 0){
 		output.rollTwo = response;
 
-	} else if(Game.turnState == 1){
+	} else if(Game.turnState.phase == 1){
 		if(response.length != undefined){
 			if(response.length == 2){
 				print('rerolling in f')
 				output.reroll = response[0];
 				output.rollTwo = response[1];
 			}
+		}
+	} else if (Game.turnState.phase == 3) {
+		if(response.length != undefined){
+			if(humanInputType.card == 7){
+				if(response.length == 3){
+					output.targetPlayer = response[0];
+					output.targetBuilding = response[1];
+					output.myBuilding = response[2];
+				}
+			}else {
+				output.targetPlayer = response;
+			}
+
 		}
 	} else if(Game.turnState.phase == 4) {
 
@@ -86,6 +100,7 @@ function runHumanGame(){
 			Game.next(response);
 		} else {
 			manage.takeHumanInput(inputType);
+			humanInputType = inputType;
 			manage.draw();
 			if(Game.turnState.phase == 4){
 				print('You have $'+me.money);
@@ -123,7 +138,7 @@ var scoreBreakpoint;
 var iterations = 1000;
 var maxGen = 7;
 var currGen = 1;
-var maxMetaGen = 4;
+var maxMetaGen = 5;
 var currMetaGen = 1;
 
 var bestScore = [-1];
