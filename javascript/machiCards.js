@@ -265,7 +265,9 @@ Cards = {
 		isLandmark:true,
 		landmarkPosition:0,
 		position:15,
-		src:'images/AmusementPark.jpg'
+		src:'images/Station.jpg',
+		unbuiltSRC:'images/unbuiltStation.jpg',
+ 
 	},
 	ShoppingMall:{
 		name:"Shopping Mall",
@@ -273,7 +275,8 @@ Cards = {
 		isLandmark:true,
 		landmarkPosition:1,
 		position:16,
-		src:'images/AmusementPark.jpg'
+		src:'images/ShoppingMall.jpg',
+		unbuiltSRC:'images/unbuiltShoppingMall.jpg',
 	},
 	AmusementPark:{
 		name:"Amusement Park",
@@ -281,7 +284,8 @@ Cards = {
 		isLandmark:true,
 		landmarkPosition:2,
 		position:17,
-		src:'images/AmusementPark.jpg'
+		src:'images/AmusementPark.jpg',
+		unbuiltSRC:'images/unbuiltAmusementPark.jpg',
 	},
 	RadioTower:{
 		name:"Radio Tower",		
@@ -289,7 +293,8 @@ Cards = {
 		isLandmark:true,
 		landmarkPosition:3,
 		position:18,
-		src:'images/AmusementPark.jpg'
+		src:'images/RadioTower.jpg',
+		unbuiltSRC:'images/unbuiltRadioTower.jpg',
 	}
 
 

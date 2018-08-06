@@ -82,7 +82,7 @@ Game = {
 		if(Game.d1Roll > 0){
 			var currPlayer = Game.players[Game.turnState.playerTurn];
 			if(Game.print){
-				print(Game.roll ,' rolled');
+				print(Game.roll +' rolled');
 			}
 			if(currPlayer.landmarks[3]){
 				Game.turnState.phase += 1;
@@ -99,7 +99,7 @@ Game = {
 
 	rerollPhase:function(input){
 		//TODO - take input on whether to reroll or keep
-		print(input)
+		// print(input)
 		if(input !== undefined && input.reroll !== undefined){
 			var currPlayer = Game.players[Game.turnState.playerTurn];
 			if(input.reroll){
@@ -108,7 +108,7 @@ Game = {
 					return false;
 				} 
 				if(Game.print){
-					print(Game.roll ,' re-rolled');
+					print(Game.roll +' re-rolled');
 				}
 				
 			} 
@@ -184,6 +184,10 @@ Game = {
 					}
 				}
 			}
+
+			if(p.isHuman && Game.print){
+				print(p.name+" won $"+ (p.money - pre));			
+			} 
 			p.winnings.push(p.money - pre);
 		}
 		if(Game.inputQueue.length === 0){
@@ -192,9 +196,6 @@ Game = {
 			Game.turnState.rewardResponse = Game.inputQueue[0][0];
 			Game.turnState.phase += 1;
 
-		}
-		if(Game.print){
-				print('reward phase over');
 		}
 	},
 
@@ -254,22 +255,21 @@ Game = {
 	},
 
 	buyPhase:function(input){
+		var currPlayer = Game.players[Game.turnState.playerTurn];
 		if(input !== undefined && input.card !== undefined){
 			card = input.card;
 			//check card is valid
-			var currPlayer = Game.players[Game.turnState.playerTurn];
 			if(!card.isLandmark){
 				if(card.cost <= currPlayer.money && card.remain > 0){
+					var pre = currPlayer.money;
 					currPlayer.buyCard(card);
 					if(Game.print){
-						print(currPlayer.name , ' bought ', card.name);
+						print('With $'+pre+ ' ' + currPlayer.name + ' bought ', card.name);
 					}
 					// print(card.name, ' bought');
 				} else {
-					// print('Card purchase failed, either insufficient money or none remain');
-					// print(card);
-					// print(card.cost);
-					// print(currPlayer.money);
+					print('Invalid establishment purchase');
+					return false;
 				}
 			} else {
 				// print('trying to buy a landmark')
@@ -278,15 +278,18 @@ Game = {
 					if(Game.print){
 						print(currPlayer.name , ' bought ', card.name, ' !!');
 					}
-					// print(card.name, ' bought!!!');
 				} else {
-					// print('Landmark purchase failed, either insufficient money or already own');
-					
+					if(Game.print){
+						print("Invalid landmark purchase");
+					}
+					return false;
 				}
 			}
 			
 		} else {
-			// print('No card input');
+			if(Game.print){
+				print(currPlayer.name + " didn't buy anything");
+			}
 		}
 		Game.turnState.phase += 1;
 		return true;
@@ -319,6 +322,7 @@ Game = {
 				Game.turnState.playerTurn < Game.players.length - 1 ? Game.turnState.playerTurn++ : Game.turnState.playerTurn = 0;
 				Game.turn += 1;
 				if(Game.print){
+					print('------------------------')
 					print('It is now ', Game.players[Game.turnState.playerTurn].name,"'s turn!");
 				}
 			}

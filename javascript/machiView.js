@@ -24,19 +24,20 @@ function drawLine(x1,y1,x2,y2){
 	ctx.restore();
 }
 
-function printCards(cards){
+function printCards(p){
+
 	var str = "";
-	for(i in cards){
-		str += cards[i].name + " ";
+	for(i in p.cards){
+		str += p.cards[i].name + " ";
 	}
 	return str;
 }
 
-function printLandmarks(landmarks){
+function printLandmarks(p){
 	var str = "";
-	for(i in landmarks){
-		if(landmarks[i]){
-
+	// print(land)
+	for(i in p.landmarks){
+		if(p.landmarks[i]){
 			str += indexedCards[firstLandmarkLoc +parseInt(i)].name + " ";
 		}
 	}
@@ -56,12 +57,17 @@ class LineWrapper{
 }
 
 class ImageWrapper{
-	constructor(src, x, y){
+	constructor(src, x, y, width, height){
 		this.src = src;
 		this.x = x;
 		this.y = y;
-		this.width = 105;
-		this.height = 168;
+		if(width === undefined || height === undefined){	
+			this.width = 105;
+			this.height = 168;
+		} else {
+			this.width = width;
+			this.height = height; 
+		}
 
 		this.currStep = 0;
 		this.totalStep = 0;
@@ -118,7 +124,7 @@ class CanvasManager{
 		this.messageText = "Starting messageText";
 		this.ctx = ctx
 		this.images = []
-		this.establishmentImages = [];
+		this.cardImages = [];
 		this.lines = []
 
 		this.top = 75;	
@@ -147,6 +153,12 @@ class CanvasManager{
 			}
 			this.addNewLine(currLeft, this.top, currLeft, this.bottom);
 		}
+		for(var i = 1; i <= indexedCards.length - firstLandmarkLoc; i++){
+			var currLeft = this.right - this.boxWidth * i; 
+			this.addNewCardImage(indexedCards[indexedCards.length - i], currLeft+10, this.bottom + 10);
+		}
+		this.addNewImage("images/d1.png", 1050+10,10,50,50);
+		this.addNewImage("images/d2.png", 1125+10,10,50,50);
 		//1050, 0, 150, 75
 		this.addNewLine(1050+150/2, 0, 1050+150/2, 75);
 		// for(var i = 0; i < 7; i++){
@@ -164,6 +176,7 @@ class CanvasManager{
 
 	draw(){
 		// this.ctx.clearRect(0, 0, 500, 500);
+			ctx.font = '16px monospace';
 		this.ctx.clearRect(0,0,canvas.width,canvas.height);
 
 		this.ctx.fillStyle = 'rgb(200, 0, 0)';
@@ -177,9 +190,61 @@ class CanvasManager{
 
 		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
 		this.ctx.fillRect(1050, 0, 150, 75);
-		drawLine
 
+
+		if(this.buyListening){
+			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
+			this.ctx.fillRect(900, 0, 150, 75);
+
+			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+			this.ctx.fillText("No Purchase", 900+40, 40);
+		}
+		if(this.rerollListening){
+			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
+			this.ctx.fillRect(900, 0, 150, 75);
+
+			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+			this.ctx.fillText("Keep Roll", 900+40, 40);
+		}
+
+
+		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		
+		for(var i = 0; i < Game.players.length; i++){
+			var p = Game.players[i];
+			 if(i==0){
+				ctx.save();
+				ctx.translate( 0, 0 );
+				ctx.rotate( Math.PI / 2 );
+				ctx.textAlign = "left";
+				ctx.fillText(p.name +": $"+p.money, 0, -this.left+10);
+				ctx.fillText(printCards(p), 0, -this.left+25);
+				ctx.fillText(printLandmarks(p), 0, -this.left+40);
+				ctx.restore();
+
+			} else if(i==1){
+				
+			ctx.fillText(p.name +": $"+p.money, this.left+10, this.bottom+12);
+			ctx.fillText(printCards(p), this.left+10, this.bottom+27);
+			ctx.fillText(printLandmarks(p), this.left+10, this.bottom+42);
+			}
+			else if(i ==2){
+				ctx.save();
+				ctx.translate( 0, 0 );
+				ctx.rotate( -Math.PI / 2 );
+				ctx.textAlign = "right";
+				ctx.fillText(p.name +": $"+p.money, 0, this.right+10);
+				ctx.fillText(printCards(p), 0, this.right+25);
+				ctx.fillText(printLandmarks(p), 0, this.right+40);
+
+
+				// ctx.fillText( "Right side text", 0,this.right+10 );
+				// ctx.fillText( "Right side text", 0,this.right+10 );
+				// ctx.fillText( "Right side text", 0,this.right+10 );
+				ctx.restore();
+			}
+		}
+
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			var currCard = indexedEstablishments[i];
 			if(i < this.numCols){
@@ -195,33 +260,11 @@ class CanvasManager{
 
 		ctx.fillText(this.messageText, 400, 50);
 
-		ctx.fillText(Game.players[0].money, 10, 20);
-		ctx.fillText(printCards(Game.players[0].cards), 10, 30);
-		ctx.fillText(printLandmarks(Game.players[0].landmarks), 10, 40);
 		
-		ctx.fillText(Game.players[1].money, this.left+10, this.bottom+20);
-		ctx.fillText(printCards(Game.players[1].cards), this.left+10, this.bottom+30);
-		ctx.fillText(printLandmarks(Game.players[1].landmarks), this.left+10, this.bottom+40);
-		
-		ctx.fillText(Game.players[2].money, this.right+10,20);
-		ctx.fillText(printCards(Game.players[2].cards), this.right+10,30);
-		ctx.fillText(printLandmarks(Game.players[2].landmarks), this.right+10, 40);
-		// Game.players[1].money
-		// Game.players[2].money
 
 
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		for(var i = 0; i < this.numCols; i++){
-			ctx.font = '14px monospace';
-			var currLeft = this.left + i * this.boxWidth;
-
-			// ctx.fillText('Card ' + i, currLeft+20, this.top+20);
-
-
-			// ctx.fillText('Card ' + (i+7), this.left + i*this.boxWidth+20, this.top + this.boxHeight+20);
-			
-			// ctx.fillRect(this.left+i*this.boxWidth+10,this.top + this.boxHeight + 40, 100, 100);
-		}
+		
 
 
 
@@ -232,9 +275,9 @@ class CanvasManager{
 				animating = true;
 			}
 		}
-		for(var i in this.establishmentImages){
-			this.establishmentImages[i].draw(this.ctx);
-			if(this.establishmentImages[i].moving){
+		for(var i in this.cardImages){
+			this.cardImages[i].draw(this.ctx);
+			if(this.cardImages[i].moving){
 				animating = true;
 			}
 		}
@@ -247,12 +290,12 @@ class CanvasManager{
 		}
 	}
 
-	addNewImage(src,x,y){
-		this.images.push(new ImageWrapper(src,x,y));
+	addNewImage(src,x,y,width,height){
+		this.images.push(new ImageWrapper(src,x,y,width,height));
 	}
 
 	addNewCardImage(card, x, y){
-		this.establishmentImages.push(new cardImageWrapper(card, x, y));
+		this.cardImages.push(new cardImageWrapper(card, x, y));
 
 	}
 
@@ -272,23 +315,30 @@ class CanvasManager{
 			}
 		}
 		if (this.rerollListening){
+			if(clickInObj(900,0,150,75,x,y)){
+				print('it worked!');
+				return [false, false];
+			}
 			var roll1 = clickInObj(1050, 0, 75, 75, x, y);
 			var roll2 = clickInObj(1050+75, 0, 75, 75, x, y);
+			
 			if(roll1 || roll2){
 				print('rerolling');
 				return [true, roll2];
-			} else {
-				return [false];
-			}
+			} 
 
 		}
 		if(this.buyListening){
-			for(var i in this.establishmentImages){
-				if(this.establishmentImages[i].contains(x,y)){
-					return this.establishmentImages[i].card.position;
+			if(clickInObj(900,0,150,75,x,y)){
+				return -1;
+			}
+			for(var i in this.cardImages){
+				if(this.cardImages[i].contains(x,y)){
+					return this.cardImages[i].card.position;
 				}
 			}
 		}
+
 		if(this.playerListening){
 			print('taking player input')
 		} else if(this.stealListening){
@@ -300,13 +350,14 @@ class CanvasManager{
 	}
 	disableListeners(){
 		this.diceListening = false;
+		this.rerollListening = false;
 		this.buyListening = false;
-		this.playerListening = false;
 		this.stealListening = false;
+		this.draw();
 	}
 
 	takeHumanInput(inputType){
-		print(inputType);
+		// print(inputType);
 		if(inputType.phase == 0){
 			this.messageText = "Roll Dice";
 			this.diceListening = true;
@@ -323,6 +374,7 @@ class CanvasManager{
 			this.messageText = "Choose Purchase";
 			this.buyListening = true;
 		}
+		this.draw();
 
 	}
 }

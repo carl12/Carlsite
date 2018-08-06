@@ -32,16 +32,17 @@ manage.draw();
 
 var me;
 var humanInputType; 
+
 function initHumanGame(){
 
 	print('welcome to Machi Koro!');
-	var playLoc;
+	var playLoc = randInt(0,3);
 	Game.init(true);
-	playLoc = randInt(0,3);
-	print('you are player ', playLoc);
+	print('you are player '+ playLoc);
 	Game.players[playLoc] = new HumanPlayer("Human!");
 	me = Game.players[playLoc];
 	var k = 0; 
+
 	runHumanGame();
 }
 
@@ -67,6 +68,7 @@ function f(response){
 					output.myBuilding = response[2];
 				}
 			}else {
+				// TODO - finish this
 				output.targetPlayer = response;
 			}
 
@@ -78,7 +80,11 @@ function f(response){
 		} 
 		// print(output);
 	}
-	setTimeout(runHumanGame);
+	if(Game.turnState.phase == 4){
+		setTimeout(runHumanGame, 1000);
+	} else {
+		setTimeout(runHumanGame, 300);
+	}
 	return Game.next(output);
 }
 
@@ -433,8 +439,7 @@ function nextGeneration(){
 		print('~+~+~+~+~+~+~+~+~+~+~+~++~+~')
 	}
 	pop = newPop;
-	// print('we made a new pop with ', pop.length, ' which should be the same as ', popSize);
-	
+	// print('we made a new pop with ', pop.length, ' which should be the same as ', popSize);	
 }
 
 
@@ -455,5 +460,5 @@ canvas.addEventListener('mouseover', function(e) {
 
 // initHumanGame();
 // startGenetic();
-
+// testStrats();
 
