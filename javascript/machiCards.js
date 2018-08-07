@@ -301,5 +301,6 @@ Cards = {
 };
 var indexedCards = [];
 Object.entries(Cards).forEach((key,val)=>{indexedCards[key[1].position] = key[1]});
-
 var indexedEstablishments = indexedCards.slice(0, firstLandmarkLoc);
+var indexedLandmarks = indexedCards.slice(firstLandmarkLoc);
+

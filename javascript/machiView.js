@@ -107,8 +107,8 @@ class ImageWrapper{
 }
 
 class cardImageWrapper extends ImageWrapper{
-	constructor(card, x, y){
-		super(card.src, x, y);
+	constructor(card, x, y, width, height){
+		super(card.src, x, y, width, height);
 		this.card = card;
 	}
 
@@ -121,6 +121,12 @@ class cardImageWrapper extends ImageWrapper{
 
 class CanvasManager{
 	constructor(ctx){
+		this.imageHolder = []
+		for(var i = 0; i < indexedCards.length; i++){
+			this.imageHolder[i] = new Image();
+			this.imageHolder[i].src = indexedCards[i].src;
+		}
+
 		this.messageText = "Starting messageText";
 		this.ctx = ctx
 		this.images = []
@@ -153,20 +159,15 @@ class CanvasManager{
 			}
 			this.addNewLine(currLeft, this.top, currLeft, this.bottom);
 		}
-		for(var i = 1; i <= indexedCards.length - firstLandmarkLoc; i++){
-			var currLeft = this.right - this.boxWidth * i; 
-			this.addNewCardImage(indexedCards[indexedCards.length - i], currLeft+10, this.bottom + 10);
+		for(var i = 0; i < indexedLandmarks.length ; i++){
+			var currLeft = this.right - this.boxWidth/2 * (i+1); 
+			this.addNewCardImage(indexedLandmarks[i], currLeft+10, this.bottom + 10, 105/2, 168/2);
 		}
 		this.addNewImage("images/d1.png", 1050+10,10,50,50);
 		this.addNewImage("images/d2.png", 1125+10,10,50,50);
 		//1050, 0, 150, 75
 		this.addNewLine(1050+150/2, 0, 1050+150/2, 75);
-		// for(var i = 0; i < 7; i++){
-		// 	var currLeft = this.left + i * this.boxWidth;
 
-		// 	this.addNewLine(currLeft, this.top, currLeft, this.bottom);
-		// 	this.addNewImage('images/AmusementPark.jpg', currLeft+10, this.top+20);
-		// }
 
 		for(var j = 0; j < 3; j++){
 			this.addNewLine(this.left, this.top + j * this.boxHeight, this.right, this.top + j * this.boxHeight);
@@ -212,6 +213,9 @@ class CanvasManager{
 		
 		for(var i = 0; i < Game.players.length; i++){
 			var p = Game.players[i];
+			var bc = Game.players[i].buildingCount;
+			var tmpImg;
+			var numEstTypes = 0;
 			 if(i==0){
 				ctx.save();
 				ctx.translate( 0, 0 );
@@ -220,14 +224,36 @@ class CanvasManager{
 				ctx.fillText(p.name +": $"+p.money, 0, -this.left+10);
 				ctx.fillText(printCards(p), 0, -this.left+25);
 				ctx.fillText(printLandmarks(p), 0, -this.left+40);
+				numEstTypes = 0;
+				for(var j = 0; j < bc.length; j++){
+					if(bc[j]> 0){
+						numEstTypes ++;
+						tmpImg = this.imageHolder[j];
+						print(this.boxWidth/2 * numEstTypes)
+						print(105/2);
+						ctx.drawImage(tmpImg, (this.boxWidth/2) * (numEstTypes-1) + 10, -this.left + 50, 105/2, 168/2);
+						
+					}
+				}
 				ctx.restore();
 
 			} else if(i==1){
 				
-			ctx.fillText(p.name +": $"+p.money, this.left+10, this.bottom+12);
-			ctx.fillText(printCards(p), this.left+10, this.bottom+27);
-			ctx.fillText(printLandmarks(p), this.left+10, this.bottom+42);
-			}
+				ctx.fillText(p.name +": $"+p.money, this.left+10, this.bottom+12);
+				ctx.fillText(printCards(p), this.left+10, this.bottom+27);
+				ctx.fillText(printLandmarks(p), this.left+10, this.bottom+42);
+
+				for(var j = 0; j < bc.length; j++){
+						if(bc[j]> 0){
+							numEstTypes ++;
+							tmpImg = this.imageHolder[j];
+							ctx.drawImage(tmpImg, this.left + (this.boxWidth/2) * (numEstTypes-1) + 10
+								, this.bottom + 50, 105/2, 168/2);
+							
+						}
+					}
+				}
+
 			else if(i ==2){
 				ctx.save();
 				ctx.translate( 0, 0 );
@@ -241,8 +267,17 @@ class CanvasManager{
 				// ctx.fillText( "Right side text", 0,this.right+10 );
 				// ctx.fillText( "Right side text", 0,this.right+10 );
 				// ctx.fillText( "Right side text", 0,this.right+10 );
+				for(var j = 0; j < bc.length; j++){
+					if(bc[j]> 0){
+						numEstTypes ++;
+						tmpImg = this.imageHolder[j];
+						ctx.drawImage(tmpImg, -(this.boxWidth/2) * numEstTypes, this.right + 50, 105/2, 168/2);
+							
+					}
+				}
 				ctx.restore();
 			}
+			
 		}
 
 		for(var i = 0; i < indexedEstablishments.length; i++){
@@ -294,8 +329,8 @@ class CanvasManager{
 		this.images.push(new ImageWrapper(src,x,y,width,height));
 	}
 
-	addNewCardImage(card, x, y){
-		this.cardImages.push(new cardImageWrapper(card, x, y));
+	addNewCardImage(card, x, y, width, height){
+		this.cardImages.push(new cardImageWrapper(card, x, y, width, height));
 
 	}
 
