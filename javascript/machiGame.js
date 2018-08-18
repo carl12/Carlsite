@@ -13,6 +13,7 @@ function allTrue(value){
 
 Game = {
 	genericNames:['Aaron','Bob','Carl','Devon'],
+	players:[],
 
 	init:function(print = false){
 		for(var j in indexedCards){

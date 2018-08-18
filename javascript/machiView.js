@@ -229,8 +229,7 @@ class CanvasManager{
 					if(bc[j]> 0){
 						numEstTypes ++;
 						tmpImg = this.imageHolder[j];
-						print(this.boxWidth/2 * numEstTypes)
-						print(105/2);
+						ctx.fillText(""+bc[j], (this.boxWidth/2) * (numEstTypes-1) + 30, -this.left + 150);
 						ctx.drawImage(tmpImg, (this.boxWidth/2) * (numEstTypes-1) + 10, -this.left + 50, 105/2, 168/2);
 						
 					}
@@ -247,6 +246,7 @@ class CanvasManager{
 						if(bc[j]> 0){
 							numEstTypes ++;
 							tmpImg = this.imageHolder[j];
+							ctx.fillText(""+bc[j], this.left + (this.boxWidth/2) * (numEstTypes-1) + 30, this.bottom + 150);
 							ctx.drawImage(tmpImg, this.left + (this.boxWidth/2) * (numEstTypes-1) + 10
 								, this.bottom + 50, 105/2, 168/2);
 							
@@ -271,6 +271,8 @@ class CanvasManager{
 					if(bc[j]> 0){
 						numEstTypes ++;
 						tmpImg = this.imageHolder[j];
+						// ctx.fillText(bc[j],)
+						ctx.fillText(""+bc[j], -(this.boxWidth/2) * (numEstTypes) + 30, this.right + 150);
 						ctx.drawImage(tmpImg, -(this.boxWidth/2) * numEstTypes, this.right + 50, 105/2, 168/2);
 							
 					}

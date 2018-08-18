@@ -26,7 +26,7 @@ canvas.addEventListener("click", (event)=>{
 
 
 
-Game.init();
+// Game.init();
 manage = new CanvasManager(ctx);
 manage.draw();
 
