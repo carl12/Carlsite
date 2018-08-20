@@ -1,9 +1,19 @@
 //Add listeners to images and dice
 //Handle listener input
+
 var canvas = document.getElementById('myCanvas');
 var canvasLeft = canvas.offsetLeft;
 var canvasTop = canvas.offsetTop;
+var outputBox = document.getElementById('outputText');
 
+print = function(...outputText){
+	console.log(outputText)
+	for(var i = 0; i < outputText.length; i++){
+		console.log(outputText[i]);
+		outputBox.innerHTML += outputText[i];
+	}
+	outputBox.innerHTML += "\n";
+}
 
 
 canvas.addEventListener("click", (event)=>{
@@ -27,21 +37,24 @@ canvas.addEventListener("click", (event)=>{
 
 
 // Game.init();
+
 manage = new CanvasManager(ctx);
+manage.game = Game;
 manage.draw();
 
 var me;
 var humanInputType; 
 
 function initHumanGame(){
-
 	print('welcome to Machi Koro!');
-	var playLoc = randInt(0,3);
-	Game.init(true);
+	var playLoc = randInt(0,4);
+	Game.init(4, true);
 	print('you are player '+ playLoc);
 	Game.players[playLoc] = new HumanPlayer("Human!");
 	me = Game.players[playLoc];
 	var k = 0; 
+
+	manage.disableListeners();
 
 	runHumanGame();
 }

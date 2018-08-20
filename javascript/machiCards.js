@@ -9,7 +9,7 @@ trigger={
 }
 
 category=['none','farm','animal','food','natural','factory','business'];
-firstLandmarkLoc = 15;
+FIRST_LANDMARK_LOC = 15;
 
 function reward_func(player){
 	//TODO - implement rewards that require input. 
@@ -301,6 +301,6 @@ Cards = {
 };
 var indexedCards = [];
 Object.entries(Cards).forEach((key,val)=>{indexedCards[key[1].position] = key[1]});
-var indexedEstablishments = indexedCards.slice(0, firstLandmarkLoc);
-var indexedLandmarks = indexedCards.slice(firstLandmarkLoc);
+var indexedEstablishments = indexedCards.slice(0, FIRST_LANDMARK_LOC);
+var indexedLandmarks = indexedCards.slice(FIRST_LANDMARK_LOC);
 

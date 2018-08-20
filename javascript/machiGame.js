@@ -15,7 +15,7 @@ Game = {
 	genericNames:['Aaron','Bob','Carl','Devon'],
 	players:[],
 
-	init:function(print = false){
+	init:function(numPlayers = 4, print = false){
 		for(var j in indexedCards){
 			indexedCards[j].remain = 6;
 		}
@@ -32,7 +32,7 @@ Game = {
 		Game.turnState = {'playerTurn':0, 'phase':0, 'amuseDoubles':false, 'isSecond':false,
 							'rewardResponse':-1, 'gameOver':false};
 		Game.inputQueue = [];
-		Game.numPlayers = 4;
+		Game.numPlayers = numPlayers;
 		Game.players = [];
 		Game.rolls = [];
 		Game.roll = 0;

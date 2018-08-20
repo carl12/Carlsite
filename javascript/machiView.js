@@ -1,8 +1,10 @@
 pr = print = console.log
 
 var canvas = document.getElementById('myCanvas');
-canvas.setAttribute('height','700px');
-canvas.setAttribute('width','1400px');
+var outputBox = document.getElementById('outputText');
+canvas.setAttribute('height','750px');
+outputBox.setAttribute('height','750px');
+canvas.setAttribute('width','1200px');
 
 canvas.style.outline="3px solid black";
 
@@ -38,7 +40,7 @@ function printLandmarks(p){
 	// print(land)
 	for(i in p.landmarks){
 		if(p.landmarks[i]){
-			str += indexedCards[firstLandmarkLoc +parseInt(i)].name + " ";
+			str += indexedCards[FIRST_LANDMARK_LOC +parseInt(i)].name + " ";
 		}
 	}
 	return str;
@@ -129,173 +131,192 @@ class CanvasManager{
 
 		this.messageText = "Starting messageText";
 		this.ctx = ctx
-		this.images = []
-		this.cardImages = [];
-		this.lines = []
 
-		this.top = 75;	
-		this.bottom = 500;
+		this.top = 0;
+		this.statusBarHeight = 75;
+		this.estTop = this.top + this.statusBarHeight;	
+		this.pWidth = 160;
 
-		this.left = 200;
-		this.right = 1200;
+		this.bottom = canvas.height - this.pWidth;
+
+		this.left = this.pWidth;
+		this.right = canvas.width - this.pWidth;
 		
 		this.numCols = 8;
 		this.numRows = 2;
-		this.boxWidth = (this.right - this.left) /this.numCols;
-		this.boxHeight = (this.bottom - this.top) / this.numRows;
 
+		this.gameWaiting = this.game === undefined;
 		this.diceListening = false;
 		this.rerollListening = false;
 		this.buyListening = false;
 		this.playerListening = false;
 		this.stealListening = false;
+
+		this.initImagesAndLines();
+	}
+
+	initImagesAndLines(){
+		this.images = []
+		this.cardImages = []
+		this.lines = []
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			if(i < this.numCols){
 				var currLeft = this.left + (i) * this.boxWidth;
-				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.top+21);
+				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.estTop+21, this.boxWidth - 20, this.boxHeight - 20);
 			} else {
 				var currLeft = this.left + (i-this.numCols) * this.boxWidth;
-				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.top+21 + this.boxHeight);
+				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.estTop+21 + this.boxHeight, this.boxWidth - 20, this.boxHeight - 20);
 			}
-			this.addNewLine(currLeft, this.top, currLeft, this.bottom);
+			this.addNewLine(currLeft, this.estTop, currLeft, this.bottom);
 		}
-		for(var i = 0; i < indexedLandmarks.length ; i++){
-			var currLeft = this.right - this.boxWidth/2 * (i+1); 
-			this.addNewCardImage(indexedLandmarks[i], currLeft+10, this.bottom + 10, 105/2, 168/2);
-		}
-		this.addNewImage("images/d1.png", 1050+10,10,50,50);
-		this.addNewImage("images/d2.png", 1125+10,10,50,50);
-		//1050, 0, 150, 75
-		this.addNewLine(1050+150/2, 0, 1050+150/2, 75);
 
+		// this.addNewImage("images/d1.png", this.right - 150 + 10, 10,50,50);
+		
+		this.addNewImage("images/d1.png", this.right - 150 + 10, this.top + 10, 50, 50);
+		this.addNewImage("images/d2.png", this.right - 150/2 + 10, this.top + 10, 50, 50);
+		//1050, 0, 150, 75
+		this.addNewLine(this.right - 150/2 , this.top, this.right - 150/2, this.estTop);
 
 		for(var j = 0; j < 3; j++){
-			this.addNewLine(this.left, this.top + j * this.boxHeight, this.right, this.top + j * this.boxHeight);
+			this.addNewLine(this.left, this.estTop + j * this.boxHeight, this.right, this.estTop + j * this.boxHeight);
+		}		
+	}
+
+	setDimensions(numPlayers){
+
+		this.left = 0;
+		this.top = 0;
+		this.right = canvas.width;
+		this.bottom = canvas.height;
+
+		if (numPlayers >= 1){
+			this.left = this.pWidth;
+		} if (numPlayers >= 2){
+			this.bottom = canvas.height - this.pWidth;
+		} if (numPlayers >= 3){
+			this.right = canvas.width - this.pWidth;
+		} if (numPlayers >= 4){
+			this.top = this.pWidth;
+		} else {
+			print('wrong number of players')
 		}
-		// this.draw();
+
+		this.estTop = this.top + this.statusBarHeight;
+		this.boxWidth = (this.right - this.left) /this.numCols;
+		this.boxHeight = (this.bottom - this.estTop) / this.numRows;
 	}
 
 	draw(){
-		// this.ctx.clearRect(0, 0, 500, 500);
-			ctx.font = '16px monospace';
+		this.setDimensions(this.game.players.length);
+		this.initImagesAndLines();
+		ctx.font = '16px monospace';
 		this.ctx.clearRect(0,0,canvas.width,canvas.height);
 
 		this.ctx.fillStyle = 'rgb(200, 0, 0)';
-		this.ctx.fillRect(0,0, 200, 700);
+		this.ctx.fillRect(0,0, this.left, canvas.height);
 
 		this.ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
-		this.ctx.fillRect(1200, 0, 200, 700);
+		this.ctx.fillRect(this.right, 0, this.pWidth, canvas.height);
 
 		this.ctx.fillStyle = 'rgba(0, 200, 0, 0.5)';
-		this.ctx.fillRect(200, 500, 1000, 800);
+		this.ctx.fillRect(this.left, this.bottom, this.right - this.left, this.pWidth);
+
+		this.ctx.fillStyle = 'rgba(100, 0, 100, 0.5)';
+		this.ctx.fillRect(this.right, 0, this.left - this.right, this.top);
 
 		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
-		this.ctx.fillRect(1050, 0, 150, 75);
+		this.ctx.fillRect(this.right - 150, this.top, 150, this.statusBarHeight);
 
-
-		if(this.buyListening){
-			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
-			this.ctx.fillRect(900, 0, 150, 75);
-
+		var buttonDim = [this.right - 300, this.top, 150, this.statusBarHeight]
+		if(this.gameWaiting){
+			this.ctx.fillStyle = 'rgba(0, 200, 0, 1)';
+			this.ctx.fillRect(...buttonDim);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("No Purchase", 900+40, 40);
-		}
-		if(this.rerollListening){
+			this.ctx.fillText("Start game", this.right - 300 + 40, this.top+40);
+		} else if(this.buyListening){
 			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
-			this.ctx.fillRect(900, 0, 150, 75);
-
+			this.ctx.fillRect(...buttonDim);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("Keep Roll", 900+40, 40);
+			this.ctx.fillText("No Purchase", this.right - 300 + 40, this.top+40);
+		} else if(this.rerollListening){
+			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
+			this.ctx.fillRect(...buttonDim);
+			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+			this.ctx.fillText("Keep Roll", this.right - 300 + 40, this.top+40);
 		}
-
 
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		
-		for(var i = 0; i < Game.players.length; i++){
-			var p = Game.players[i];
-			var bc = Game.players[i].buildingCount;
-			var tmpImg;
-			var numEstTypes = 0;
-			 if(i==0){
+		if(this.game !== undefined){
+			for(var i = 0; i < this.game.players.length; i++){
+				var p = this.game.players[i];
+				var bc = this.game.players[i].buildingCount;
+				var tmpImg;
+				var numEstTypes = 0;
 				ctx.save();
-				ctx.translate( 0, 0 );
-				ctx.rotate( Math.PI / 2 );
-				ctx.textAlign = "left";
-				ctx.fillText(p.name +": $"+p.money, 0, -this.left+10);
-				ctx.fillText(printCards(p), 0, -this.left+25);
-				ctx.fillText(printLandmarks(p), 0, -this.left+40);
-				numEstTypes = 0;
+				var currLandmark;
+				if(i==0){
+					ctx.translate( this.left, 0 );
+					ctx.rotate( Math.PI / 2 );
+					currLandmark = canvas.height;
+				} else if(i==1){
+					ctx.translate(this.left, this.bottom);
+					currLandmark = this.right - this.left;
+				}
+				else if(i ==2){
+					ctx.translate( this.right, canvas.height);
+					ctx.rotate( -Math.PI / 2 );
+					currLandmark = canvas.height;
+				}
+				else if(i == 3){
+					ctx.translate(this.right, this.top);
+					ctx.rotate(Math.PI);
+					currLandmark = this.right - this.left;
+				}
+
+				ctx.fillText(p.name +": $"+p.money, 0, 12);
+				ctx.fillText(printCards(p), 0, 27);
+				ctx.fillText(printLandmarks(p), 0, 42);
+
 				for(var j = 0; j < bc.length; j++){
 					if(bc[j]> 0){
-						numEstTypes ++;
 						tmpImg = this.imageHolder[j];
-						ctx.fillText(""+bc[j], (this.boxWidth/2) * (numEstTypes-1) + 30, -this.left + 150);
-						ctx.drawImage(tmpImg, (this.boxWidth/2) * (numEstTypes-1) + 10, -this.left + 50, 105/2, 168/2);
-						
+						ctx.fillText(""+bc[j], (this.boxWidth/2) * (numEstTypes) + 30, 150);
+						ctx.drawImage(tmpImg, (this.boxWidth/2) * numEstTypes + 10,  50, 105/2, 168/2);
+						numEstTypes ++;
+							
 					}
 				}
-				ctx.restore();
 
-			} else if(i==1){
+				currLandmark -= (105/2 + 10);
+				for(var j = 0; j < p.landmarks.length; j++){
+					tmpImg = this.imageHolder[j + FIRST_LANDMARK_LOC];
+					
+					ctx.drawImage(tmpImg, currLandmark, 50, 105/2, 168/2); 
+					ctx.fillText(p.landmarks[j]?"Owned":"Unowned", currLandmark, 150);
+					currLandmark -= this.boxWidth/2;
+				}
+				ctx.restore();
 				
-				ctx.fillText(p.name +": $"+p.money, this.left+10, this.bottom+12);
-				ctx.fillText(printCards(p), this.left+10, this.bottom+27);
-				ctx.fillText(printLandmarks(p), this.left+10, this.bottom+42);
-
-				for(var j = 0; j < bc.length; j++){
-						if(bc[j]> 0){
-							numEstTypes ++;
-							tmpImg = this.imageHolder[j];
-							ctx.fillText(""+bc[j], this.left + (this.boxWidth/2) * (numEstTypes-1) + 30, this.bottom + 150);
-							ctx.drawImage(tmpImg, this.left + (this.boxWidth/2) * (numEstTypes-1) + 10
-								, this.bottom + 50, 105/2, 168/2);
-							
-						}
-					}
-				}
-
-			else if(i ==2){
-				ctx.save();
-				ctx.translate( 0, 0 );
-				ctx.rotate( -Math.PI / 2 );
-				ctx.textAlign = "right";
-				ctx.fillText(p.name +": $"+p.money, 0, this.right+10);
-				ctx.fillText(printCards(p), 0, this.right+25);
-				ctx.fillText(printLandmarks(p), 0, this.right+40);
-
-
-				// ctx.fillText( "Right side text", 0,this.right+10 );
-				// ctx.fillText( "Right side text", 0,this.right+10 );
-				// ctx.fillText( "Right side text", 0,this.right+10 );
-				for(var j = 0; j < bc.length; j++){
-					if(bc[j]> 0){
-						numEstTypes ++;
-						tmpImg = this.imageHolder[j];
-						// ctx.fillText(bc[j],)
-						ctx.fillText(""+bc[j], -(this.boxWidth/2) * (numEstTypes) + 30, this.right + 150);
-						ctx.drawImage(tmpImg, -(this.boxWidth/2) * numEstTypes, this.right + 50, 105/2, 168/2);
-							
-					}
-				}
-				ctx.restore();
 			}
-			
 		}
 
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			var currCard = indexedEstablishments[i];
 			if(i < this.numCols){
 				var currLeft = this.left + currCard.position * this.boxWidth;
-				ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+3, this.top+20, this.boxWidth-5);
+				ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+3, this.estTop+20, this.boxWidth-5);
 			} else {
 				var currLeft = this.left + (currCard.position-this.numCols) * this.boxWidth;
-				var currUp = this.top + this.boxHeight;
+				var currUp = this.estTop + this.boxHeight;
 				ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+3, currUp + 20, this.boxWidth-5);
 			}
 
 		}
 
-		ctx.fillText(this.messageText, 400, 50);
+		ctx.fillText(this.messageText, 400, this.top + 50);
+		if(this.game.roll !== undefined){
+			ctx.fillText(this.game.roll, 600, this.top + 50);
+		}
 
 		
 
@@ -341,9 +362,13 @@ class CanvasManager{
 	}
 
 	checkClick(x,y){
+		if(this.gameWaiting){
+			setTimeout(initHumanGame());
+			return true;
+		}
 		if(this.diceListening){
-			var roll1 = clickInObj(1050, 0, 75, 75, x, y);
-			var roll2 = clickInObj(1050+75, 0, 75, 75, x, y);
+			var roll1 = clickInObj(this.right - 150, this.top, 75, 75, x, y);
+			var roll2 = clickInObj(this.right - 150/2, this.top, 75, 75, x, y);
 
 			if(roll1){
 				return false;
@@ -352,12 +377,12 @@ class CanvasManager{
 			}
 		}
 		if (this.rerollListening){
-			if(clickInObj(900,0,150,75,x,y)){
+			if(clickInObj(this.right - 300,this.top,150,75,x,y)){
 				print('it worked!');
 				return [false, false];
 			}
-			var roll1 = clickInObj(1050, 0, 75, 75, x, y);
-			var roll2 = clickInObj(1050+75, 0, 75, 75, x, y);
+			var roll1 = clickInObj(this.right - 150, 0, 75, 75, x, y);
+			var roll2 = clickInObj(this.right - 150/2, 0, 75, 75, x, y);
 			
 			if(roll1 || roll2){
 				print('rerolling');
@@ -386,6 +411,7 @@ class CanvasManager{
 
 	}
 	disableListeners(){
+		this.gameWaiting = false;
 		this.diceListening = false;
 		this.rerollListening = false;
 		this.buyListening = false;

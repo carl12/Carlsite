@@ -247,7 +247,7 @@ class AIPlayer extends Player {
 			building = indexedCards[buildLoc];
 
 			if(building.isLandmark){
-				if(!this.landmarks[buildLoc - firstLandmarkLoc] && this.money >= building.cost){
+				if(!this.landmarks[buildLoc - FIRST_LANDMARK_LOC] && this.money >= building.cost){
 					return buildLoc;
 				}
 			} else {
