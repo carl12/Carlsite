@@ -37,7 +37,6 @@ function printCards(p){
 
 function printLandmarks(p){
 	var str = "";
-	// print(land)
 	for(i in p.landmarks){
 		if(p.landmarks[i]){
 			str += indexedCards[FIRST_LANDMARK_LOC +parseInt(i)].name + " ";

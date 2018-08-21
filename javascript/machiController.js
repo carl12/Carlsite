@@ -7,9 +7,8 @@ var canvasTop = canvas.offsetTop;
 var outputBox = document.getElementById('outputText');
 
 print = function(...outputText){
-	console.log(outputText)
+	console.log(...outputText)
 	for(var i = 0; i < outputText.length; i++){
-		console.log(outputText[i]);
 		outputBox.innerHTML += outputText[i];
 	}
 	outputBox.innerHTML += "\n";
@@ -160,10 +159,11 @@ var currGen = 1;
 var maxMetaGen = 5;
 var currMetaGen = 1;
 
-var bestScore = [-1];
+var bestScore = [];
 var bestScoreGene = [];
 var bestScoreGen = [];
 var bestStratScores = [];
+var numBest = 6;
 
 var singleGames = new Array(aiStratList.length).fill(0);
 var singleWins = new Array(aiStratList.length).fill(0);
@@ -277,6 +277,12 @@ function printAiPerformance(){
 	alert('done!');
 }
 
+function printPop(pop){
+	for(var i = 0; i < pop.length; i++){
+		print(JSON.stringify(pop[i]));
+	}
+}
+
 function printFinalist(){
 
 	// var total = spotWinner.reduce((a, b) => a + b, 0);
@@ -287,7 +293,7 @@ function printFinalist(){
 	print(bestScore);
 	print(bestScoreGen);
 	print('-~-~-~-~-~-~-~');
-	print(JSON.stringify(bestScoreGene[bestScoreGene.length-1]))
+	printPop(bestScoreGene);
 	alert('done!');
 }
 
@@ -381,9 +387,23 @@ function runOneStrat(i, isRerun = false){
 
 
 	}
-	if(bestStrat){
-		print('best strat scored ', score1);
-		bestStratScores.push(score1);
+	if(bestScore.length < numBest || score1 > bestScore[bestScore.length-1]){
+
+		var insert = bestScore.length;
+		while(bestScore[insert-1] < score1 && insert > 0){
+			insert--;
+		}
+		bestScore.splice(insert, 0, score1);
+		bestScoreGene.splice(insert, 0, currStrat);
+		bestScoreGen.splice(insert, 0, [currMetaGen, currGen]);
+
+
+		if(bestScore.length > numBest){
+			bestScore.pop();
+			bestScoreGene.pop();
+			bestScoreGen.pop();
+		}
+		print(bestScore);
 	}
 	scores[i] = score1;	
 }
@@ -395,12 +415,12 @@ function getWinners() {
 	var breakpoint = Math.floor(sortedScores.length/5);
 	// print('sorted scores' ,sortedScores)
 
-	if(sortedScores[0] > bestScore[bestScore.length-1]){
-		bestScore.push(sortedScores[0]);
-		bestScoreGene.push(pop[scores.indexOf(sortedScores[0])]);
-		bestScoreGen.push([currMetaGen, currGen]);
+	if(sortedScores[0] >= bestScore[0]){
+		//bestScore.push(sortedScores[0]);
+		//bestScoreGene.push(pop[scores.indexOf(sortedScores[0])]);
+		// bestScoreGen.push([currMetaGen, currGen]);
 		var bestScoreLoc = scores.indexOf(sortedScores[0]);
-		bestStratScores.push(sortedScores[0]);
+		// bestStratScores.push(sortedScores[0]);
 
 
 		print('New record! ', sortedScores[0]);
@@ -415,6 +435,7 @@ function getWinners() {
 	scoreBreakpoint = sortedScores[i];
 	// print(scoreBreakpoint, ' is score breakpoint');
 	print('breakpoint for going forward is ', scoreBreakpoint)
+	print(JSON.stringify(sortedScores));
 	
 	for(var i = 0; i < scores.length; i++){
 		if(scores[i] >= scoreBreakpoint){
@@ -432,10 +453,13 @@ function nextGeneration(){
 	for(var i = 0; i < winners.length; i++){
 		
 			var currGene = pop[winners[i]];
+			if(currGene[0] === undefined){
+				print(currGene);
+			}
 			newPop.push(currGene);
 			for(var j = 1; i*numCopies + j < Math.floor(numCopies*(i+1)); j++){
 
-				newPop.push([shuffle(currGene[0]),currGene[1]]);
+				newPop.push(mutateGene([shuffle(currGene[0]),currGene[1]]));
 
 		}
 	}
@@ -453,6 +477,30 @@ function nextGeneration(){
 	}
 	pop = newPop;
 	// print('we made a new pop with ', pop.length, ' which should be the same as ', popSize);	
+}
+
+function mutateGene(gene){
+	var pre = JSON.parse(JSON.stringify(gene));
+	var mutate = false;
+	for(var i = 0; i < gene[0].length; i++){
+		for(var j = 0; j < 2; j++){
+			var curr = gene[0][i][j];
+			var rndNum = randInt(0,1000);
+			if(gene[0][i][0] < 15 && rndNum < 10){
+				mutate = true;
+				var pre1 = gene[0][i][j];
+				if(j == 0){
+					gene[0][i][j] = randIntTwoRange(0,7,9,15);
+				}
+				else{
+					gene[0][i][j] = randInt(0,6);
+				}
+				print('mutated', i , j , pre1, gene[0][i][j]);
+			}
+		}
+	}
+
+	return gene;
 }
 
 
