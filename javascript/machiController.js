@@ -301,11 +301,13 @@ function genPopulation(){
 	pop = [];
 	var builds = [];
 	var doubles;
-	var bestScoreGeneCopy = bestScoreGene.slice(0,bestScoreGene.length);
+	if(bestScoreGene.length > 2){
+		var bestScoreGeneCopy = bestScoreGene.slice(0,bestScoreGene.length);
 
-	pop.push(bestScoreGeneCopy[0]);
-	pop.push(bestScoreGeneCopy[1]);
-	pop.push(bestScoreGeneCopy[2]);
+		pop.push(bestScoreGeneCopy[0]);
+		pop.push(bestScoreGeneCopy[1]);
+		pop.push(bestScoreGeneCopy[2]);
+	}
 	// while(bestScoreGeneCopy.length > 0){
 	// 	pop.push(bestScoreGeneCopy.pop());
 	// }
