@@ -148,22 +148,22 @@ function arrProd(a, b, times=1){
 }
 
 var pop = [];
-var popSize = 200;
+var popSize = 300;
 var scores = [];
 var winners;
 var scoreBreakpoint;
 
 var iterations = 1000;
-var maxGen = 7;
+var maxGen = 8;
 var currGen = 1;
-var maxMetaGen = 5;
+var maxMetaGen = 8;
 var currMetaGen = 1;
 
 var bestScore = [];
 var bestScoreGene = [];
 var bestScoreGen = [];
 var bestStratScores = [];
-var numBest = 6;
+var numBest = 10;
 
 var singleGames = new Array(aiStratList.length).fill(0);
 var singleWins = new Array(aiStratList.length).fill(0);
@@ -237,18 +237,19 @@ function startGenetic(){
 
 function runGeneration(){
 	print('--------------');
-	print('GENERATION ', currGen ,' OF ',maxGen);
+	print('GENERATION ', currGen ,' of ',maxGen);
 	print('--------------');
 	runGames();
 	setTimeout(getWinners);
 	setTimeout(nextGeneration);
 	setTimeout(outputWinners);
-	if(currGen++ < maxGen){
+	if(currGen < maxGen){
+		setTimeout(()=>currGen++);
 		setTimeout(runGeneration);
 	} else {
-		if(currMetaGen++ < maxMetaGen){
-			currGen = 1;
+		if(currMetaGen < maxMetaGen){
 
+			setTimeout(()=>{currGen=1;currMetaGen++;});
 			setTimeout(genPopulation);
 			setTimeout(print,0,'~~~~~~~~~~~~~');
 			setTimeout(print,0,'Running Meta Gen ', currMetaGen, ' of ' ,maxMetaGen);
@@ -260,6 +261,7 @@ function runGeneration(){
 			setTimeout(print,0,'------ All Finished! ------');
 			setTimeout(printAiPerformance);
 			setTimeout(printFinalist)
+			setTimeout(alert, 0, 'done');
 		}
 	}
 }
@@ -274,7 +276,6 @@ function printAiPerformance(){
 	print('------------');
 	print(singleWinrate);
 	// print(multiWinrate);
-	alert('done!');
 }
 
 function printPop(pop){
@@ -294,7 +295,6 @@ function printFinalist(){
 	print(bestScoreGen);
 	print('-~-~-~-~-~-~-~');
 	printPop(bestScoreGene);
-	alert('done!');
 }
 
 function genPopulation(){
@@ -302,12 +302,16 @@ function genPopulation(){
 	var builds = [];
 	var doubles;
 	var bestScoreGeneCopy = bestScoreGene.slice(0,bestScoreGene.length);
-	while(bestScoreGeneCopy.length > 0){
-		pop.push(bestScoreGeneCopy.pop());
-	}
+
+	pop.push(bestScoreGeneCopy[0]);
+	pop.push(bestScoreGeneCopy[1]);
+	pop.push(bestScoreGeneCopy[2]);
+	// while(bestScoreGeneCopy.length > 0){
+	// 	pop.push(bestScoreGeneCopy.pop());
+	// }
 	for(var i = pop.length - 1; i < popSize; i++){
 		builds = genRandomStrat();
-		doubles = randInt(0,2);
+		doubles = 1;//randInt(0,2);
 		pop.push([builds, doubles])
 	}
 }
@@ -320,7 +324,7 @@ function runGames(){
 }
 
 function runOneStrat(i, isRerun = false){
-
+	print('.');
 	var score1 = 0;
 	var currStrat = pop[i];
 	var bestStrat = false;
@@ -389,21 +393,53 @@ function runOneStrat(i, isRerun = false){
 	}
 	if(bestScore.length < numBest || score1 > bestScore[bestScore.length-1]){
 
+
+		
 		var insert = bestScore.length;
 		while(bestScore[insert-1] < score1 && insert > 0){
 			insert--;
 		}
-		bestScore.splice(insert, 0, score1);
-		bestScoreGene.splice(insert, 0, currStrat);
-		bestScoreGen.splice(insert, 0, [currMetaGen, currGen]);
 
-
-		if(bestScore.length > numBest){
-			bestScore.pop();
-			bestScoreGene.pop();
-			bestScoreGen.pop();
+		var string = JSON.stringify(currStrat);
+		var sameStratLoc = bestScore.length;
+		for(var j = 0; i < bestScore.length; i++){
+			if(string === JSON.stringify(bestScoreGene[i])){
+				sameStratLoc = i;
+				break;
+			}
 		}
-		print(bestScore);
+
+		if(insert <= sameStratLoc){
+			
+			if(sameStratLoc === bestScore.length){	
+				if(bestScore.length > numBest){
+					bestScore.pop();
+					bestScoreGene.pop();
+					bestScoreGen.pop();
+				}	
+			} else {
+
+				print('Found strat with score '+score1);
+				print(bestScore);
+				print(sameStratLoc,"is location of neighbor strat");
+
+				bestScore.splice(sameStratLoc,1)
+				bestScoreGene.splice(sameStratLoc,1)
+				bestScoreGen.splice(sameStratLoc,1)
+			}
+			bestScore.splice(insert, 0, score1);
+			bestScoreGene.splice(insert, 0, currStrat);
+			bestScoreGen.splice(insert, 0, [currMetaGen, currGen]);
+			
+			print(bestScore);
+		} else {
+			print('Higher score done by same strat')
+			print(bestScore);
+			print(score1);
+		}
+		
+			
+		
 	}
 	scores[i] = score1;	
 }
