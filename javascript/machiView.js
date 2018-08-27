@@ -8,7 +8,6 @@ canvas.setAttribute('width','1200px');
 
 canvas.style.outline="3px solid black";
 
-
 var ctx = canvas.getContext('2d');
 
 function clickInObj(objX, objY, width, height, clickX, clickY){
@@ -27,7 +26,6 @@ function drawLine(x1,y1,x2,y2){
 }
 
 function printCards(p){
-
 	var str = "";
 	for(i in p.cards){
 		str += p.cards[i].name + " ";
@@ -123,6 +121,7 @@ class cardImageWrapper extends ImageWrapper{
 class CanvasManager{
 	constructor(ctx){
 		this.imageHolder = []
+		this.landmarkLocs = [];
 		for(var i = 0; i < indexedCards.length; i++){
 			this.imageHolder[i] = new Image();
 			this.imageHolder[i].src = indexedCards[i].src;
@@ -245,6 +244,7 @@ class CanvasManager{
 		}
 
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+		this.landmarkLocs = [];
 		if(this.game !== undefined){
 			for(var i = 0; i < this.game.players.length; i++){
 				var p = this.game.players[i];
@@ -253,6 +253,7 @@ class CanvasManager{
 				var numEstTypes = 0;
 				ctx.save();
 				var currLandmark;
+
 				if(i==0){
 					ctx.translate( this.left, 0 );
 					ctx.rotate( Math.PI / 2 );
@@ -287,11 +288,12 @@ class CanvasManager{
 				}
 
 				currLandmark -= (105/2 + 10);
-				for(var j = 0; j < p.landmarks.length; j++){
+				for(var j = p.landmarks.length-1; j >= 0; j--){
 					tmpImg = this.imageHolder[j + FIRST_LANDMARK_LOC];
 					
 					ctx.drawImage(tmpImg, currLandmark, 50, 105/2, 168/2); 
-					ctx.fillText(p.landmarks[j]?"Owned":"Unowned", currLandmark, 150);
+					this.landmarkLocs[j] = [j+FIRST_LANDMARK_LOC, [this.left + currLandmark, this.bottom + 50, 105/2, 168/2]];
+					ctx.fillText(p.landmarks[j]?"Bought":"X", currLandmark, 150);
 					currLandmark -= this.boxWidth/2;
 				}
 				ctx.restore();
@@ -353,7 +355,6 @@ class CanvasManager{
 
 	addNewCardImage(card, x, y, width, height){
 		this.cardImages.push(new cardImageWrapper(card, x, y, width, height));
-
 	}
 
 	addNewLine(x1,y1,x2,y2){
@@ -390,12 +391,18 @@ class CanvasManager{
 
 		}
 		if(this.buyListening){
-			if(clickInObj(900,0,150,75,x,y)){
+			if(clickInObj(this.right - 300,this.top,150,75,x,y)){
 				return -1;
 			}
 			for(var i in this.cardImages){
 				if(this.cardImages[i].contains(x,y)){
 					return this.cardImages[i].card.position;
+				}
+			}
+			for(var i in this.landmarkLocs){
+				if(clickInObj(...this.landmarkLocs[i][1],x,y)){
+					print(this.landmarkLocs[i][0])
+					return this.landmarkLocs[i][0];
 				}
 			}
 		}
@@ -440,26 +447,4 @@ class CanvasManager{
 
 	}
 }
-
-
-// manage.addNewImage('images/RadioTower.jpg', 0 + 10, top + 20);
-// manage.addNewImage('images/d1.jpg', 101, 201);
-// manage.addNewImage('images/d1.jpg', 0, 0);
-
-
-
-
-
-// var counter = 0;
-// var gameLoop = setInterval(function(){
-// 	counter++;
-//     Game.playTurn();
-// 	manage.draw();
-// 	if(Game.checkWinner() >= 0){
-// 		clearInterval(gameLoop);
-// 		print(counter);
-// 		print('all done');
-
-// 	}
-// }, 500);
 
