@@ -148,15 +148,15 @@ function arrProd(a, b, times=1){
 }
 
 var pop = [];
-var popSize = 300;
+var popSize = 1000;
 var scores = [];
 var winners;
 var scoreBreakpoint;
 
 var iterations = 1000;
-var maxGen = 8;
+var maxGen = 3;
 var currGen = 1;
-var maxMetaGen = 8;
+var maxMetaGen = 2;
 var currMetaGen = 1;
 
 var bestScore = [];
@@ -172,7 +172,7 @@ var multiWins = new Array(aiStratList.length).fill(0);
 
 var spotWinner = [0,0,0,0];
 
-function testStrats(tests){
+function testStrats(tests = 100000){
 	for(var j = 0; j < tests; j++){
 		setTimeout(runRandomStrats);
 		if(j % 30000 == 0){
@@ -325,10 +325,10 @@ function runGames(){
 	}
 }
 
-function runOneStrat(i, isRerun = false){
+function runOneStrat(stratLoc, isRerun = false){
 	print('.');
 	var score1 = 0;
-	var currStrat = pop[i];
+	var currStrat = pop[stratLoc];
 	var bestStrat = false;
 	var playLoc;
 
@@ -398,18 +398,17 @@ function runOneStrat(i, isRerun = false){
 
 		
 		var insert = bestScore.length;
-		while(bestScore[insert-1] < score1 && insert > 0){
-			insert--;
-		}
-
 		var string = JSON.stringify(currStrat);
 		var sameStratLoc = bestScore.length;
-		for(var j = 0; i < bestScore.length; i++){
-			if(string === JSON.stringify(bestScoreGene[i])){
-				sameStratLoc = i;
-				break;
+		for(var j = bestScore.length-1; j >= 0; j--){
+			if(bestScore[j] < score1){
+				insert--;
+			}
+			if(string === JSON.stringify(bestScoreGene[j])){
+				sameStratLoc = j;
 			}
 		}
+
 
 		if(insert <= sameStratLoc){
 			
@@ -443,7 +442,7 @@ function runOneStrat(i, isRerun = false){
 			
 		
 	}
-	scores[i] = score1;	
+	scores[stratLoc] = score1;	
 }
 
 function getWinners() {

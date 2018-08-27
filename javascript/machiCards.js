@@ -1,6 +1,6 @@
 print = console.log
 // console.log('cards loaded')
-trigger={
+const COLOR_TRIGGERS={
 	red:(isTurn)=> !isTurn,
 	blue:()=>true,
 	purple:(isTurn)=> isTurn,
@@ -8,7 +8,7 @@ trigger={
 	none:()=> false
 }
 
-category=['none','farm','animal','food','natural','factory','business'];
+ESTABLISHMENT_CATEGORY = ['none','farm','animal','food','natural','factory','business'];
 FIRST_LANDMARK_LOC = 15;
 
 function reward_func(player){
@@ -52,7 +52,7 @@ Cards = {
 	WheatField:{
 		name:"Wheat Field",
 		cost:1,
-		triggersOn:trigger.blue,
+		triggersOn:COLOR_TRIGGERS.blue,
 		triggers:[1],
 		noInput:true,
 		rewardVal:1,
@@ -66,7 +66,7 @@ Cards = {
 	Ranch:{
 		name:"Ranch",
 		cost:1,
-		triggersOn:trigger.blue,
+		triggersOn:COLOR_TRIGGERS.blue,
 		triggers:[2],
 		noInput:true,
 		rewardVal:1,
@@ -80,7 +80,7 @@ Cards = {
 	Bakery:{
 		name:"Bakery",
 		cost:1,
-		triggersOn:trigger.green,
+		triggersOn:COLOR_TRIGGERS.green,
 		triggers:[2,3],
 		noInput:true,
 		rewardVal:1,
@@ -94,7 +94,7 @@ Cards = {
 	Cafe:{
 		name:"Cafe",
 		cost:2,
-		triggersOn:trigger.red,
+		triggersOn:COLOR_TRIGGERS.red,
 		triggers:[3],
 		noInput:true,
 		rewardVal:1,
@@ -108,7 +108,7 @@ Cards = {
 	ConvenienceStore:{
 		name:"Convenience Store",
 		cost:2,
-		triggersOn:trigger.green,
+		triggersOn:COLOR_TRIGGERS.green,
 		triggers:[4],
 		noInput:true,
 		rewardVal:3,
@@ -122,7 +122,7 @@ Cards = {
 	Forest:{
 		name:"Forest",
 		cost:3,
-		triggersOn:trigger.blue,
+		triggersOn:COLOR_TRIGGERS.blue,
 		triggers:[5],
 		noInput:true,
 		rewardVal:1,
@@ -136,7 +136,7 @@ Cards = {
 	Stadium:{
 		name:"Stadium",
 		cost:6,
-		triggersOn:trigger.purple,
+		triggersOn:COLOR_TRIGGERS.purple,
 		triggers:[6],
 		noInput:true,
 		rewardVal:2,
@@ -150,7 +150,7 @@ Cards = {
 	TVStation:{
 		name:"TV Station",
 		cost:7,
-		triggersOn:trigger.purple,
+		triggersOn:COLOR_TRIGGERS.purple,
 		triggers:[6],
 		noInput:false,
 		rewardVal:6,
@@ -164,7 +164,7 @@ Cards = {
 	BusinessCenter:{
 		name:"Business Center",
 		cost:8,
-		triggersOn:trigger.purple,
+		triggersOn:COLOR_TRIGGERS.purple,
 		triggers:[6],
 		noInput:false,
 		rewardVal:0,
@@ -178,7 +178,7 @@ Cards = {
 	CheeseFactory:{
 		name:"Cheese Factory",
 		cost:5,
-		triggersOn:trigger.green,
+		triggersOn:COLOR_TRIGGERS.green,
 		triggers:[7],
 		noInput:true,
 		rewardVal:3,
@@ -192,7 +192,7 @@ Cards = {
 	FurnitureFactory:{
 		name:"Furniture Factory",
 		cost:3,
-		triggersOn:trigger.green,
+		triggersOn:COLOR_TRIGGERS.green,
 		triggers:[8],
 		noInput:true,
 		rewardVal:3,
@@ -206,7 +206,7 @@ Cards = {
 	Mine:{
 		name:"Mine",
 		cost:6,
-		triggersOn:trigger.blue,
+		triggersOn:COLOR_TRIGGERS.blue,
 		triggers:[9],
 		noInput:true,
 		rewardVal:5,
@@ -220,7 +220,7 @@ Cards = {
 	FamilyRestaurant:{
 		name:"Family Restaurant",
 		cost:3,
-		triggersOn:trigger.red,
+		triggersOn:COLOR_TRIGGERS.red,
 		triggers:[9,10],
 		noInput:true,
 		rewardVal:2,
@@ -234,7 +234,7 @@ Cards = {
 	AppleOrchard:{
 		name:"Apple Orchard",
 		cost:3,
-		triggersOn:trigger.blue,
+		triggersOn:COLOR_TRIGGERS.blue,
 		triggers:[10],
 		noInput:true,
 		rewardVal:3,
@@ -248,7 +248,7 @@ Cards = {
 	FruitAndVegetableMarket:{
 		name:"Fruit and Vegetable Market",
 		cost:2,
-		triggersOn:trigger.green,
+		triggersOn:COLOR_TRIGGERS.green,
 		triggers:[11,12],
 		noInput:true,
 		rewardVal:2,
@@ -289,7 +289,7 @@ Cards = {
 	},
 	RadioTower:{
 		name:"Radio Tower",		
-		cost:24,
+		cost:22,
 		isLandmark:true,
 		landmarkPosition:3,
 		position:18,

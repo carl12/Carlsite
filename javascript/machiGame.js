@@ -158,7 +158,7 @@ Game = {
 				if(c.triggers.includes(Game.roll) && c.triggersOn(isTurn))
 				{
 					if(c.noInput){
-						if(c.triggersOn === trigger.red){
+						if(c.triggersOn === COLOR_TRIGGERS.red){
 							var currPlayer = Game.players[Game.turnState.playerTurn];
 							var moneyLost = Math.min(currPlayer.money, c.reward(p));
 							Game.players[Game.turnState.playerTurn].money -= moneyLost;
