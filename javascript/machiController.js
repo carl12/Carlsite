@@ -237,6 +237,14 @@ function runRandomStrats(){
 	}
 }
 
+function startGeneticParam(popSizeIn = 100, iterationsIn = 200, maxGenIn = 3, maxMetaGenIn = 3, numBestIn = 10){
+	popSize = popSizeIn;
+	iterations = iterationsIn;
+	maxGen = maxGenIn;
+	maxMetaGen = maxMetaGenIn;
+	numBest = numBestIn;
+	startGenetic();
+}
 
 function startGenetic(){
 	genPopulation();

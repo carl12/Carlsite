@@ -122,7 +122,8 @@ class CanvasManager{
 		this.imageHolder = [];
 		this.images = [];
 		this.landmarkLocs = [];
-		this.animatingLocs = []
+		this.animatingLocs = [];
+		this.animating = false;
 		this.numPlayers = 0;
 		for(var i = 0; i < indexedCards.length; i++){
 			this.imageHolder[i] = new Image();
@@ -226,13 +227,26 @@ class CanvasManager{
 		} else if (this.game === undefined && this.numPlayers === 0){
 			return
 		}
-		print(this.game)
-		print(this.numPlayers)
 		// this.setDimensions(this.game.players.length);
 		// this.initImagesAndLines();
-		ctx.font = '16px monospace';
+		
 		this.ctx.clearRect(0,0,canvas.width,canvas.height);
 
+
+		this.drawPlayerPalates();
+		this.drawStatusBar();
+		this.drawCardsLinesImages();
+
+		if(this.animating){
+			requestAnimationFrame(this.draw.bind(this))
+		} else {
+			while(this.animatingLocs.length > 0){
+				this.images.splice(this.animatingLocs.pop(),1)
+			}
+		}
+	}
+
+	drawPlayerPalates(){
 		this.ctx.fillStyle = 'rgb(200, 0, 0)';
 		this.ctx.fillRect(0,0, this.left, canvas.height);
 
@@ -244,28 +258,6 @@ class CanvasManager{
 
 		this.ctx.fillStyle = 'rgba(100, 0, 100, 0.5)';
 		this.ctx.fillRect(this.right, 0, this.left - this.right, this.top);
-
-		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
-		this.ctx.fillRect(this.right - 150, this.top, 150, this.statusBarHeight);
-
-		var buttonDim = [this.right - 300, this.top, 150, this.statusBarHeight]
-		if(this.game === undefined){
-			this.ctx.fillStyle = 'rgba(0, 200, 0, 1)';
-			this.ctx.fillRect(...buttonDim);
-			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("Start game", this.right - 300 + 40, this.top+40);
-		} else if(this.buyListening){
-			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
-			this.ctx.fillRect(...buttonDim);
-			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("No Purchase", this.right - 300 + 40, this.top+40);
-		} else if(this.rerollListening){
-			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
-			this.ctx.fillRect(...buttonDim);
-			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("Keep Roll", this.right - 300 + 40, this.top+40);
-		}
-
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		this.landmarkLocs = [];
 		if(this.game !== undefined){
@@ -324,7 +316,40 @@ class CanvasManager{
 				
 			}
 		}
+	}
 
+	drawStatusBar(){
+		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
+		this.ctx.fillRect(this.right - 150, this.top, 150, this.statusBarHeight);
+
+		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+		var buttonDim = [this.right - 300, this.top, 150, this.statusBarHeight]
+		if(this.game === undefined){
+			this.ctx.fillStyle = 'rgba(0, 200, 0, 1)';
+			this.ctx.fillRect(...buttonDim);
+			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+			this.ctx.fillText("Start game", this.right - 300 + 40, this.top+40);
+		} else if(this.buyListening){
+			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
+			this.ctx.fillRect(...buttonDim);
+			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+			this.ctx.fillText("No Purchase", this.right - 300 + 40, this.top+40);
+		} else if(this.rerollListening){
+			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
+			this.ctx.fillRect(...buttonDim);
+			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+			this.ctx.fillText("Keep Roll", this.right - 300 + 40, this.top+40);
+		}
+
+		ctx.font = '32px monospace';
+		ctx.fillText(this.messageText, 300, this.top + 50);
+		if(this.game.roll !== undefined){
+			ctx.fillText("Roll: " + this.game.roll, 600, this.top + 50);
+		}
+	}
+
+	drawCardsLinesImages(){
+		ctx.font = '16px monospace';
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			var currCard = indexedEstablishments[i];
 			if(i < this.numCols){
@@ -338,19 +363,11 @@ class CanvasManager{
 
 		}
 
-		ctx.font = '32px monospace';
-		ctx.fillText(this.messageText, 300, this.top + 50);
-		if(this.game.roll !== undefined){
-			ctx.fillText("Roll: " + this.game.roll, 600, this.top + 50);
-		}
+
 
 		
-
-
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		
-
-
 
 		for(var i in this.cardImages){
 			this.cardImages[i].draw(this.ctx);
@@ -361,26 +378,18 @@ class CanvasManager{
 		for(var i in this.lines){
 			this.lines[i].draw(this.ctx);
 		}
-		var animating = false
+		this.animating = false
 
 		for(var i in this.images){
 			this.images[i].draw(this.ctx);
 			if(this.images[i].moving){
-				animating = true;
+				this.animating = true;
 				if(!this.animatingLocs.includes(i)){
 					this.animatingLocs.push(i);
 				}
 			}
 		}
-		if(animating){
-			requestAnimationFrame(this.draw.bind(this))
-		} else {
-			while(this.animatingLocs.length > 0){
-				this.images.splice(this.animatingLocs.pop(),1)
-			}
-		}
 	}
-
 	addNewImage(src,x,y,width,height){
 		this.images.push(new ImageWrapper(src,x,y,width,height));
 	}
