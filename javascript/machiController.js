@@ -23,6 +23,9 @@ canvas.addEventListener("click", (event)=>{
 	if(response !== undefined){
 		if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
 			var success = f(response);
+			if(Game.lastBought != null){
+				manage.drawBuy(Game.turnState.playerTurn, Game.lastBought)
+			}
 			if(success){
 				manage.disableListeners();
 			}
@@ -54,8 +57,9 @@ function initHumanGame(){
 	var k = 0; 
 
 	manage.disableListeners();
+	manage.setDimensions();
 
-	runHumanGame();
+	setTimeout(runHumanGame);
 }
 
 function f(response){
@@ -102,30 +106,33 @@ function f(response){
 
 function runHumanGame(){
 
-	var k = 0;
-	while(Game.winner === -1 && k < 1000){
-		k++;
-		while(!Game.requireInput() && Game.winner == -1){
+	if(Game.winner === -1){
+		manage.draw()
+		if(!Game.requireInput()){
 			Game.next();
-		}
-		if(Game.winner != -1) {
-			break;
-		}
-		inputType = Game.getInputType();
-		if(!Game.players[Game.turnState.playerTurn].isHuman){	
-			var response;
-			response = inputType.player.takeInput(inputType);
-			Game.next(response);
 		} else {
-			manage.takeHumanInput(inputType);
-			humanInputType = inputType;
-			manage.draw();
-			if(Game.turnState.phase == 4){
-				print('You have $'+me.money);
+			inputType = Game.getInputType();
+			if(!Game.players[Game.turnState.playerTurn].isHuman){	
+				var response;
+				response = inputType.player.takeInput(inputType);
+				Game.next(response);
+			} else {
+				manage.takeHumanInput(inputType);
+				humanInputType = inputType;
+				manage.draw();
+				if(Game.turnState.phase == 4){
+					print('You have $'+me.money);
+				}
+				return;
 			}
-			break;
+
+			if(Game.lastBought != null){
+				manage.drawBuy(Game.turnState.playerTurn, Game.lastBought)
+			}
 		}
-	}
+		manage.draw()
+		setTimeout(runHumanGame, 1000)
+	} 
 }
 
 function arrAdd(a, b, plus = 1){

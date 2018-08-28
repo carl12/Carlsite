@@ -85,8 +85,7 @@ class ImageWrapper{
 			this.y += this.dy;
 			this.currStep++;
 			this.moving = this.currStep < this.totalStep;
-			this.totalStep
-			print(this.currStep)	
+			this.totalStep	
 		}
 
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -120,8 +119,11 @@ class cardImageWrapper extends ImageWrapper{
 
 class CanvasManager{
 	constructor(ctx){
-		this.imageHolder = []
+		this.imageHolder = [];
+		this.images = [];
 		this.landmarkLocs = [];
+		this.animatingLocs = []
+		this.numPlayers = 0;
 		for(var i = 0; i < indexedCards.length; i++){
 			this.imageHolder[i] = new Image();
 			this.imageHolder[i].src = indexedCards[i].src;
@@ -160,10 +162,10 @@ class CanvasManager{
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			if(i < this.numCols){
 				var currLeft = this.left + (i) * this.boxWidth;
-				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.estTop+21, this.boxWidth - 20, this.boxHeight - 20);
+				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.estTop+21, this.boxWidth - 20, this.boxHeight - 25);
 			} else {
 				var currLeft = this.left + (i-this.numCols) * this.boxWidth;
-				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.estTop+21 + this.boxHeight, this.boxWidth - 20, this.boxHeight - 20);
+				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.estTop+21 + this.boxHeight, this.boxWidth - 20, this.boxHeight - 25);
 			}
 			this.addNewLine(currLeft, this.estTop, currLeft, this.bottom);
 		}
@@ -180,20 +182,20 @@ class CanvasManager{
 		}		
 	}
 
-	setDimensions(numPlayers){
-
+	setDimensions(){
+		this.numPlayers = this.game.players.length;
 		this.left = 0;
 		this.top = 0;
 		this.right = canvas.width;
 		this.bottom = canvas.height;
 
-		if (numPlayers >= 1){
+		if (this.numPlayers >= 1){
 			this.left = this.pWidth;
-		} if (numPlayers >= 2){
+		} if (this.numPlayers >= 2){
 			this.bottom = canvas.height - this.pWidth;
-		} if (numPlayers >= 3){
+		} if (this.numPlayers >= 3){
 			this.right = canvas.width - this.pWidth;
-		} if (numPlayers >= 4){
+		} if (this.numPlayers >= 4){
 			this.top = this.pWidth;
 		} else {
 			print('wrong number of players')
@@ -202,11 +204,26 @@ class CanvasManager{
 		this.estTop = this.top + this.statusBarHeight;
 		this.boxWidth = (this.right - this.left) /this.numCols;
 		this.boxHeight = (this.bottom - this.estTop) / this.numRows;
+		this.initImagesAndLines();
+	}
+	drawBuy(player, card){
+		var x = this.cardImages[card.position].x;
+		var y = this.cardImages[card.position].y;
+		this.addNewImage(card.src, x,y, 100, 150)
+		var x,y;
+		var left = 0; var midHoriz = (this.left+this.right)/2; var right = canvas.width;
+		var up = 0; var midVert = canvas.height/2; var down = canvas.height;
+		var loc = [[left+100, midVert], [midHoriz, down], [right, midVert], [midHoriz, up-160]][player]
+
+		this.images[this.images.length - 1].startAnimation(...loc,100)
 	}
 
 	draw(){
-		this.setDimensions(this.game.players.length);
-		this.initImagesAndLines();
+		if(this.numPlayers == 0 && this.game !== undefined){
+			this.setDimensions()
+		}
+		// this.setDimensions(this.game.players.length);
+		// this.initImagesAndLines();
 		ctx.font = '16px monospace';
 		this.ctx.clearRect(0,0,canvas.width,canvas.height);
 
@@ -272,11 +289,12 @@ class CanvasManager{
 					ctx.rotate(Math.PI);
 					currLandmark = this.right - this.left;
 				}
+				ctx.font = '20px monospace';
+				ctx.fillText(p.name +": $"+p.money, 2, 16);
+				ctx.fillText(printCards(p), 2, 33);
+				ctx.fillText(printLandmarks(p), 0, 48);
 
-				ctx.fillText(p.name +": $"+p.money, 0, 12);
-				ctx.fillText(printCards(p), 0, 27);
-				ctx.fillText(printLandmarks(p), 0, 42);
-
+				ctx.font = '16px monospace';
 				for(var j = 0; j < bc.length; j++){
 					if(bc[j]> 0){
 						tmpImg = this.imageHolder[j];
@@ -314,9 +332,10 @@ class CanvasManager{
 
 		}
 
-		ctx.fillText(this.messageText, 400, this.top + 50);
+		ctx.font = '32px monospace';
+		ctx.fillText(this.messageText, 300, this.top + 50);
 		if(this.game.roll !== undefined){
-			ctx.fillText(this.game.roll, 600, this.top + 50);
+			ctx.fillText("Roll: " + this.game.roll, 600, this.top + 50);
 		}
 
 		
@@ -327,25 +346,32 @@ class CanvasManager{
 
 
 
-		var animating = false
-		for(var i in this.images){
-			this.images[i].draw(this.ctx);
-			if(this.images[i].moving){
-				animating = true;
-			}
-		}
 		for(var i in this.cardImages){
 			this.cardImages[i].draw(this.ctx);
-			if(this.cardImages[i].moving){
-				animating = true;
-			}
+			// if(this.cardImages[i].moving){
+			// 	animating = true;
+			// }
 		}
 		for(var i in this.lines){
 			this.lines[i].draw(this.ctx);
 		}
+		var animating = false
+
+		for(var i in this.images){
+			this.images[i].draw(this.ctx);
+			if(this.images[i].moving){
+				animating = true;
+				if(!this.animatingLocs.includes(i)){
+					this.animatingLocs.push(i);
+				}
+			}
+		}
 		if(animating){
-			print('requested draw again')
 			requestAnimationFrame(this.draw.bind(this))
+		} else {
+			while(this.animatingLocs.length > 0){
+				this.images.splice(this.animatingLocs.pop(),1)
+			}
 		}
 	}
 
@@ -401,7 +427,6 @@ class CanvasManager{
 			}
 			for(var i in this.landmarkLocs){
 				if(clickInObj(...this.landmarkLocs[i][1],x,y)){
-					print(this.landmarkLocs[i][0])
 					return this.landmarkLocs[i][0];
 				}
 			}
@@ -422,6 +447,7 @@ class CanvasManager{
 		this.rerollListening = false;
 		this.buyListening = false;
 		this.stealListening = false;
+		this.messageText = "Processing";
 		this.draw();
 	}
 

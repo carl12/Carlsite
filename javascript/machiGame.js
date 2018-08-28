@@ -31,6 +31,7 @@ Game = {
 
 		Game.turnState = {'playerTurn':0, 'phase':0, 'amuseDoubles':false, 'isSecond':false,
 							'rewardResponse':-1, 'gameOver':false};
+		Game.lastBought = null;
 		Game.inputQueue = [];
 		Game.numPlayers = numPlayers;
 		Game.players = [];
@@ -264,6 +265,7 @@ Game = {
 				if(card.cost <= currPlayer.money && card.remain > 0){
 					var pre = currPlayer.money;
 					currPlayer.buyCard(card);
+					Game.lastBought = card;
 					if(Game.print){
 						print('With $'+pre+ ' ' + currPlayer.name + ' bought ', card.name);
 					}
@@ -276,6 +278,7 @@ Game = {
 				// print('trying to buy a landmark')
 				if(card.cost <= currPlayer.money && !currPlayer.landmarks[card.landmarkPosition]){
 					currPlayer.buyCard(card);
+					Game.lastBought = card
 					if(Game.print){
 						print(currPlayer.name , ' bought ', card.name, ' !!');
 					}
@@ -314,6 +317,7 @@ Game = {
 	},
 
 	nextPlayer:function(){
+		Game.lastBought = null;
 		Game.checkWinner();
 		if(!Game.turnState.gameOver){
 			if(Game.turnState.amuseDoubles && !Game.turnState.isSecond){
