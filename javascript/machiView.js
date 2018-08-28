@@ -205,7 +205,7 @@ class CanvasManager{
 		this.boxHeight = (this.bottom - this.estTop) / this.numRows;
 		this.initImagesAndLines();
 	}
-	drawBuy(player, card){
+	animateBuy(player, card){
 		if(card.position >= FIRST_LANDMARK_LOC){
 			return;
 		}

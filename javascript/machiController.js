@@ -23,10 +23,10 @@ canvas.addEventListener("click", (event)=>{
 	if(response !== undefined){
 		if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
 			var success = f(response);
-			if(Game.lastBought != null){
-				manage.drawBuy(Game.turnState.playerTurn, Game.lastBought)
-			}
 			if(success){
+			if(Game.lastBought != null){
+				manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
+			}
 				manage.disableListeners();
 			}
 		}
@@ -128,7 +128,7 @@ function runHumanGame(){
 			}
 
 			if(Game.lastBought != null){
-				manage.drawBuy(Game.turnState.playerTurn, Game.lastBought)
+				manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
 			}
 		}
 		manage.draw()
