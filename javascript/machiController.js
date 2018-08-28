@@ -41,7 +41,7 @@ canvas.addEventListener("click", (event)=>{
 // Game.init();
 
 manage = new CanvasManager(ctx);
-manage.game = Game;
+// manage.game = Game;
 manage.draw();
 
 var me;
@@ -54,7 +54,8 @@ function initHumanGame(){
 	print('you are player '+ playLoc);
 	Game.players[playLoc] = new HumanPlayer("Human!");
 	me = Game.players[playLoc];
-	var k = 0; 
+	manage.game = Game;
+
 
 	manage.disableListeners();
 	manage.setDimensions();

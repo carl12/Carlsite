@@ -145,7 +145,7 @@ class CanvasManager{
 		this.numCols = 8;
 		this.numRows = 2;
 
-		this.gameWaiting = this.game === undefined;
+		this.game === undefined;
 		this.diceListening = false;
 		this.rerollListening = false;
 		this.buyListening = false;
@@ -198,7 +198,6 @@ class CanvasManager{
 		} if (this.numPlayers >= 4){
 			this.top = this.pWidth;
 		} else {
-			print('wrong number of players')
 		}
 
 		this.estTop = this.top + this.statusBarHeight;
@@ -207,13 +206,16 @@ class CanvasManager{
 		this.initImagesAndLines();
 	}
 	drawBuy(player, card){
+		if(card.position >= FIRST_LANDMARK_LOC){
+			return;
+		}
 		var x = this.cardImages[card.position].x;
 		var y = this.cardImages[card.position].y;
 		this.addNewImage(card.src, x,y, 100, 150)
 		var x,y;
 		var left = 0; var midHoriz = (this.left+this.right)/2; var right = canvas.width;
 		var up = 0; var midVert = canvas.height/2; var down = canvas.height;
-		var loc = [[left+100, midVert], [midHoriz, down], [right, midVert], [midHoriz, up-160]][player]
+		var loc = [[left-100, midVert], [midHoriz, down], [right, midVert], [midHoriz, up-160]][player]
 
 		this.images[this.images.length - 1].startAnimation(...loc,100)
 	}
@@ -221,7 +223,11 @@ class CanvasManager{
 	draw(){
 		if(this.numPlayers == 0 && this.game !== undefined){
 			this.setDimensions()
+		} else if (this.game === undefined && this.numPlayers === 0){
+			return
 		}
+		print(this.game)
+		print(this.numPlayers)
 		// this.setDimensions(this.game.players.length);
 		// this.initImagesAndLines();
 		ctx.font = '16px monospace';
@@ -243,7 +249,7 @@ class CanvasManager{
 		this.ctx.fillRect(this.right - 150, this.top, 150, this.statusBarHeight);
 
 		var buttonDim = [this.right - 300, this.top, 150, this.statusBarHeight]
-		if(this.gameWaiting){
+		if(this.game === undefined){
 			this.ctx.fillStyle = 'rgba(0, 200, 0, 1)';
 			this.ctx.fillRect(...buttonDim);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
@@ -291,8 +297,8 @@ class CanvasManager{
 				}
 				ctx.font = '20px monospace';
 				ctx.fillText(p.name +": $"+p.money, 2, 16);
-				ctx.fillText(printCards(p), 2, 33);
-				ctx.fillText(printLandmarks(p), 0, 48);
+				// ctx.fillText(printCards(p), 2, 33);
+				ctx.fillText(printLandmarks(p), 0, 40);
 
 				ctx.font = '16px monospace';
 				for(var j = 0; j < bc.length; j++){
@@ -388,7 +394,7 @@ class CanvasManager{
 	}
 
 	checkClick(x,y){
-		if(this.gameWaiting){
+		if(this.game === undefined){
 			setTimeout(initHumanGame());
 			return true;
 		}
@@ -442,7 +448,7 @@ class CanvasManager{
 
 	}
 	disableListeners(){
-		this.gameWaiting = false;
+		// this.gameWaiting = false;
 		this.diceListening = false;
 		this.rerollListening = false;
 		this.buyListening = false;
