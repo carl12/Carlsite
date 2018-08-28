@@ -225,7 +225,8 @@ class CanvasManager{
 		if(this.numPlayers == 0 && this.game !== undefined){
 			this.setDimensions()
 		} else if (this.game === undefined && this.numPlayers === 0){
-			return
+			this.drawMenu();
+			return;
 		}
 		// this.setDimensions(this.game.players.length);
 		// this.initImagesAndLines();
@@ -244,6 +245,18 @@ class CanvasManager{
 				this.images.splice(this.animatingLocs.pop(),1)
 			}
 		}
+	}
+	drawMenu(){
+		ctx.font = '64px monospace';
+		ctx.textAlign = 'center';
+		ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
+		ctx.font = '32px monospace';
+		ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
+		print('asdf')
+		var a = new Image();
+		a.src = 'images/machi-koro.jpg';
+		ctx.drawImage(a, 1, 200, 2400/2, 800/2);
+		ctx.textAlign = 'left';
 	}
 
 	drawPlayerPalates(){
