@@ -20,8 +20,13 @@ canvas.addEventListener("click", (event)=>{
 	var y = event.pageY - canvasTop;
 
 	var response = manage.checkClick(x,y);
-	if(response !== undefined){
+	if(!Game.initRun){
+		print('escaped!')
+		return;
+	}
+	else if(response !== undefined){
 		if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
+			
 			var success = f(response);
 			if(success){
 			if(Game.lastBought != null){
@@ -48,7 +53,7 @@ var me;
 var humanInputType; 
 
 function initHumanGame(){
-	print('welcome to Machi Koro!');
+	print('Welcome to Machi Koro!');
 	var playLoc = randInt(0,4);
 	Game.init(4, true);
 	print('you are player '+ playLoc);

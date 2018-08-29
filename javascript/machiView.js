@@ -252,9 +252,11 @@ class CanvasManager{
 		ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
 		ctx.font = '32px monospace';
 		ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
-		print('asdf')
+		
 		var a = new Image();
 		a.src = 'images/machi-koro.jpg';
+		a.onLoad = this.draw;
+		ctx.fillText("Image loading...", canvas.width/2, 400);
 		ctx.drawImage(a, 1, 200, 2400/2, 800/2);
 		ctx.textAlign = 'left';
 	}
@@ -418,7 +420,7 @@ class CanvasManager{
 	checkClick(x,y){
 		if(this.game === undefined){
 			setTimeout(initHumanGame());
-			return true;
+			return;
 		}
 		if(this.diceListening){
 			var roll1 = clickInObj(this.right - 150, this.top, 75, 75, x, y);

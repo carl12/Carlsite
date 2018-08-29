@@ -14,11 +14,13 @@ function allTrue(value){
 Game = {
 	genericNames:['Aaron','Bob','Carl','Devon'],
 	players:[],
+	initRun:false,
 
 	init:function(numPlayers = 4, print = false){
 		for(var j in indexedCards){
 			indexedCards[j].remain = 6;
 		}
+		Game.initRun = true;
 		Game.print = print;
 		Game.turn = 0;
 		Game.winner = -1;
@@ -51,7 +53,7 @@ Game = {
 		if(!Game.turnState.gameOver){
 			return Game.turnPhases[Game.turnState.phase](input);
 		} else {
-			print('game is over, go home!')
+			print('Game is over, go home!')
 			return false;
 		}
 	},
