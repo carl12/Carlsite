@@ -2,10 +2,15 @@ pr = print = console.log
 
 var canvas = document.getElementById('myCanvas');
 var outputBox = document.getElementById('outputText');
-canvas.setAttribute('height','750px');
-outputBox.setAttribute('height','750px');
-canvas.setAttribute('width','1200px');
 
+
+print = function(...outputText){
+	console.log(...outputText)
+	for(var i = 0; i < outputText.length; i++){
+		outputBox.innerHTML += outputText[i];
+	}
+	outputBox.innerHTML += "\n";
+}
 canvas.style.outline="3px solid black";
 
 var ctx = canvas.getContext('2d');
@@ -118,7 +123,19 @@ class cardImageWrapper extends ImageWrapper{
 }
 
 class CanvasManager{
-	constructor(ctx){
+	constructor(canvas, outputBox){
+		this.canvas = canvas
+		this.outputBox = outputBox;
+		this.canvasHeightFraction = 0.98;
+		this.canvasWidthFraction = 0.8;
+		this.windowWidth = window.innerWidth;
+		this.windowHeight = window.innerHeight;
+		this.ctx = this.canvas.getContext('2d');
+		this.canvas.setAttribute('height',this.windowHeight*this.canvasHeightFraction+"px");
+		this.canvas.setAttribute('width', this.windowWidth*this.canvasWidthFraction+"px");
+		this.outputBox.style.height = this.windowHeight*this.canvasHeightFraction+"px";
+		this.outputBox.style.width = (this.windowWidth*(1-this.canvasWidthFraction)-10)+"px";
+
 		this.imageHolder = [];
 		this.images = [];
 		this.landmarkLocs = [];
@@ -131,7 +148,6 @@ class CanvasManager{
 		}
 
 		this.messageText = "Starting messageText";
-		this.ctx = ctx
 
 		this.top = 0;
 		this.statusBarHeight = 75;
@@ -139,14 +155,13 @@ class CanvasManager{
 		this.pWidth = 160;
 
 		this.bottom = canvas.height - this.pWidth;
-
 		this.left = this.pWidth;
 		this.right = canvas.width - this.pWidth;
 		
 		this.numCols = 8;
 		this.numRows = 2;
 
-		this.game === undefined;
+		this.game = undefined;
 		this.diceListening = false;
 		this.rerollListening = false;
 		this.buyListening = false;
@@ -184,6 +199,15 @@ class CanvasManager{
 	}
 
 	setDimensions(){
+
+		this.windowWidth = window.innerWidth;
+		this.windowHeight = window.innerHeight;
+		this.canvas.setAttribute('height',this.windowHeight*this.canvasHeightFraction+"px");
+		this.canvas.setAttribute('width', this.windowWidth*this.canvasWidthFraction+"px");
+
+		this.outputBox.style.height = this.windowHeight*this.canvasHeightFraction+"px";
+		this.outputBox.style.width = (this.windowWidth*(1-this.canvasWidthFraction)-13)+"px";
+
 		this.numPlayers = this.game.players.length;
 		this.left = 0;
 		this.top = 0;
@@ -222,7 +246,9 @@ class CanvasManager{
 	}
 
 	draw(){
-		if(this.numPlayers == 0 && this.game !== undefined){
+		if(this.windowHeight !== window.innerHeight || this.windowWidth !== window.innerWidth){
+			this.setDimensions();
+		} else if(this.numPlayers == 0 && this.game !== undefined){
 			this.setDimensions()
 		} else if (this.game === undefined && this.numPlayers === 0){
 			this.drawMenu();
@@ -434,11 +460,10 @@ class CanvasManager{
 		}
 		if (this.rerollListening){
 			if(clickInObj(this.right - 300,this.top,150,75,x,y)){
-				print('it worked!');
 				return [false, false];
 			}
-			var roll1 = clickInObj(this.right - 150, 0, 75, 75, x, y);
-			var roll2 = clickInObj(this.right - 150/2, 0, 75, 75, x, y);
+			var roll1 = clickInObj(this.right - 150, this.top, 75, 75, x, y);
+			var roll2 = clickInObj(this.right - 150/2, this.top, 75, 75, x, y);
 			
 			if(roll1 || roll2){
 				print('rerolling');

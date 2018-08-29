@@ -2,17 +2,12 @@
 //Handle listener input
 
 var canvas = document.getElementById('myCanvas');
-var canvasLeft = canvas.offsetLeft;
-var canvasTop = canvas.offsetTop;
 var outputBox = document.getElementById('outputText');
 
-print = function(...outputText){
-	console.log(...outputText)
-	for(var i = 0; i < outputText.length; i++){
-		outputBox.innerHTML += outputText[i];
-	}
-	outputBox.innerHTML += "\n";
-}
+var canvasLeft = canvas.offsetLeft;
+var canvasTop = canvas.offsetTop;
+
+
 
 
 canvas.addEventListener("click", (event)=>{
@@ -45,7 +40,7 @@ canvas.addEventListener("click", (event)=>{
 
 // Game.init();
 
-manage = new CanvasManager(ctx);
+manage = new CanvasManager(canvas, outputBox);
 // manage.game = Game;
 manage.draw();
 
@@ -57,6 +52,7 @@ function initHumanGame(){
 	var playLoc = randInt(0,4);
 	Game.init(4, true);
 	print('you are player '+ playLoc);
+	print('asdf')
 	Game.players[playLoc] = new HumanPlayer("Human!");
 	me = Game.players[playLoc];
 	manage.game = Game;
@@ -76,7 +72,6 @@ function f(response){
 	} else if(Game.turnState.phase == 1){
 		if(response.length != undefined){
 			if(response.length == 2){
-				print('rerolling in f')
 				output.reroll = response[0];
 				output.rollTwo = response[1];
 			}
