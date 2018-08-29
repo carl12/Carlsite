@@ -40,7 +40,7 @@ canvas.addEventListener("click", (event)=>{
 
 // Game.init();
 
-manage = new CanvasManager(canvas, outputBox);
+manage = new CanvasManager(window, canvas, outputBox);
 // manage.game = Game;
 manage.draw();
 

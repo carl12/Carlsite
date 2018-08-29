@@ -123,13 +123,14 @@ class cardImageWrapper extends ImageWrapper{
 }
 
 class CanvasManager{
-	constructor(canvas, outputBox){
+	constructor(window, canvas, outputBox){
 		this.canvas = canvas
 		this.outputBox = outputBox;
+		this.window = window;
 		this.canvasHeightFraction = 0.98;
 		this.canvasWidthFraction = 0.8;
-		this.windowWidth = window.innerWidth;
-		this.windowHeight = window.innerHeight;
+		this.windowWidth = this.window.innerWidth;
+		this.windowHeight = this.window.innerHeight;
 		this.ctx = this.canvas.getContext('2d');
 		this.canvas.setAttribute('height',this.windowHeight*this.canvasHeightFraction+"px");
 		this.canvas.setAttribute('width', this.windowWidth*this.canvasWidthFraction+"px");
@@ -200,8 +201,8 @@ class CanvasManager{
 
 	setDimensions(){
 
-		this.windowWidth = window.innerWidth;
-		this.windowHeight = window.innerHeight;
+		this.windowWidth = this.window.innerWidth;
+		this.windowHeight = this.window.innerHeight;
 		this.canvas.setAttribute('height',this.windowHeight*this.canvasHeightFraction+"px");
 		this.canvas.setAttribute('width', this.windowWidth*this.canvasWidthFraction+"px");
 
