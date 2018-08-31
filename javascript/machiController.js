@@ -47,10 +47,20 @@ manage.draw();
 var me;
 var humanInputType; 
 
-function initHumanGame(){
+function returnHumanGameMaker(numPlayers){
+	return ()=>{initHumanGame(numPlayers)};
+}
+
+
+function initHumanGame(numPlayers = 4, position = undefined){
 	print('Welcome to Machi Koro!');
-	var playLoc = randInt(0,4);
-	Game.init(4, true);
+	var playLoc;
+	if(position === undefined){
+		playLoc = randInt(0,numPlayers);
+	} else {
+		playLoc = position;
+	}
+	Game.init(numPlayers, true);
 	print('you are player '+ playLoc);
 	print('asdf')
 	Game.players[playLoc] = new HumanPlayer("Human!");
@@ -95,7 +105,6 @@ function f(response){
 		if (response !== -1){
 			output.card = indexedCards[response];
 		} 
-		// print(output);
 	}
 	if(Game.turnState.phase == 4){
 		setTimeout(runHumanGame, 1000);
@@ -180,7 +189,7 @@ var multiWins = new Array(aiStratList.length).fill(0);
 
 var spotWinner = [0,0,0,0];
 
-function testStrats(tests = 100000){
+function testStrats(tests = 1000){
 	for(var j = 0; j < tests; j++){
 		setTimeout(runRandomStrats);
 		if(j % 30000 == 0){

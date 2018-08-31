@@ -1,4 +1,4 @@
-pr = print = console.log
+
 
 var canvas = document.getElementById('myCanvas');
 var outputBox = document.getElementById('outputText');
@@ -23,10 +23,10 @@ function drawLine(x1,y1,x2,y2){
 	ctx.save();
 	ctx.strokeStyle = 'navy'; // set the strokeStyle color to 'navy' (for the stroke() call below)
 	ctx.lineWidth = 3.0;      // set the line width to 3 pixels
-	ctx.beginPath();          // start a new path
-	ctx.moveTo (x1,y1);      // set (150,20) to be the starting point
-	ctx.lineTo (x2,y2);     // line from (150,30) to (270,120)
-	ctx.stroke();             // actually draw the triangle shape in 'navy' color and 3 pixel wide lines
+	ctx.beginPath();          
+	ctx.moveTo (x1,y1);      
+	ctx.lineTo (x2,y2);     
+	ctx.stroke();             // actually draw the line
 	ctx.restore();
 }
 
@@ -72,7 +72,6 @@ class ImageWrapper{
 			this.width = width;
 			this.height = height; 
 		}
-
 		this.currStep = 0;
 		this.totalStep = 0;
 		this.moving = false;
@@ -149,12 +148,14 @@ class CanvasManager{
 		}
 
 		this.messageText = "Starting messageText";
+		this.gameModeNames = ["Two Players","Three Players", "Four Players", "AI Test", "Genetic"];
+		this.gameModeFuncs = [returnHumanGameMaker(2), returnHumanGameMaker(3), returnHumanGameMaker(4),
+								testStrats, startGeneticParam]
 
 		this.top = 0;
 		this.statusBarHeight = 75;
 		this.estTop = this.top + this.statusBarHeight;	
 		this.pWidth = 160;
-
 		this.bottom = canvas.height - this.pWidth;
 		this.left = this.pWidth;
 		this.right = canvas.width - this.pWidth;
@@ -184,7 +185,7 @@ class CanvasManager{
 				var currLeft = this.left + (i-this.numCols) * this.boxWidth;
 				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.estTop+21 + this.boxHeight, this.boxWidth - 20, this.boxHeight - 25);
 			}
-			this.addNewLine(currLeft, this.estTop, currLeft, this.bottom);
+			// this.addNewLine(currLeft, this.estTop, currLeft, this.bottom);
 		}
 
 		// this.addNewImage("images/d1.png", this.right - 150 + 10, 10,50,50);
@@ -192,10 +193,10 @@ class CanvasManager{
 		this.addNewImage("images/d1.png", this.right - 150 + 10, this.top + 10, 50, 50);
 		this.addNewImage("images/d2.png", this.right - 150/2 + 10, this.top + 10, 50, 50);
 		//1050, 0, 150, 75
-		this.addNewLine(this.right - 150/2 , this.top, this.right - 150/2, this.estTop);
+		// this.addNewLine(this.right - 150/2 , this.top, this.right - 150/2, this.estTop);
 
 		for(var j = 0; j < 3; j++){
-			this.addNewLine(this.left, this.estTop + j * this.boxHeight, this.right, this.estTop + j * this.boxHeight);
+			// this.addNewLine(this.left, this.estTop + j * this.boxHeight, this.right, this.estTop + j * this.boxHeight);
 		}		
 	}
 
@@ -231,6 +232,7 @@ class CanvasManager{
 		this.boxHeight = (this.bottom - this.estTop) / this.numRows;
 		this.initImagesAndLines();
 	}
+
 	animateBuy(player, card){
 		if(card.position >= FIRST_LANDMARK_LOC){
 			return;
@@ -247,6 +249,7 @@ class CanvasManager{
 	}
 
 	draw(){
+		this.ctx.clearRect(0,0,canvas.width,canvas.height);
 		if(this.windowHeight !== window.innerHeight || this.windowWidth !== window.innerWidth){
 			this.setDimensions();
 		} else if(this.numPlayers == 0 && this.game !== undefined){
@@ -258,7 +261,6 @@ class CanvasManager{
 		// this.setDimensions(this.game.players.length);
 		// this.initImagesAndLines();
 		
-		this.ctx.clearRect(0,0,canvas.width,canvas.height);
 
 
 		this.drawPlayerPalates();
@@ -273,19 +275,44 @@ class CanvasManager{
 			}
 		}
 	}
+
 	drawMenu(){
+
 		ctx.font = '64px monospace';
 		ctx.textAlign = 'center';
 		ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
-		ctx.font = '32px monospace';
-		ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
+		// ctx.font = '32px monospace';
+		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
 		
 		var a = new Image();
 		a.src = 'images/machi-koro.jpg';
 		a.onLoad = this.draw;
 		ctx.fillText("Image loading...", canvas.width/2, 400);
-		ctx.drawImage(a, 1, 200, 2400/2, 800/2);
+		this.menuPicMiddleX = this.canvas.width/2 - a.width/4;
+		var middleY = this.canvas.height/2 - a.height/4;
+
+		ctx.drawImage(a, this.menuPicMiddleX, middleY, a.width/2, a.height/2);
 		ctx.textAlign = 'left';
+		
+		this.menuButtonHeight = 80;
+		this.menuButtonBorder = 20;
+		this.menuButtonWidth = a.width/2/5 - this.menuButtonBorder;
+		this.menuButtonY = middleY + a.height/2 + this.menuButtonBorder;
+
+
+		ctx.font = '16px monospace';
+		this.ctx.textBaseline="middle";
+		this.ctx.textAlign = 'center';
+		
+		for(var i = 0; i < this.gameModeNames.length; i++){
+			var offset = i*(this.menuButtonWidth + this.menuButtonBorder);
+			this.ctx.fillStyle = 'rgb(255, 0, 0, 0.5)';
+			this.ctx.fillRect(this.menuPicMiddleX + offset, this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight);
+			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+			this.ctx.fillText(this.gameModeNames[i], this.menuPicMiddleX + this.menuButtonWidth/2 + offset, this.menuButtonY+ this.menuButtonHeight/2);
+			
+		}
+		this.ctx.textBaseline = "middle";	
 	}
 
 	drawPlayerPalates(){
@@ -446,7 +473,16 @@ class CanvasManager{
 
 	checkClick(x,y){
 		if(this.game === undefined){
-			setTimeout(initHumanGame());
+			print(x,y)
+			for(var i =0; i < this.gameModeNames.length; i++){
+				if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonWidth), 
+					this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight, x,y)){
+					print(i);
+					print();
+					this.gameModeFuncs[i]();
+				}
+			}
+			// setTimeout(initHumanGame());
 			return;
 		}
 		if(this.diceListening){
