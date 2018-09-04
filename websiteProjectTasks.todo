@@ -1,23 +1,31 @@
-Machi Koro
+Menu:
+ ☐ Add tab for machi koro to navigate
+ ☐ Mention machi koro in text
 
-Main Menu:
-  ☐ Scale image appropriantely
-  ☐ Figure out optimal image size
-  ☐ Compress image
+Machi Koro:
+  Main Menu:
+    ☐ Scale image appropriantely
+    ☐ Figure out optimal image size
+    ☐ Compress image
+    ☐ Load buttons before image is loaded
+    ☐ Figure out why paint doesnt work when change size + move mouse
 
-Game Menu:
-  ☐ Quit button
+  Game Board:
+    ☐ Quit button
+    ☐ Get better images
+    ☐ Scale images properly
+    ☐ Scroll bar down when new print occurs
 
-Genetic Display:
-  ☐ Implement option for manager to display chart
-  ☐ Layout design
-  ☐ Pause button
-  ☐ Output for a gene
-  ☐ Libraries for graphs
+  Genetic Display:
+    ☐ Implement option for manager to display chart
+    ☐ Layout design
+    ☐ Pause button
+    ☐ Output for a gene
+    ☐ Libraries for graphs
 
-Strategy test:
- ☐ Figure out requirements for strategy test window
+  Strategy test:
+   ☐ Figure out requirements for strategy test window
 
-Cleanup:
- ☐ Think about optimal canvas manager object usage
- ☐ look for functions that are too large and split
+  Cleanup:
+   ☐ Think about optimal canvas manager object usage
+   ☐ look for functions that are too large and split
