@@ -37,9 +37,11 @@ canvas.addEventListener("click", (event)=>{
 
 // Game.init();
 
-manage = new CanvasManager(window, canvas, outputBox);
+var manage = new GameCanvasManager(window, canvas, outputBox);
 // manage.game = Game;
 manage.draw();
+
+var geneticManager = new GeneticViewManager();
 
 var me;
 var humanInputType; 
@@ -248,8 +250,16 @@ function runRandomStrats(){
 	}
 }
 
-function startGeneticParam(popSizeIn = 100, iterationsIn = 200, maxGenIn = 3, maxMetaGenIn = 3, numBestIn = 10){
+function startGeneticParam(popSizeIn = 100, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
+	metaGenTransferIn = 1, singleBothOrDoublesIn = 1, iterationsIn = 200, maxGenIn = 3, 
+	maxMetaGenIn = 3, numBestIn = 10){
+
 	popSize = popSizeIn;
+	breakpointRatio = breakpointRatioIn;
+	mutationRate = mutationRateIn;
+	metaGenTransfer = metaGenTransferIn;
+	singleBothOrDoubles = singleBothOrDoublesIn;
+
 	iterations = iterationsIn;
 	maxGen = maxGenIn;
 	maxMetaGen = maxMetaGenIn;
