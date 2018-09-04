@@ -1,0 +1,23 @@
+Machi Koro
+
+Main Menu:
+  ☐ Scale image appropriantely
+  ☐ Figure out optimal image size
+  ☐ Compress image
+
+Game Menu:
+  ☐ Quit button
+
+Genetic Display:
+  ☐ Implement option for manager to display chart
+  ☐ Layout design
+  ☐ Pause button
+  ☐ Output for a gene
+  ☐ Libraries for graphs
+
+Strategy test:
+ ☐ Figure out requirements for strategy test window
+
+Cleanup:
+ ☐ Think about optimal canvas manager object usage
+ ☐ look for functions that are too large and split
