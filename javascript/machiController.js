@@ -16,7 +16,6 @@ canvas.addEventListener("click", (event)=>{
 
 	var response = manage.checkClick(x,y);
 	if(!Game.initRun){
-		print('escaped!')
 		return;
 	}
 	else if(response !== undefined){
@@ -63,7 +62,7 @@ function initHumanGame(numPlayers = 4, position = undefined){
 	Game.init(numPlayers, true);
 	print('you are player '+ playLoc);
 	print('asdf')
-	Game.players[playLoc] = new HumanPlayer("Human!");
+	Game.players[playLoc] = new HumanPlayer("Human Player!");
 	me = Game.players[playLoc];
 	manage.game = Game;
 

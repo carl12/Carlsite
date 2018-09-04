@@ -1,6 +1,7 @@
 
 
 var canvas = document.getElementById('myCanvas');
+
 var outputBox = document.getElementById('outputText');
 
 
@@ -10,6 +11,7 @@ print = function(...outputText){
 		outputBox.innerHTML += outputText[i];
 	}
 	outputBox.innerHTML += "\n";
+	outputBox.scrollTop = outputBox.scrollHeight;
 }
 canvas.style.outline="3px solid black";
 
@@ -146,6 +148,9 @@ class CanvasManager{
 			this.imageHolder[i] = new Image();
 			this.imageHolder[i].src = indexedCards[i].src;
 		}
+		this.mainMenuPic = new Image();
+		this.mainMenuPic.src = 'images/machi-koro.jpg';
+		this.mainMenuPic.onload = this.draw.bind(this);
 
 		this.messageText = "Starting messageText";
 		this.gameModeNames = ["Two Players","Three Players", "Four Players", "AI Test", "Genetic"];
@@ -210,6 +215,13 @@ class CanvasManager{
 		this.outputBox.style.height = this.windowHeight*this.canvasHeightFraction+"px";
 		this.outputBox.style.width = (this.windowWidth*(1-this.canvasWidthFraction)-13)+"px";
 
+		if(this.game !== undefined)
+		{
+			this.setPlayerPalates();
+		}
+		
+	}
+	setPlayerPalates(){
 		this.numPlayers = this.game.players.length;
 		this.left = 0;
 		this.top = 0;
@@ -250,22 +262,22 @@ class CanvasManager{
 
 	draw(){
 		this.ctx.clearRect(0,0,canvas.width,canvas.height);
+
 		if(this.windowHeight !== window.innerHeight || this.windowWidth !== window.innerWidth){
 			this.setDimensions();
-		} else if(this.numPlayers == 0 && this.game !== undefined){
-			this.setDimensions()
-		} else if (this.game === undefined && this.numPlayers === 0){
+		} 
+		if (this.game === undefined){
 			this.drawMenu();
 			return;
+		} else {
+			this.drawPlayerPalates();
+			this.drawStatusBar();
+			this.drawCardsLinesImages();
 		}
 		// this.setDimensions(this.game.players.length);
 		// this.initImagesAndLines();
 		
 
-
-		this.drawPlayerPalates();
-		this.drawStatusBar();
-		this.drawCardsLinesImages();
 
 		if(this.animating){
 			requestAnimationFrame(this.draw.bind(this))
@@ -277,27 +289,30 @@ class CanvasManager{
 	}
 
 	drawMenu(){
-
+		ctx.save();
 		ctx.font = '64px monospace';
 		ctx.textAlign = 'center';
 		ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
 		// ctx.font = '32px monospace';
 		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
 		
-		var a = new Image();
-		a.src = 'images/machi-koro.jpg';
-		a.onLoad = this.draw;
-		ctx.fillText("Image loading...", canvas.width/2, 400);
-		this.menuPicMiddleX = this.canvas.width/2 - a.width/4;
-		var middleY = this.canvas.height/2 - a.height/4;
 
-		ctx.drawImage(a, this.menuPicMiddleX, middleY, a.width/2, a.height/2);
+		ctx.fillText("Image loading...", canvas.width/2, 400);
+
+		var ratio = this.mainMenuPic.height/this.mainMenuPic.width;
+		this.mainMenuPic.width = this.canvas.width*0.9;
+		this.mainMenuPic.height = this.mainMenuPic.width * ratio;
+
+		this.menuPicMiddleX = this.canvas.width/2 - this.mainMenuPic.width/2;
+		var middleY = this.canvas.height/2 - this.mainMenuPic.height/2;
+
+		ctx.drawImage(this.mainMenuPic, this.menuPicMiddleX, middleY, this.mainMenuPic.width, this.mainMenuPic.height);
 		ctx.textAlign = 'left';
 		
 		this.menuButtonHeight = 80;
 		this.menuButtonBorder = 20;
-		this.menuButtonWidth = a.width/2/5 - this.menuButtonBorder;
-		this.menuButtonY = middleY + a.height/2 + this.menuButtonBorder;
+		this.menuButtonWidth = this.mainMenuPic.width/5 - this.menuButtonBorder;
+		this.menuButtonY = middleY + this.mainMenuPic.height + this.menuButtonBorder;
 
 
 		ctx.font = '16px monospace';
@@ -312,7 +327,7 @@ class CanvasManager{
 			this.ctx.fillText(this.gameModeNames[i], this.menuPicMiddleX + this.menuButtonWidth/2 + offset, this.menuButtonY+ this.menuButtonHeight/2);
 			
 		}
-		this.ctx.textBaseline = "middle";	
+		ctx.restore();
 	}
 
 	drawPlayerPalates(){
@@ -473,12 +488,10 @@ class CanvasManager{
 
 	checkClick(x,y){
 		if(this.game === undefined){
-			print(x,y)
 			for(var i =0; i < this.gameModeNames.length; i++){
-				if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonWidth), 
+				if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonBorder), 
 					this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight, x,y)){
-					print(i);
-					print();
+
 					this.gameModeFuncs[i]();
 				}
 			}
