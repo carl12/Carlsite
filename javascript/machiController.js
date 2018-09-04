@@ -8,8 +8,6 @@ var canvasLeft = canvas.offsetLeft;
 var canvasTop = canvas.offsetTop;
 
 
-
-
 canvas.addEventListener("click", (event)=>{
 	var x = event.pageX - canvasLeft;
 	var y = event.pageY - canvasTop;
@@ -169,6 +167,11 @@ var scores = [];
 var winners;
 var scoreBreakpoint;
 
+var breakpointRatio = 0.2;
+var mutationRate = 0.01;
+var metaGenTransfer = 0;
+var singleBothOrDoubles = 1;
+
 var iterations = 1000;
 var maxGen = 3;
 var currGen = 1;
@@ -325,19 +328,23 @@ function genPopulation(){
 	pop = [];
 	var builds = [];
 	var doubles;
-	if(bestScoreGene.length > 2){
-		var bestScoreGeneCopy = bestScoreGene.slice(0,bestScoreGene.length);
-
-		pop.push(bestScoreGeneCopy[0]);
-		pop.push(bestScoreGeneCopy[1]);
-		pop.push(bestScoreGeneCopy[2]);
+	for(var i = 0; i < metaGenTransfer && i < bestScoreGene.length; i++){
+		pop.push(bestScoreGene[i]);
 	}
+
 	// while(bestScoreGeneCopy.length > 0){
 	// 	pop.push(bestScoreGeneCopy.pop());
 	// }
 	for(var i = pop.length - 1; i < popSize; i++){
 		builds = genRandomStrat();
-		doubles = 1;//randInt(0,2);
+
+		if(singleBothOrDoubles == 0){
+			doubles = 0;
+		} else if (singleBothOrDoubles == 1){
+			doubles = randInt(0,2);
+		} else {
+			doubles = 1;
+		}
 		pop.push([builds, doubles])
 	}
 }
@@ -473,7 +480,7 @@ function getWinners() {
 	winners = [];
 	//sort from highest to lowest
 	var sortedScores = scores.slice(0,scores.length).sort((a,b)=>b-a);
-	var breakpoint = Math.floor(sortedScores.length/5);
+	var breakpoint = Math.floor(sortedScores.length * breakpointRatio);
 	// print('sorted scores' ,sortedScores)
 
 	if(sortedScores[0] >= bestScore[0]){
@@ -546,8 +553,8 @@ function mutateGene(gene){
 	for(var i = 0; i < gene[0].length; i++){
 		for(var j = 0; j < 2; j++){
 			var curr = gene[0][i][j];
-			var rndNum = randInt(0,1000);
-			if(gene[0][i][0] < 15 && rndNum < 10){
+			var rndNum = math.random();
+			if(gene[0][i][0] < 15 && rndNum < mutationRate){
 				mutate = true;
 				var pre1 = gene[0][i][j];
 				if(j == 0){
