@@ -63,8 +63,10 @@ class LineWrapper{
 }
 
 class ImageWrapper{
-	constructor(src, x, y, width, height){
-		this.src = src;
+	constructor(img, x, y, width, height){
+
+		this.img = img;
+		this.src = img.src;
 		this.x = x;
 		this.y = y;
 		if(width === undefined || height === undefined){	
@@ -80,8 +82,6 @@ class ImageWrapper{
 		this.dx = 0;
 		this.dy = 0;
 
-		this.img = new Image();
-		this.img.src = src;
 		var img = this.img;
 	}
 
@@ -111,8 +111,8 @@ class ImageWrapper{
 }
 
 class cardImageWrapper extends ImageWrapper{
-	constructor(card, x, y, width, height){
-		super(card.src, x, y, width, height);
+	constructor(img, card, x, y, width, height){
+		super(img, x, y, width, height);
 		this.card = card;
 	}
 
@@ -138,16 +138,26 @@ class CanvasManager{
 		this.outputBox.style.height = this.windowHeight*this.canvasHeightFraction+"px";
 		this.outputBox.style.width = (this.windowWidth*(1-this.canvasWidthFraction)-10)+"px";
 
-		this.imageHolder = [];
-		this.images = [];
+		this.imageWrappers = [];
+		this.cardWrappers = [];
 		this.landmarkLocs = [];
 		this.animatingLocs = [];
 		this.animating = false;
 		this.numPlayers = 0;
+		this.cardImageHolder = [];
 		for(var i = 0; i < indexedCards.length; i++){
-			this.imageHolder[i] = new Image();
-			this.imageHolder[i].src = indexedCards[i].src;
+			this.cardImageHolder[i] = new Image();
+			this.cardImageHolder[i].src = indexedCards[i].src;
 		}
+		this.otherImageHolder = [];
+		var d1Img = new Image();
+		d1Img.src = "images/d1.png";
+
+		var d2Img = new Image();
+		d2Img.src = "images/d2.png";
+		this.otherImageHolder.push(d1Img);
+		this.otherImageHolder.push(d2Img);
+
 		this.mainMenuPic = new Image();
 		this.mainMenuPic.src = 'images/machi-koro.jpg';
 		this.mainMenuPic.onload = this.draw.bind(this);
@@ -179,30 +189,31 @@ class CanvasManager{
 	}
 
 	initImagesAndLines(){
-		this.images = []
-		this.cardImages = []
+		this.imageWrappers = []
+		this.cardWrappers = []
 		this.lines = []
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			if(i < this.numCols){
 				var currLeft = this.left + (i) * this.boxWidth;
-				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.estTop+21, this.boxWidth - 20, this.boxHeight - 25);
+				this.addNewCardImage(this.cardImageHolder[i], indexedEstablishments[i], currLeft+10, this.estTop+21, this.boxWidth - 20, this.boxHeight - 25);
 			} else {
 				var currLeft = this.left + (i-this.numCols) * this.boxWidth;
-				this.addNewCardImage(indexedEstablishments[i], currLeft+10, this.estTop+21 + this.boxHeight, this.boxWidth - 20, this.boxHeight - 25);
+				this.addNewCardImage(this.cardImageHolder[i], indexedEstablishments[i], currLeft+10, this.estTop+21 + this.boxHeight, this.boxWidth - 20, this.boxHeight - 25);
 			}
 			// this.addNewLine(currLeft, this.estTop, currLeft, this.bottom);
 		}
 
 		// this.addNewImage("images/d1.png", this.right - 150 + 10, 10,50,50);
 		
-		this.addNewImage("images/d1.png", this.right - 150 + 10, this.top + 10, 50, 50);
-		this.addNewImage("images/d2.png", this.right - 150/2 + 10, this.top + 10, 50, 50);
+
+		this.addNewImage(this.otherImageHolder[0], this.right - 150 + 10, this.top + 10, 50, 50);
+		this.addNewImage(this.otherImageHolder[1], this.right - 150/2 + 10, this.top + 10, 50, 50);
 		//1050, 0, 150, 75
 		// this.addNewLine(this.right - 150/2 , this.top, this.right - 150/2, this.estTop);
 
-		for(var j = 0; j < 3; j++){
+		// for(var j = 0; j < 3; j++){
 			// this.addNewLine(this.left, this.estTop + j * this.boxHeight, this.right, this.estTop + j * this.boxHeight);
-		}		
+		// }		
 	}
 
 	setDimensions(){
@@ -249,15 +260,15 @@ class CanvasManager{
 		if(card.position >= FIRST_LANDMARK_LOC){
 			return;
 		}
-		var x = this.cardImages[card.position].x;
-		var y = this.cardImages[card.position].y;
-		this.addNewImage(card.src, x,y, 100, 150)
+		var x = this.cardWrappers[card.position].x;
+		var y = this.cardWrappers[card.position].y;
+		this.addNewImage(this.cardImageHolder[i], x,y, 100, 150)
 		var x,y;
 		var left = 0; var midHoriz = (this.left+this.right)/2; var right = canvas.width;
 		var up = 0; var midVert = canvas.height/2; var down = canvas.height;
 		var loc = [[left-100, midVert], [midHoriz, down], [right, midVert], [midHoriz, up-160]][player]
 
-		this.images[this.images.length - 1].startAnimation(...loc,100)
+		this.imageWrappers[this.imageWrappers.length - 1].startAnimation(...loc,100)
 	}
 
 	draw(){
@@ -283,16 +294,16 @@ class CanvasManager{
 			requestAnimationFrame(this.draw.bind(this))
 		} else {
 			while(this.animatingLocs.length > 0){
-				this.images.splice(this.animatingLocs.pop(),1)
+				this.imageWrappers.splice(this.animatingLocs.pop(),1)
 			}
 		}
 	}
 
 	drawMenu(){
-		ctx.save();
-		ctx.font = '64px monospace';
-		ctx.textAlign = 'center';
-		ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
+		this.ctx.save();
+		this.ctx.font = '64px monospace';
+		this.ctx.textAlign = 'center';
+		this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
 		// ctx.font = '32px monospace';
 		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
 		
@@ -379,7 +390,7 @@ class CanvasManager{
 				ctx.font = '16px monospace';
 				for(var j = 0; j < bc.length; j++){
 					if(bc[j]> 0){
-						tmpImg = this.imageHolder[j];
+						tmpImg = this.cardImageHolder[j];
 						ctx.fillText(""+bc[j], (this.boxWidth/2) * (numEstTypes) + 30, 150);
 						ctx.drawImage(tmpImg, (this.boxWidth/2) * numEstTypes + 10,  50, 105/2, 168/2);
 						numEstTypes ++;
@@ -389,7 +400,7 @@ class CanvasManager{
 
 				currLandmark -= (105/2 + 10);
 				for(var j = p.landmarks.length-1; j >= 0; j--){
-					tmpImg = this.imageHolder[j + FIRST_LANDMARK_LOC];
+					tmpImg = this.cardImageHolder[j + FIRST_LANDMARK_LOC];
 					
 					ctx.drawImage(tmpImg, currLandmark, 50, 105/2, 168/2); 
 					this.landmarkLocs[j] = [j+FIRST_LANDMARK_LOC, [this.left + currLandmark, this.bottom + 50, 105/2, 168/2]];
@@ -453,9 +464,9 @@ class CanvasManager{
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		
 
-		for(var i in this.cardImages){
-			this.cardImages[i].draw(this.ctx);
-			// if(this.cardImages[i].moving){
+		for(var i in this.cardWrappers){
+			this.cardWrappers[i].draw(this.ctx);
+			// if(this.cardWrappers[i].moving){
 			// 	animating = true;
 			// }
 		}
@@ -464,9 +475,9 @@ class CanvasManager{
 		}
 		this.animating = false
 
-		for(var i in this.images){
-			this.images[i].draw(this.ctx);
-			if(this.images[i].moving){
+		for(var i in this.imageWrappers){
+			this.imageWrappers[i].draw(this.ctx);
+			if(this.imageWrappers[i].moving){
 				this.animating = true;
 				if(!this.animatingLocs.includes(i)){
 					this.animatingLocs.push(i);
@@ -474,12 +485,12 @@ class CanvasManager{
 			}
 		}
 	}
-	addNewImage(src,x,y,width,height){
-		this.images.push(new ImageWrapper(src,x,y,width,height));
+	addNewImage(img,x,y,width,height){
+		this.imageWrappers.push(new ImageWrapper(img,x,y,width,height));
 	}
 
-	addNewCardImage(card, x, y, width, height){
-		this.cardImages.push(new cardImageWrapper(card, x, y, width, height));
+	addNewCardImage(img, card, x, y, width, height){
+		this.cardWrappers.push(new cardImageWrapper(img, card, x, y, width, height));
 	}
 
 	addNewLine(x1,y1,x2,y2){
@@ -525,9 +536,9 @@ class CanvasManager{
 			if(clickInObj(this.right - 300,this.top,150,75,x,y)){
 				return -1;
 			}
-			for(var i in this.cardImages){
-				if(this.cardImages[i].contains(x,y)){
-					return this.cardImages[i].card.position;
+			for(var i in this.cardWrappers){
+				if(this.cardWrappers[i].contains(x,y)){
+					return this.cardWrappers[i].card.position;
 				}
 			}
 			for(var i in this.landmarkLocs){
