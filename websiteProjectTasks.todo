@@ -4,17 +4,17 @@ Menu:
 
 Machi Koro:
   Main Menu:
-    ☐ Scale image appropriantely
+    ✔ Scale image appropriantely @done (18-09-04 14:27)
     ☐ Figure out optimal image size
     ☐ Compress image
     ☐ Load buttons before image is loaded
-    ☐ Figure out why paint doesnt work when change size + move mouse
+    ✔ Figure out why paint doesnt work when change size + move mouse @done (18-09-04 16:30)
 
   Game Board:
     ☐ Quit button
     ☐ Get better images
     ☐ Scale images properly
-    ☐ Scroll bar down when new print occurs
+    ✔ Scroll bar down when new print occurs @done (18-09-04 16:30)
 
   Genetic Display:
     ☐ Implement option for manager to display chart

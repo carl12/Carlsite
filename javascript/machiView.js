@@ -123,8 +123,11 @@ class cardImageWrapper extends ImageWrapper{
 	}
 }
 
-class CanvasManager{
+class GameCanvasManager{
 	constructor(window, canvas, outputBox){
+		this.mySpanId = 'gameCanvasSpan';
+		this.mySpan = document.getElementById(this.mySpanId);
+
 		this.canvas = canvas
 		this.outputBox = outputBox;
 		this.window = window;
@@ -187,6 +190,13 @@ class CanvasManager{
 
 		this.initImagesAndLines();
 	}
+	enableGameCanvasSpan(){
+		this.mySpan.style.display = "block";
+	}
+	disableGameCanvasSpan(){
+		this.mySpan.style.display = "none";
+	}
+
 
 	initImagesAndLines(){
 		this.imageWrappers = []
@@ -553,10 +563,8 @@ class CanvasManager{
 		} else if(this.stealListening){
 			print('steal listening');
 		}
-
-
-
 	}
+
 	disableListeners(){
 		// this.gameWaiting = false;
 		this.diceListening = false;
@@ -587,6 +595,43 @@ class CanvasManager{
 		}
 		this.draw();
 
+	}
+}
+
+class GeneticViewManager{
+	constructor(){
+		this.mySpanId = 'geneticSpan'
+		this.menuSpanId = 'inputGeneticSpan';
+		this.runSpanId = 'runningGeneticSpan';
+
+		this.mySpan = document.getElementById(this.mySpanId);
+		this.menuSpan = document.getElementById(this.menuSpanId);
+		this.runSpan = document.getElementById(this.runSpanId);
+
+
+		this.titleID;
+		/*
+		popSize
+		breakpointRatio
+		mutationRate
+		metaGenTransfer
+		singleBothOrDoubles
+
+		iterations
+		maxGen
+		maxMetaGen
+
+		numBest
+		*/
+
+	}
+	enableGeneticSpan(){
+		this.mySpan.style.display = "block";
+		this.menuSpan.style.display = "block";
+		this.runSpan.style.display = "none";
+	}
+	disableGeneticSpan(){
+		this.mySpan.style.display = "none";
 	}
 }
 
