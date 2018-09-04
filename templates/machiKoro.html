@@ -7,14 +7,27 @@
 </head>
 
 <body>
-	<canvas id="myCanvas" style="float:left" > 
-		Canvas failed to load
-	</canvas>
+	<span id="gameCanvasSpan" style="display: block">
+		<!-- <canvas id="myChart" width="400" height="400"></canvas> -->
+		<!-- <div>adsf</div> -->
+		<canvas id="myCanvas" style="float:left" > 
+			Canvas failed to load
+		</canvas>
 
-    <textarea id="outputText" id="output" style="resize:none" readonly></textarea> 
+	    <textarea id="outputText" id="output" style="resize:none" readonly></textarea> 
+	</span>
+	<span id="geneticSpan" style="display: none">
+		<span id="inputGeneticSpan">
+			<h1>Big menu Here!</h1>
+			
+		</span>
+		<span id="runningGeneticSpan">
+			
+		</span>
+	</span>
   	
 </body>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script src="javascript/machiCards.js"></script>
 <script src="javascript/machiPlayer.js"></script>
 <script src="javascript/machiGame.js"></script> 
