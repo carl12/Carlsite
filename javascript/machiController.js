@@ -6,6 +6,15 @@ var outputBox = document.getElementById('outputText');
 
 var canvasLeft = canvas.offsetLeft;
 var canvasTop = canvas.offsetTop;
+window.chartColors = {
+	red: 'rgb(255, 99, 132)',
+	orange: 'rgb(255, 159, 64)',
+	yellow: 'rgb(255, 205, 86)',
+	green: 'rgb(75, 192, 192)',
+	blue: 'rgb(54, 162, 235)',
+	purple: 'rgb(153, 102, 255)',
+	grey: 'rgb(201, 203, 207)'
+};
 
 
 canvas.addEventListener("click", (event)=>{
@@ -164,7 +173,7 @@ function arrProd(a, b, times=1){
 }
 
 var pop = [];
-var popSize = 1000;
+var popSize = 100;
 var scores = [];
 var winners;
 var scoreBreakpoint;
@@ -174,7 +183,7 @@ var mutationRate = 0.01;
 var metaGenTransfer = 0;
 var singleBothOrDoubles = 1;
 
-var iterations = 1000;
+var iterations = 100;
 var maxGen = 3;
 var currGen = 1;
 var maxMetaGen = 2;
@@ -185,6 +194,7 @@ var bestScoreGene = [];
 var bestScoreGen = [];
 var bestStratScores = [];
 var numBest = 10;
+var useView = true;
 
 var singleGames = new Array(aiStratList.length).fill(0);
 var singleWins = new Array(aiStratList.length).fill(0);
@@ -192,6 +202,12 @@ var multiGames = new Array(aiStratList.length).fill(0);
 var multiWins = new Array(aiStratList.length).fill(0);
 
 var spotWinner = [0,0,0,0];
+
+function switchOnGraphs(){
+	manage.disableGameSpan();
+	geneticManager.startGeneticView();
+	geneticManager.toggleMenu();
+}
 
 function testStrats(tests = 1000){
 	for(var j = 0; j < tests; j++){
@@ -252,7 +268,7 @@ function runRandomStrats(){
 
 function startGeneticParam(popSizeIn = 100, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
 	metaGenTransferIn = 1, singleBothOrDoublesIn = 1, iterationsIn = 200, maxGenIn = 3, 
-	maxMetaGenIn = 3, numBestIn = 10){
+	maxMetaGenIn = 3, numBestIn = 10, useViewIn = true){
 
 	popSize = popSizeIn;
 	breakpointRatio = breakpointRatioIn;
@@ -264,10 +280,15 @@ function startGeneticParam(popSizeIn = 100, breakpointRatioIn = 0.2, mutationRat
 	maxGen = maxGenIn;
 	maxMetaGen = maxMetaGenIn;
 	numBest = numBestIn;
+	useView = useViewIn;
+
 	startGenetic();
 }
 
 function startGenetic(){
+	if(useView){
+		switchOnGraphs();
+	}
 	genPopulation();
 	runGeneration();	
 }
@@ -282,7 +303,7 @@ function runGeneration(){
 	setTimeout(outputWinners);
 	if(currGen < maxGen){
 		setTimeout(()=>currGen++);
-		setTimeout(runGeneration);
+		setTimeout(runGeneration, 6000);
 	} else {
 		if(currMetaGen < maxMetaGen){
 
@@ -291,7 +312,7 @@ function runGeneration(){
 			setTimeout(print,0,'~~~~~~~~~~~~~');
 			setTimeout(print,0,'Running Meta Gen ', currMetaGen, ' of ' ,maxMetaGen);
 			setTimeout(print,0,'~~~~~~~~~~~~~');
-			setTimeout(runGeneration);
+			setTimeout(runGeneration, 6000);
 			
 
 		} else {
@@ -356,6 +377,9 @@ function genPopulation(){
 			doubles = 1;
 		}
 		pop.push([builds, doubles])
+	}
+	if(useView){
+		geneticManager.clearScores();
 	}
 }
 
@@ -435,9 +459,6 @@ function runOneStrat(stratLoc, isRerun = false){
 
 	}
 	if(bestScore.length < numBest || score1 > bestScore[bestScore.length-1]){
-
-
-		
 		var insert = bestScore.length;
 		var string = JSON.stringify(currStrat);
 		var sameStratLoc = bestScore.length;
@@ -484,6 +505,9 @@ function runOneStrat(stratLoc, isRerun = false){
 		
 	}
 	scores[stratLoc] = score1;	
+	if(useView){
+		geneticManager.submitNewScore(score1, stratLoc);
+	}
 }
 
 function getWinners() {
@@ -521,6 +545,9 @@ function getWinners() {
 		}
 	}
 	console.log('out of ', pop.length,' strats, we have ', winners.length, ' winners');
+	if(useView){
+		geneticManager.endTesting(scoreBreakpoint, [currMetaGen, currGen]);
+	}
 	return i;
 }
 
@@ -563,7 +590,7 @@ function mutateGene(gene){
 	for(var i = 0; i < gene[0].length; i++){
 		for(var j = 0; j < 2; j++){
 			var curr = gene[0][i][j];
-			var rndNum = math.random();
+			var rndNum = Math.random();
 			if(gene[0][i][0] < 15 && rndNum < mutationRate){
 				mutate = true;
 				var pre1 = gene[0][i][j];

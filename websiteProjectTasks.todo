@@ -19,6 +19,9 @@ Machi Koro:
   Genetic Display:
     ✔ Implement option for manager to display chart @done (18-09-04 17:04)
     ☐ Layout design
+      ☐ Wins over time
+      ☐ Curr Wins
+      ☐ 
     ☐ Pause button
     ☐ Output for a gene
     ☐ Libraries for graphs

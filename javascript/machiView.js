@@ -125,7 +125,7 @@ class cardImageWrapper extends ImageWrapper{
 
 class GameCanvasManager{
 	constructor(window, canvas, outputBox){
-		this.mySpanId = 'gameCanvasSpan';
+		this.mySpanId = 'gameSpan';
 		this.mySpan = document.getElementById(this.mySpanId);
 
 		this.canvas = canvas
@@ -190,10 +190,10 @@ class GameCanvasManager{
 
 		this.initImagesAndLines();
 	}
-	enableGameCanvasSpan(){
+	enableGameSpan(){
 		this.mySpan.style.display = "block";
 	}
-	disableGameCanvasSpan(){
+	disableGameSpan(){
 		this.mySpan.style.display = "none";
 	}
 
@@ -604,10 +604,24 @@ class GeneticViewManager{
 		this.menuSpanId = 'inputGeneticSpan';
 		this.runSpanId = 'runningGeneticSpan';
 
+		this.winsOverTimeId = 'chart1';
+		this.currWinsId = 'chart2';
+
 		this.mySpan = document.getElementById(this.mySpanId);
 		this.menuSpan = document.getElementById(this.menuSpanId);
 		this.runSpan = document.getElementById(this.runSpanId);
 
+		this.winsOverTimeChart = document.getElementById('chart1');
+		this.currWinsChart = document.getElementById('chart2');
+
+		this.stratLoc = [];
+		this.numStratWins = [];
+		this.lastNumStrats = 0;
+
+		this.genBest = [];
+		this.genBreakpoint = [];
+		this.genAvg = [];
+		this.genRecord =[];
 
 		this.titleID;
 		/*
@@ -625,7 +639,37 @@ class GeneticViewManager{
 		*/
 
 	}
-	enableGeneticSpan(){
+	submitNewScore(score, loc){
+		this.stratLoc.push(loc);
+		this.numStratWins.push(score);
+		this.numStratWins.sort((a,b)=>b-a);
+		// if(this.numStratWins.length - this.lastNumStrats > 40){
+		// 	this.draw();
+		// 	this.lastNumStrats = this.numStratWins.length;
+		// }
+
+	}
+	endTesting(breakpoint, currGen){
+		var maxLoc = 0;
+		var sum = 0;
+		for(var i = 0; i < this.numStratWins.length; i++){
+			sum += this.numStratWins[i];
+			if(this.numStratWins[i] > this.numStratWins[maxLoc]){
+				maxLoc = i;
+			}
+		}
+		this.genBest.push(this.numStratWins[maxLoc]);
+		this.genBreakpoint.push(breakpoint);
+		this.genAvg.push(sum/this.numStratWins.length);
+		this.genRecord.push(currGen);
+		this.draw();
+	}
+	clearScores(){
+		this.stratLoc = [];
+		this.numStratWins = [];
+		this.lastNumStrats = 0;
+	}
+	startGeneticView(){
 		this.mySpan.style.display = "block";
 		this.menuSpan.style.display = "block";
 		this.runSpan.style.display = "none";
@@ -633,5 +677,76 @@ class GeneticViewManager{
 	disableGeneticSpan(){
 		this.mySpan.style.display = "none";
 	}
+
+	toggleMenu(){
+		if(this.menuSpan.style.display == "none"){
+			this.menuSpan.style.display = "block";
+			this.runSpan.style.display = "none";
+		} else {
+			this.menuSpan.style.display = "none";
+			this.runSpan.style.display = "block";
+			// this.draw();
+		}
+	}
+	draw(){
+		var ctx1 = this.winsOverTimeChart;
+		var ctx2 = this.currWinsChart;
+		ctx1.height = 500;
+		ctx1.width = 500;
+		var myChart = new Chart(this.winsOverTimeChart, {
+		    type: 'line',
+		    data: {
+		        labels: this.stratLoc,
+		        datasets: [{
+		            label: '# of Wins',
+		            data: this.numStratWins,
+		            borderWidth: 1,
+		            fill: false,
+		            borderColor: window.chartColors.green,
+					backgroundColor: window.chartColors.green,
+		        }]
+		    },
+		    options: {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero:true
+		                }
+		            }]
+		        }
+		    }
+		});
+
+		var myChart2 = new Chart(this.currWinsChart, {
+			type:'line',
+			data: {
+				labels: this.genRecord,
+				datasets: [{
+					label: 'Best Score!',
+					data: this.genBest,
+					fill: false,
+					borderColor: window.chartColors.red,
+					backgroundColor: window.chartColors.red,
+				},
+				{
+					label: 'Breakpoint',
+					data: this.genBreakpoint,
+					fill: false,
+					borderColor: window.chartColors.blue,
+					backgroundColor: window.chartColors.blue,
+				},				
+				{
+					label: 'Average',
+					data: this.genAvg,
+					fill: false,
+					borderColor: window.chartColors.purple,
+					backgroundColor: window.chartColors.purple,
+				},]
+			}
+		})
+
+
+	}
+
 }
 
