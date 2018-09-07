@@ -320,9 +320,11 @@ class GameCanvasManager{
 
 		ctx.fillText("Image loading...", canvas.width/2, 400);
 
-		var ratio = this.mainMenuPic.height/this.mainMenuPic.width;
-		this.mainMenuPic.width = this.canvas.width*0.9;
-		this.mainMenuPic.height = this.mainMenuPic.width * ratio;
+		if(this.mainMenuPic.height !== 0){
+			var ratio = this.mainMenuPic.height/this.mainMenuPic.width;
+			this.mainMenuPic.width = this.canvas.width*0.9;
+			this.mainMenuPic.height = this.mainMenuPic.width * ratio;
+		}
 
 		this.menuPicMiddleX = this.canvas.width/2 - this.mainMenuPic.width/2;
 		var middleY = this.canvas.height/2 - this.mainMenuPic.height/2;
