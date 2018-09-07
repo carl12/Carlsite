@@ -41,7 +41,32 @@ canvas.addEventListener("click", (event)=>{
 	// print(x,y);
 });
 
+var callQueue = [];
+var popInTimeout = false;
+function addToCallQueue(func, timeout = 0, ...args){
+	callQueue.push([func, timeout, args]);
+	if(!popInTimeout){
+		setTimeout(popCallQueue);
+		popInTimeout = true;
+	}
+}
 
+function popCallQueue(){
+	if(callQueue.length > 0){
+		info = callQueue.splice(0,1)[0];
+		setTimeout(delayedCall, info[1], info[0], info[2]);
+	}
+}
+
+function delayedCall(func, args){
+
+	func(...args);
+	if(callQueue.length > 0){
+		setTimeout(popCallQueue);
+	} else {
+		popInTimeout = false;
+	}
+}
 
 
 // Game.init();
@@ -79,7 +104,7 @@ function initHumanGame(numPlayers = 4, position = undefined){
 	manage.disableListeners();
 	manage.setDimensions();
 
-	setTimeout(runHumanGame);
+	addToCallQueue(runHumanGame);
 }
 
 function f(response){
@@ -115,9 +140,9 @@ function f(response){
 		} 
 	}
 	if(Game.turnState.phase == 4){
-		setTimeout(runHumanGame, 1000);
+		addToCallQueue(runHumanGame, 1000);
 	} else {
-		setTimeout(runHumanGame, 300);
+		addToCallQueue(runHumanGame, 300);
 	}
 	return Game.next(output);
 }
@@ -149,7 +174,7 @@ function runHumanGame(){
 			}
 		}
 		manage.draw()
-		setTimeout(runHumanGame, 1000)
+		addToCallQueue(runHumanGame, 1000)
 	} 
 }
 
@@ -211,12 +236,12 @@ function switchOnGraphs(){
 
 function testStrats(tests = 1000){
 	for(var j = 0; j < tests; j++){
-		setTimeout(runRandomStrats);
+		addToCallQueue(runRandomStrats);
 		if(j % 30000 == 0){
-			setTimeout(print, 0, j, ' runs out of ', tests);
+			addToCallQueue(print, 0, j, ' runs out of ', tests);
 		}
 	}
-	setTimeout(printAiPerformance);
+	addToCallQueue(printAiPerformance);
 }
 
 function runRandomStrats(){
@@ -298,28 +323,28 @@ function runGeneration(){
 	print('GENERATION ', currGen ,' of ',maxGen);
 	print('--------------');
 	runGames();
-	setTimeout(getWinners);
-	setTimeout(nextGeneration);
-	setTimeout(outputWinners);
+	addToCallQueue(getWinners);
+	addToCallQueue(nextGeneration);
+	addToCallQueue(outputWinners);
 	if(currGen < maxGen){
-		setTimeout(()=>currGen++);
-		setTimeout(runGeneration, 6000);
+		addToCallQueue(()=>currGen++);
+		addToCallQueue(runGeneration, 6000);
 	} else {
 		if(currMetaGen < maxMetaGen){
 
-			setTimeout(()=>{currGen=1;currMetaGen++;});
-			setTimeout(genPopulation);
-			setTimeout(print,0,'~~~~~~~~~~~~~');
-			setTimeout(print,0,'Running Meta Gen ', currMetaGen, ' of ' ,maxMetaGen);
-			setTimeout(print,0,'~~~~~~~~~~~~~');
-			setTimeout(runGeneration, 6000);
+			addToCallQueue(()=>{currGen=1;currMetaGen++;});
+			addToCallQueue(genPopulation);
+			addToCallQueue(print,0,'~~~~~~~~~~~~~');
+			addToCallQueue(print,0,'Running Meta Gen ', currMetaGen, ' of ' ,maxMetaGen);
+			addToCallQueue(print,0,'~~~~~~~~~~~~~');
+			addToCallQueue(runGeneration, 6000);
 			
 
 		} else {
-			setTimeout(print,0,'------ All Finished! ------');
-			setTimeout(printAiPerformance);
-			setTimeout(printFinalist)
-			setTimeout(alert, 0, 'done');
+			addToCallQueue(print,0,'------ All Finished! ------');
+			addToCallQueue(printAiPerformance);
+			addToCallQueue(printFinalist)
+			addToCallQueue(alert, 0, 'done');
 		}
 	}
 }
@@ -386,7 +411,7 @@ function genPopulation(){
 function runGames(){
 	for(var i = 0; i < pop.length; i++){
 		var currGene = pop[i];
-		setTimeout(runOneStrat, 0, i);
+		addToCallQueue(runOneStrat, 0, i);
 	}
 }
 
