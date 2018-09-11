@@ -32,7 +32,7 @@ g = {
 	winners:[],
 	scoreBreakpoint:0,
 	
-	breakpointRatio:0,
+	breakpointRatio:0.2,
 	mutationRate:0.01,
 	metaGenTransfer:0,
 	singleBothOrDoubles:1,
@@ -57,9 +57,9 @@ g = {
 	spotWinner: [0,0,0,0],
 
 
-	startGeneticParam:function(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
-		metaGenTransferIn = 0, singleBothOrDoublesIn = 1, iterationsIn = 1000, maxGenIn = 8, 
-		maxMetaGenIn = 8, numBestIn = 10, useViewIn = true){
+	startGeneticParam:function(popSizeIn = 10, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
+		metaGenTransferIn = 0, singleBothOrDoublesIn = 1, iterationsIn = 10, maxGenIn = 3, 
+		maxMetaGenIn = 3, numBestIn = 10, useViewIn = true){
 
 		this.popSize = popSizeIn;
 		this.breakPointRation = breakpointRatioIn;
@@ -95,7 +95,7 @@ g = {
 		geneticBindCall(this.outputWinners);
 		if(this.currGen < this.maxGen){
 			geneticBindCall(()=>this.currGen++);
-			geneticBindCall(this.runGeneration, 6000);
+			geneticBindCall(this.runGeneration, 1000);
 		} else {
 			if(this.currMetaGen < this.maxMetaGen){
 
@@ -104,14 +104,14 @@ g = {
 				geneticBindCall(print,0,'~~~~~~~~~~~~~');
 				geneticBindCall(print,0,'Running Meta Gen ', this.currMetaGen, ' of ' ,this.maxMetaGen);
 				geneticBindCall(print,0,'~~~~~~~~~~~~~');
-				geneticBindCall(this.runGeneration, 6000);
+				geneticBindCall(this.runGeneration, 1000);
 				
 
 			} else {
 				geneticBindCall(print,0,'------ All Finished! ------');
 				geneticBindCall(this.printAiPerformance);
 				geneticBindCall(this.printFinalist)
-				geneticBindCall(alert, 0, 'done');
+				geneticBindCall(alert.bind(window), 0, 'done');
 			}
 		}
 	},
@@ -144,7 +144,7 @@ g = {
 		print(this.bestScore);
 		print(this.bestScoreGen);
 		print('-~-~-~-~-~-~-~');
-		printPop(this.bestScoreGene);
+		this.printPop(this.bestScoreGene);
 	},
 
 	genPopulation:function(){
@@ -159,20 +159,24 @@ g = {
 		// 	pop.push(bestScoreGeneCopy.pop());
 		// }
 		for(var i = this.pop.length - 1; i < this.popSize; i++){
-			builds = genRandomStrat();
-
-			if(this.singleBothOrDoubles == 0){
-				doubles = 0;
-			} else if (this.singleBothOrDoubles == 1){
-				doubles = randInt(0,2);
-			} else {
-				doubles = 1;
-			}
-			this.pop.push([builds, doubles])
+			this.pop.push(this.genRandomStrat());
 		}
 		if(this.useView){
 			geneticManager.clearScores();
 		}
+	},
+
+	genRandomStrat(){
+		var builds = genRandomBuildPriority();
+		var doubles;
+		if(this.singleBothOrDoubles == 0){
+			doubles = 0;
+		} else if (this.singleBothOrDoubles == 1){
+			doubles = randInt(0,2);
+		} else {
+			doubles = 1;
+		}
+		return [builds, doubles];
 	},
 
 	runGames:function(){
@@ -296,7 +300,9 @@ g = {
 				
 			
 		}
-		this.scores[stratLoc] = score1;	
+		if(!isRerun){
+			this.scores[stratLoc] = score1;
+		}
 		if(this.useView){
 			geneticManager.submitNewScore(score1, stratLoc);
 		}
@@ -334,6 +340,7 @@ g = {
 		for(var i = 0; i < this.scores.length; i++){
 			if(this.scores[i] >= this.scoreBreakpoint){
 				this.winners.push(i);
+				print('asdf')
 			}
 		}
 		console.log('out of ', this.pop.length,' strats, we have ', this.winners.length, ' winners');
@@ -344,7 +351,12 @@ g = {
 	},
 
 	nextGeneration:function(){
-		var numCopies = this.popSize/this.winners.length;
+		if(this.winners.length == 0){
+			print('No winners, generating new population');
+			this.genPopulation();
+			return;
+		}
+		var numCopies = Math.floor(this.popSize/this.winners.length);
 		var newPop = [];
 
 		for(var i = 0; i < this.winners.length; i++){
@@ -360,6 +372,9 @@ g = {
 
 			}
 		}
+		while(newPop.length < this.popSize){
+			newPop.push(this.genRandomStrat());
+		}
 		print(newPop.length)
 		if(newPop.length !== this.popSize){
 			print(this.winners.length)
@@ -373,6 +388,7 @@ g = {
 			print('~+~+~+~+~+~+~+~+~+~+~+~++~+~')
 		}
 		this.pop = newPop;
+		this.scores = [];
 		// print('we made a new pop with ', pop.length, ' which should be the same as ', popSize);	
 	},
 
@@ -621,7 +637,6 @@ function popCallQueue(){
 }
 
 function delayedCall(func, args){
-
 	func(...args);
 	if(callQueue.length > 0){
 		setTimeout(popCallQueue);

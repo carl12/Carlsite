@@ -35,7 +35,7 @@ function randIntTwoRange(low1, high1, low2, high2){
 	return val;
 } 
 
-function genRandomStrat(){
+function genRandomBuildPriority(){
 	var base = [[18,1],[17,1],[16,1],[15,1]]
 	var length = randInt(1,10);
 	var generated = [];

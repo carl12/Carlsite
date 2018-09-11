@@ -679,6 +679,7 @@ class GeneticViewManager{
 		this.mySpanId = 'geneticSpan'
 		this.menuSpanId = 'inputGeneticSpan';
 		this.runSpanId = 'runningGeneticSpan';
+		this.paramInfoId = 'paramInfo';
 
 		this.winsOverTimeId = 'chart1';
 		this.currWinsId = 'chart2';
@@ -686,6 +687,7 @@ class GeneticViewManager{
 		this.mySpan = document.getElementById(this.mySpanId);
 		this.menuSpan = document.getElementById(this.menuSpanId);
 		this.runSpan = document.getElementById(this.runSpanId);
+		this.paramDiv = document.getElementById(this.paramInfoId);
 
 		this.winsOverTimeChart = document.getElementById('chart1');
 		this.currWinsChart = document.getElementById('chart2');
@@ -764,6 +766,16 @@ class GeneticViewManager{
 			// this.draw();
 		}
 	}
+	setParamInfo(g){
+		var currMetaGen = g.maxMetaGen;
+		var currGen = g.currGen;
+		var numMetaGen = g.maxMetaGen;
+		var numGen = g.maxGen;
+		var iterations = g.iterations;
+		var popSize = g.popSize;
+		// this.paramDiv.set
+	}
+
 	draw(){
 		var ctx1 = this.winsOverTimeChart;
 		var ctx2 = this.currWinsChart;
