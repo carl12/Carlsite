@@ -15,37 +15,49 @@ window.chartColors = {
 	purple: 'rgb(153, 102, 255)',
 	grey: 'rgb(201, 203, 207)'
 };
+var callQueue = [];
+var popInTimeout = false;
 
+const MAIN_MENU_STATE = 0;
+const HUMAN_GAME_STATE = 1;
+const GENTIC_STATE = 2;
+const TEST_STRAT_STATE = 3;
+
+var viewState = MAIN_MENU_STATE;
 
 canvas.addEventListener("click", (event)=>{
 	var x = event.pageX - canvasLeft;
 	var y = event.pageY - canvasTop;
-
-	var response = manage.checkClick(x,y);
-	if(!Game.initRun){
+	var response;
+	if(viewState === MAIN_MENU_STATE){
+		menuManager.checkClick(x,y);
 		return;
-	}
-	else if(response !== undefined){
-		if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
-			
-			var success = f(response);
-			if(success){
-			if(Game.lastBought != null){
-				manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
-			}
-				manage.disableListeners();
+	} else if (viewState === HUMAN_GAME_STATE){
+		response = manage.checkClick(x,y);
+		if(!Game.initRun){
+			return;
+		}
+		else if(response !== undefined){
+			if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
+				
+				var success = hum.f(response);
+				if(success){
+					if(Game.lastBought != null){
+						manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
+					}
+					manage.disableListeners();
+				}
 			}
 		}
 	}
-
-	// print(x,y);
 });
 
-var callQueue = [];
-var popInTimeout = false;
-
-function bindedCallQueue(func, timeout, ...args){
+function geneticBindCall(func, timeout, ...args){
 	addToCallQueue(func.bind(g), timeout, ...args);
+}
+
+function humanBindCall(func, timeout, ...args){
+	addToCallQueue(func.bind(hum), timeout, ...args);
 }
 
 function addToCallQueue(func, timeout = 0, ...args){
@@ -125,6 +137,7 @@ g = {
 	},
 
 	startGenetic:function(){
+		viewState = GENTIC_STATE;
 		if(this.useView){
 			switchOnGraphs();
 		}
@@ -137,28 +150,28 @@ g = {
 		print('GENERATION ', this.currGen ,' of ',this.maxGen);
 		print('--------------');
 		this.runGames();
-		bindedCallQueue(this.getWinners);
-		bindedCallQueue(this.nextGeneration);
-		bindedCallQueue(this.outputWinners);
+		geneticBindCall(this.getWinners);
+		geneticBindCall(this.nextGeneration);
+		geneticBindCall(this.outputWinners);
 		if(this.currGen < this.maxGen){
-			bindedCallQueue(()=>this.currGen++);
-			bindedCallQueue(this.runGeneration, 6000);
+			geneticBindCall(()=>this.currGen++);
+			geneticBindCall(this.runGeneration, 6000);
 		} else {
 			if(this.currMetaGen < this.maxMetaGen){
 
-				bindedCallQueue(()=>{this.currGen=1;this.currMetaGen++;});
-				bindedCallQueue(this.genPopulation);
-				bindedCallQueue(print,0,'~~~~~~~~~~~~~');
-				bindedCallQueue(print,0,'Running Meta Gen ', this.currMetaGen, ' of ' ,this.maxMetaGen);
-				bindedCallQueue(print,0,'~~~~~~~~~~~~~');
-				bindedCallQueue(this.runGeneration, 6000);
+				geneticBindCall(()=>{this.currGen=1;this.currMetaGen++;});
+				geneticBindCall(this.genPopulation);
+				geneticBindCall(print,0,'~~~~~~~~~~~~~');
+				geneticBindCall(print,0,'Running Meta Gen ', this.currMetaGen, ' of ' ,this.maxMetaGen);
+				geneticBindCall(print,0,'~~~~~~~~~~~~~');
+				geneticBindCall(this.runGeneration, 6000);
 				
 
 			} else {
-				bindedCallQueue(print,0,'------ All Finished! ------');
-				bindedCallQueue(this.printAiPerformance);
-				bindedCallQueue(this.printFinalist)
-				bindedCallQueue(alert, 0, 'done');
+				geneticBindCall(print,0,'------ All Finished! ------');
+				geneticBindCall(this.printAiPerformance);
+				geneticBindCall(this.printFinalist)
+				geneticBindCall(alert, 0, 'done');
 			}
 		}
 	},
@@ -225,7 +238,7 @@ g = {
 	runGames:function(){
 		for(var i = 0; i < this.pop.length; i++){
 			var currGene = this.pop[i];
-			bindedCallQueue(this.runOneStrat, 0, i);
+			geneticBindCall(this.runOneStrat, 0, i);
 		}
 	},
 
@@ -455,16 +468,18 @@ g = {
 	},
 
 	testStrats:function(tests = 10000){
+		viewState = TEST_STRAT_STATE;
 		for(var j = 0; j < tests; j++){
-			bindedCallQueue(this.runRandomStrats);
-			if(j % 30000 == 0){
-				bindedCallQueue(print, 0, j, ' runs out of ', tests);
+			geneticBindCall(this.runRandomStrats);
+			if(j % 3000 == 0){
+				geneticBindCall(print, 0, j, ' runs out of ', tests);
 			}
 		}
-		bindedCallQueue(this.printAiPerformance);
+		geneticBindCall(this.printAiPerformance);
 	},
 
 	runRandomStrats:function(){
+
 		Game.init();
 		var k = 0; 
 		while(Game.winner === -1 && k < 1000){
@@ -512,114 +527,113 @@ g = {
 	},
 }
 
-// Game.init();
+hum = {
+	humanInputType:{},
 
-var manage = new GameCanvasManager(window, canvas, outputBox);
-// manage.game = Game;
-manage.draw();
+	initHumanGame:function(numPlayers = 4, position = undefined){
 
-var geneticManager = new GeneticViewManager();
+		print('Welcome to Machi Koro!');
+		var playLoc;
+		if(position === undefined){
+			playLoc = randInt(0,numPlayers);
+		} else {
+			playLoc = position;
+		}
+		Game.init(numPlayers, true);
+		print('you are player '+ playLoc);
+		print('asdf')
+		Game.players[playLoc] = new HumanPlayer("Human Player!");
+		this.me = Game.players[playLoc];
+		manage.game = Game;
 
-var me;
-var humanInputType; 
+
+		manage.disableListeners();
+		manage.setDimensions();
+		viewState = HUMAN_GAME_STATE;
+
+		humanBindCall(this.runHumanGame);
+	},
+
+	f:function(response){
+		var output = [];
+		if(Game.turnState.phase == 0){
+			output.rollTwo = response;
+
+		} else if(Game.turnState.phase == 1){
+			if(response.length != undefined){
+				if(response.length == 2){
+					output.reroll = response[0];
+					output.rollTwo = response[1];
+				}
+			}
+		} else if (Game.turnState.phase == 3) {
+			if(response.length != undefined){
+				if(humanInputType.card == 7){
+					if(response.length == 3){
+						output.targetPlayer = response[0];
+						output.targetBuilding = response[1];
+						output.myBuilding = response[2];
+					}
+				}else {
+					// TODO - finish this
+					output.targetPlayer = response;
+				}
+
+			}
+		} else if(Game.turnState.phase == 4) {
+
+			if (response !== -1){
+				output.card = indexedCards[response];
+			} 
+		}
+		if(Game.turnState.phase == 4){
+			humanBindCall(this.runHumanGame, 1000);
+		} else {
+			humanBindCall(this.runHumanGame, 300);
+		}
+		return Game.next(output);
+	},
+
+	runHumanGame:function(){
+
+		if(Game.winner === -1){
+			manage.draw()
+			if(!Game.requireInput()){
+				Game.next();
+			} else {
+				inputType = Game.getInputType();
+				if(!Game.players[Game.turnState.playerTurn].isHuman){	
+					var response;
+					response = inputType.player.takeInput(inputType);
+					Game.next(response);
+				} else {
+					manage.takeHumanInput(inputType);
+					this.humanInputType = inputType;
+					manage.draw();
+					if(Game.turnState.phase == 4){
+						print('You have $'+me.money);
+					}
+					return;
+				}
+
+				if(Game.lastBought != null){
+					manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
+				}
+			}
+			manage.draw()
+			humanBindCall(this.runHumanGame, 1000)
+		} 
+	},
+}
+
+
+// var me;
+// var humanInputType; 
 
 function returnHumanGameMaker(numPlayers){
-	return ()=>{initHumanGame(numPlayers)};
+	return ()=>{hum.initHumanGame(numPlayers)};
 }
 
-
-function initHumanGame(numPlayers = 4, position = undefined){
-	print('Welcome to Machi Koro!');
-	var playLoc;
-	if(position === undefined){
-		playLoc = randInt(0,numPlayers);
-	} else {
-		playLoc = position;
-	}
-	Game.init(numPlayers, true);
-	print('you are player '+ playLoc);
-	print('asdf')
-	Game.players[playLoc] = new HumanPlayer("Human Player!");
-	me = Game.players[playLoc];
-	manage.game = Game;
-
-
-	manage.disableListeners();
-	manage.setDimensions();
-
-	addToCallQueue(runHumanGame);
-}
-
-function f(response){
-	var output = [];
-	if(Game.turnState.phase == 0){
-		output.rollTwo = response;
-
-	} else if(Game.turnState.phase == 1){
-		if(response.length != undefined){
-			if(response.length == 2){
-				output.reroll = response[0];
-				output.rollTwo = response[1];
-			}
-		}
-	} else if (Game.turnState.phase == 3) {
-		if(response.length != undefined){
-			if(humanInputType.card == 7){
-				if(response.length == 3){
-					output.targetPlayer = response[0];
-					output.targetBuilding = response[1];
-					output.myBuilding = response[2];
-				}
-			}else {
-				// TODO - finish this
-				output.targetPlayer = response;
-			}
-
-		}
-	} else if(Game.turnState.phase == 4) {
-
-		if (response !== -1){
-			output.card = indexedCards[response];
-		} 
-	}
-	if(Game.turnState.phase == 4){
-		addToCallQueue(runHumanGame, 1000);
-	} else {
-		addToCallQueue(runHumanGame, 300);
-	}
-	return Game.next(output);
-}
-
-function runHumanGame(){
-
-	if(Game.winner === -1){
-		manage.draw()
-		if(!Game.requireInput()){
-			Game.next();
-		} else {
-			inputType = Game.getInputType();
-			if(!Game.players[Game.turnState.playerTurn].isHuman){	
-				var response;
-				response = inputType.player.takeInput(inputType);
-				Game.next(response);
-			} else {
-				manage.takeHumanInput(inputType);
-				humanInputType = inputType;
-				manage.draw();
-				if(Game.turnState.phase == 4){
-					print('You have $'+me.money);
-				}
-				return;
-			}
-
-			if(Game.lastBought != null){
-				manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
-			}
-		}
-		manage.draw()
-		addToCallQueue(runHumanGame, 1000)
-	} 
-}
 
 function switchOnGraphs(){
 	manage.disableGameSpan();
@@ -627,16 +641,15 @@ function switchOnGraphs(){
 	geneticManager.toggleMenu();
 }
 
+var manage = new GameViewManager(window, canvas, outputBox);
+var geneticManager = new GeneticViewManager();
+var menuManager = new MenuViewManager(window, canvas);
 
 
 canvas.addEventListener('mouseover', function(e) {
-	manage.draw();
-
+	if(viewState === MAIN_MENU_STATE){
+		menuManager.draw();
+	} else if(viewState === HUMAN_GAME_STATE){
+		manage.draw();
+	} 
 });
-
-// Enter either
-
-// initHumanGame();
-// startGenetic();
-// testStrats();
-

@@ -123,7 +123,7 @@ class cardImageWrapper extends ImageWrapper{
 	}
 }
 
-class GameCanvasManager{
+class GameViewManager{
 	constructor(window, canvas, outputBox){
 		this.mySpanId = 'gameSpan';
 		this.mySpan = document.getElementById(this.mySpanId);
@@ -161,14 +161,14 @@ class GameCanvasManager{
 		this.otherImageHolder.push(d1Img);
 		this.otherImageHolder.push(d2Img);
 
-		this.mainMenuPic = new Image();
-		this.mainMenuPic.src = 'images/machi-koro.jpg';
-		this.mainMenuPic.onload = this.draw.bind(this);
+		// this.mainMenuPic = new Image();
+		// this.mainMenuPic.src = 'images/machi-koro.jpg';
+		// this.mainMenuPic.onload = this.draw.bind(this);
 
 		this.messageText = "Starting messageText";
 		this.gameModeNames = ["Two Players","Three Players", "Four Players", "AI Test", "Genetic"];
 		this.gameModeFuncs = [returnHumanGameMaker(2), returnHumanGameMaker(3), returnHumanGameMaker(4),
-								g.testStrats.bind(g), g.startGeneticParam.bind(g)]
+								g.testStrats.bind(g), g.startGeneticParam.bind(g)];
 
 		this.top = 0;
 		this.statusBarHeight = 75;
@@ -288,7 +288,7 @@ class GameCanvasManager{
 			this.setDimensions();
 		} 
 		if (this.game === undefined){
-			this.drawMenu();
+			// this.drawMenu();
 			return;
 		} else {
 			this.drawPlayerPalates();
@@ -309,49 +309,49 @@ class GameCanvasManager{
 		}
 	}
 
-	drawMenu(){
-		this.ctx.save();
-		this.ctx.font = '64px monospace';
-		this.ctx.textAlign = 'center';
-		this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
-		// ctx.font = '32px monospace';
-		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
+	// drawMenu(){
+	// 	this.ctx.save();
+	// 	this.ctx.font = '64px monospace';
+	// 	this.ctx.textAlign = 'center';
+	// 	this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
+	// 	// ctx.font = '32px monospace';
+	// 	// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
 		
 
-		ctx.fillText("Image loading...", canvas.width/2, 400);
+	// 	ctx.fillText("Image loading...", canvas.width/2, 400);
 
-		if(this.mainMenuPic.height !== 0){
-			var ratio = this.mainMenuPic.height/this.mainMenuPic.width;
-			this.mainMenuPic.width = this.canvas.width*0.9;
-			this.mainMenuPic.height = this.mainMenuPic.width * ratio;
-		}
+	// 	if(this.mainMenuPic.height !== 0){
+	// 		var ratio = this.mainMenuPic.height/this.mainMenuPic.width;
+	// 		this.mainMenuPic.width = this.canvas.width*0.9;
+	// 		this.mainMenuPic.height = this.mainMenuPic.width * ratio;
+	// 	}
 
-		this.menuPicMiddleX = this.canvas.width/2 - this.mainMenuPic.width/2;
-		var middleY = this.canvas.height/2 - this.mainMenuPic.height/2;
+	// 	this.menuPicMiddleX = this.canvas.width/2 - this.mainMenuPic.width/2;
+	// 	var middleY = this.canvas.height/2 - this.mainMenuPic.height/2;
 
-		ctx.drawImage(this.mainMenuPic, this.menuPicMiddleX, middleY, this.mainMenuPic.width, this.mainMenuPic.height);
-		ctx.textAlign = 'left';
+	// 	ctx.drawImage(this.mainMenuPic, this.menuPicMiddleX, middleY, this.mainMenuPic.width, this.mainMenuPic.height);
+	// 	ctx.textAlign = 'left';
 		
-		this.menuButtonHeight = 80;
-		this.menuButtonBorder = 20;
-		this.menuButtonWidth = this.mainMenuPic.width/5 - this.menuButtonBorder;
-		this.menuButtonY = middleY + this.mainMenuPic.height + this.menuButtonBorder;
+	// 	this.menuButtonHeight = 80;
+	// 	this.menuButtonBorder = 20;
+	// 	this.menuButtonWidth = this.mainMenuPic.width/5 - this.menuButtonBorder;
+	// 	this.menuButtonY = middleY + this.mainMenuPic.height + this.menuButtonBorder;
 
 
-		ctx.font = '16px monospace';
-		this.ctx.textBaseline="middle";
-		this.ctx.textAlign = 'center';
+	// 	ctx.font = '16px monospace';
+	// 	this.ctx.textBaseline="middle";
+	// 	this.ctx.textAlign = 'center';
 		
-		for(var i = 0; i < this.gameModeNames.length; i++){
-			var offset = i*(this.menuButtonWidth + this.menuButtonBorder);
-			this.ctx.fillStyle = 'rgb(255, 0, 0, 0.5)';
-			this.ctx.fillRect(this.menuPicMiddleX + offset, this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight);
-			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText(this.gameModeNames[i], this.menuPicMiddleX + this.menuButtonWidth/2 + offset, this.menuButtonY+ this.menuButtonHeight/2);
+	// 	for(var i = 0; i < this.gameModeNames.length; i++){
+	// 		var offset = i*(this.menuButtonWidth + this.menuButtonBorder);
+	// 		this.ctx.fillStyle = 'rgb(255, 0, 0, 0.5)';
+	// 		this.ctx.fillRect(this.menuPicMiddleX + offset, this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight);
+	// 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+	// 		this.ctx.fillText(this.gameModeNames[i], this.menuPicMiddleX + this.menuButtonWidth/2 + offset, this.menuButtonY+ this.menuButtonHeight/2);
 			
-		}
-		ctx.restore();
-	}
+	// 	}
+	// 	ctx.restore();
+	// }
 
 	drawPlayerPalates(){
 		this.ctx.fillStyle = 'rgb(200, 0, 0)';
@@ -497,6 +497,7 @@ class GameCanvasManager{
 			}
 		}
 	}
+
 	addNewImage(img,x,y,width,height){
 		this.imageWrappers.push(new ImageWrapper(img,x,y,width,height));
 	}
@@ -511,14 +512,6 @@ class GameCanvasManager{
 
 	checkClick(x,y){
 		if(this.game === undefined){
-			for(var i =0; i < this.gameModeNames.length; i++){
-				if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonBorder), 
-					this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight, x,y)){
-
-					this.gameModeFuncs[i]();
-				}
-			}
-			// setTimeout(initHumanGame());
 			return;
 		}
 		if(this.diceListening){
@@ -597,6 +590,87 @@ class GameCanvasManager{
 		}
 		this.draw();
 
+	}
+}
+
+class MenuViewManager{
+	constructor(window, canvas){
+		this.canvas = canvas;
+		this.window = window;
+		this.canvasHeightFraction = 0.98;
+		this.canvasWidthFraction = 0.8;
+		this.windowWidth = this.window.innerWidth;
+		this.windowHeight = this.window.innerHeight;
+		this.ctx = this.canvas.getContext('2d');
+
+		this.mainMenuPic = new Image();
+		this.mainMenuPic.src = 'images/machi-koro.jpg';
+		this.mainMenuPic.onload = this.draw.bind(this);
+
+		this.gameModeNames = ["Two Players","Three Players", "Four Players", "AI Test", "Genetic"];
+		this.gameModeFuncs = [returnHumanGameMaker(2), returnHumanGameMaker(3), returnHumanGameMaker(4),
+								g.testStrats.bind(g), g.startGeneticParam.bind(g)];
+	}
+	draw(){
+		this.drawMenu();
+	}
+
+	checkClick(x,y){
+		for(var i =0; i < this.gameModeNames.length; i++){
+			if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonBorder), 
+				this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight, x,y)){
+
+				this.gameModeFuncs[i]();
+			}
+		}
+		// setTimeout(initHumanGame());
+		return;
+	}
+
+	drawMenu(){
+
+		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+		this.ctx.save();
+		this.ctx.font = '64px monospace';
+		this.ctx.textAlign = 'center';
+		this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
+		// ctx.font = '32px monospace';
+		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
+		
+
+		ctx.fillText("Image loading...", this.canvas.width/2, 400);
+
+		if(this.mainMenuPic.height !== 0){
+			var ratio = this.mainMenuPic.height/this.mainMenuPic.width;
+			this.mainMenuPic.width = this.canvas.width*0.9;
+			this.mainMenuPic.height = this.mainMenuPic.width * ratio;
+		}
+
+		this.menuPicMiddleX = this.canvas.width/2 - this.mainMenuPic.width/2;
+		var middleY = this.canvas.height/2 - this.mainMenuPic.height/2;
+
+		ctx.drawImage(this.mainMenuPic, this.menuPicMiddleX, middleY, this.mainMenuPic.width, this.mainMenuPic.height);
+		ctx.textAlign = 'left';
+		
+		this.menuButtonHeight = 80;
+		this.menuButtonBorder = 20;
+		this.menuButtonWidth = this.mainMenuPic.width/5 - this.menuButtonBorder;
+		this.menuButtonY = middleY + this.mainMenuPic.height + this.menuButtonBorder;
+
+
+		ctx.font = '16px monospace';
+		this.ctx.textBaseline="middle";
+		this.ctx.textAlign = 'center';
+		
+		for(var i = 0; i < this.gameModeNames.length; i++){
+			var offset = i*(this.menuButtonWidth + this.menuButtonBorder);
+			this.ctx.fillStyle = 'rgb(255, 0, 0, 0.5)';
+			this.ctx.fillRect(this.menuPicMiddleX + offset, this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight);
+			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+			this.ctx.fillText(this.gameModeNames[i], this.menuPicMiddleX + this.menuButtonWidth/2 + offset, this.menuButtonY+ this.menuButtonHeight/2);
+			
+		}
+		ctx.restore();
 	}
 }
 
