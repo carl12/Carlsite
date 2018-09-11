@@ -25,66 +25,6 @@ const TEST_STRAT_STATE = 3;
 
 var viewState = MAIN_MENU_STATE;
 
-canvas.addEventListener("click", (event)=>{
-	var x = event.pageX - canvasLeft;
-	var y = event.pageY - canvasTop;
-	var response;
-	if(viewState === MAIN_MENU_STATE){
-		menuManager.checkClick(x,y);
-		return;
-	} else if (viewState === HUMAN_GAME_STATE){
-		response = manage.checkClick(x,y);
-		if(!Game.initRun){
-			return;
-		}
-		else if(response !== undefined){
-			if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
-				
-				var success = hum.f(response);
-				if(success){
-					if(Game.lastBought != null){
-						manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
-					}
-					manage.disableListeners();
-				}
-			}
-		}
-	}
-});
-
-function geneticBindCall(func, timeout, ...args){
-	addToCallQueue(func.bind(g), timeout, ...args);
-}
-
-function humanBindCall(func, timeout, ...args){
-	addToCallQueue(func.bind(hum), timeout, ...args);
-}
-
-function addToCallQueue(func, timeout = 0, ...args){
-	callQueue.push([func, timeout, args]);
-	if(!popInTimeout){
-		setTimeout(popCallQueue);
-		popInTimeout = true;
-	}
-}
-
-function popCallQueue(){
-	if(callQueue.length > 0){
-		info = callQueue.splice(0,1)[0];
-		setTimeout(delayedCall, info[1], info[0], info[2]);
-	}
-}
-
-function delayedCall(func, args){
-
-	func(...args);
-	if(callQueue.length > 0){
-		setTimeout(popCallQueue);
-	} else {
-		popInTimeout = false;
-	}
-}
-
 g = {
 	pop:[],
 	popSize:100,
@@ -626,6 +566,69 @@ hum = {
 	},
 }
 
+var manage = new GameViewManager(window, canvas, outputBox);
+var geneticManager = new GeneticViewManager();
+var menuManager = new MenuViewManager(window, canvas);
+
+canvas.addEventListener("click", (event)=>{
+	var x = event.pageX - canvasLeft;
+	var y = event.pageY - canvasTop;
+	var response;
+	if(viewState === MAIN_MENU_STATE){
+		menuManager.checkClick(x,y);
+		return;
+	} else if (viewState === HUMAN_GAME_STATE){
+		response = manage.checkClick(x,y);
+		if(!Game.initRun){
+			return;
+		}
+		else if(response !== undefined){
+			if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
+				
+				var success = hum.f(response);
+				if(success){
+					if(Game.lastBought != null){
+						manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
+					}
+					manage.disableListeners();
+				}
+			}
+		}
+	}
+});
+
+function geneticBindCall(func, timeout, ...args){
+	addToCallQueue(func.bind(g), timeout, ...args);
+}
+
+function humanBindCall(func, timeout, ...args){
+	addToCallQueue(func.bind(hum), timeout, ...args);
+}
+
+function addToCallQueue(func, timeout = 0, ...args){
+	callQueue.push([func, timeout, args]);
+	if(!popInTimeout){
+		setTimeout(popCallQueue);
+		popInTimeout = true;
+	}
+}
+
+function popCallQueue(){
+	if(callQueue.length > 0){
+		info = callQueue.splice(0,1)[0];
+		setTimeout(delayedCall, info[1], info[0], info[2]);
+	}
+}
+
+function delayedCall(func, args){
+
+	func(...args);
+	if(callQueue.length > 0){
+		setTimeout(popCallQueue);
+	} else {
+		popInTimeout = false;
+	}
+}
 
 // var me;
 // var humanInputType; 
@@ -641,9 +644,6 @@ function switchOnGraphs(){
 	geneticManager.toggleMenu();
 }
 
-var manage = new GameViewManager(window, canvas, outputBox);
-var geneticManager = new GeneticViewManager();
-var menuManager = new MenuViewManager(window, canvas);
 
 
 canvas.addEventListener('mouseover', function(e) {
