@@ -178,25 +178,6 @@ function runHumanGame(){
 	} 
 }
 
-function arrAdd(a, b, plus = 1){
-	var c = [];
-	var flip = plus ? 1 : -1;
-	for(var i = 0; i < a.length; i++)
-	{
-		c[i] = a[i] + flip * b[i];
-	}
-	return c;
-}
-
-function arrProd(a, b, times=1){
-	var c = [];
-	var flip = times ? 1: -1;
-	for(var i = 0; i < a.length; i++){
-		c[i] = a[i] * Math.pow(b[i],flip);
-	}
-	return c;
-}
-
 var pop = [];
 var popSize = 100;
 var scores = [];
@@ -234,7 +215,7 @@ function switchOnGraphs(){
 	geneticManager.toggleMenu();
 }
 
-function testStrats(tests = 1000){
+function testStrats(tests = 10000){
 	for(var j = 0; j < tests; j++){
 		addToCallQueue(runRandomStrats);
 		if(j % 30000 == 0){
@@ -291,9 +272,9 @@ function runRandomStrats(){
 	}
 }
 
-function startGeneticParam(popSizeIn = 100, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
-	metaGenTransferIn = 1, singleBothOrDoublesIn = 1, iterationsIn = 200, maxGenIn = 3, 
-	maxMetaGenIn = 3, numBestIn = 10, useViewIn = true){
+function startGeneticParam(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
+	metaGenTransferIn = 0, singleBothOrDoublesIn = 1, iterationsIn = 1000, maxGenIn = 8, 
+	maxMetaGenIn = 8, numBestIn = 10, useViewIn = true){
 
 	popSize = popSizeIn;
 	breakpointRatio = breakpointRatioIn;

@@ -698,10 +698,10 @@ class GeneticViewManager{
 		var myChart = new Chart(this.winsOverTimeChart, {
 		    type: 'line',
 		    data: {
-		        labels: this.stratLoc,
+		        labels: JSON.parse(JSON.stringify(this.stratLoc)),
 		        datasets: [{
 		            label: '# of Wins',
-		            data: this.numStratWins,
+		            data: JSON.parse(JSON.stringify(this.numStratWins)),
 		            borderWidth: 1,
 		            fill: false,
 		            borderColor: window.chartColors.green,
@@ -722,24 +722,24 @@ class GeneticViewManager{
 		var myChart2 = new Chart(this.currWinsChart, {
 			type:'line',
 			data: {
-				labels: this.genRecord,
+				labels: JSON.parse(JSON.stringify(this.genRecord)),
 				datasets: [{
 					label: 'Best Score!',
-					data: this.genBest,
+					data: JSON.parse(JSON.stringify(this.genBest)),
 					fill: false,
 					borderColor: window.chartColors.red,
 					backgroundColor: window.chartColors.red,
 				},
 				{
 					label: 'Breakpoint',
-					data: this.genBreakpoint,
+					data: JSON.parse(JSON.stringify(this.genBreakpoint)),
 					fill: false,
 					borderColor: window.chartColors.blue,
 					backgroundColor: window.chartColors.blue,
 				},				
 				{
 					label: 'Average',
-					data: this.genAvg,
+					data: JSON.parse(JSON.stringify(this.genAvg)),
 					fill: false,
 					borderColor: window.chartColors.purple,
 					backgroundColor: window.chartColors.purple,
