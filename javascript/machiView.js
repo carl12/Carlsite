@@ -168,7 +168,7 @@ class GameCanvasManager{
 		this.messageText = "Starting messageText";
 		this.gameModeNames = ["Two Players","Three Players", "Four Players", "AI Test", "Genetic"];
 		this.gameModeFuncs = [returnHumanGameMaker(2), returnHumanGameMaker(3), returnHumanGameMaker(4),
-								testStrats, startGeneticParam]
+								g.testStrats.bind(g), g.startGeneticParam.bind(g)]
 
 		this.top = 0;
 		this.statusBarHeight = 75;
