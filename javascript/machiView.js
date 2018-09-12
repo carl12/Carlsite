@@ -4,6 +4,18 @@ var canvas = document.getElementById('myCanvas');
 
 var outputBox = document.getElementById('outputText');
 
+function printStrat(strat){
+	var output = "";
+	if(strat[1]){
+		output += "Roll Doubles \n";
+	} else {
+		output+= "Don't Roll Doubles \n";
+	}
+	for(var i =0; i < strat[0].length; i++){
+		output+= `${i+1}. ${indexedCards[strat[0][i][0]].name} x${strat[0][i][1]} \n`;
+	}
+	return output
+}
 
 print = function(...outputText){
 	console.log(...outputText)
@@ -680,6 +692,7 @@ class GeneticViewManager{
 		this.menuSpanId = 'inputGeneticSpan';
 		this.runSpanId = 'runningGeneticSpan';
 		this.paramInfoId = 'paramInfo';
+		this.bestStratId = 'bestStrat';
 
 		this.winsOverTimeId = 'chart1';
 		this.currWinsId = 'chart2';
@@ -688,9 +701,10 @@ class GeneticViewManager{
 		this.menuSpan = document.getElementById(this.menuSpanId);
 		this.runSpan = document.getElementById(this.runSpanId);
 		this.paramDiv = document.getElementById(this.paramInfoId);
+		this.bestStrat = document.getElementById(this.bestStratId);
 
-		this.winsOverTimeChart = document.getElementById('chart1');
-		this.currWinsChart = document.getElementById('chart2');
+		this.winsOverTimeCanvas = document.getElementById('chart1');
+		this.currWinsCanvas = document.getElementById('chart2');
 
 		this.stratLoc = [];
 		this.numStratWins = [];
@@ -766,22 +780,32 @@ class GeneticViewManager{
 			// this.draw();
 		}
 	}
-	setParamInfo(g){
-		var currMetaGen = g.maxMetaGen;
+	setParamInfo(g, currStrat = 0){
+		var currMetaGen = g.currMetaGen;
 		var currGen = g.currGen;
 		var numMetaGen = g.maxMetaGen;
 		var numGen = g.maxGen;
 		var iterations = g.iterations;
 		var popSize = g.popSize;
-		// this.paramDiv.set
+		var output = `Meta Generations: ${currMetaGen}/${numMetaGen} | Generation: ${currGen}/${numGen} |  Pop Size: ${currStrat}/${popSize} | iterations: ${iterations}`
+		this.paramDiv.innerText = output;
 	}
 
 	draw(){
-		var ctx1 = this.winsOverTimeChart;
-		var ctx2 = this.currWinsChart;
-		ctx1.height = 500;
-		ctx1.width = 500;
-		var myChart = new Chart(this.winsOverTimeChart, {
+		this.setParamInfo(g, g.popSize);
+		print(g.bestScore);
+		var output = `Winning Strat with ${g.bestScore[0]} wins out of ${g.iterations}:\n` + printStrat(g.bestScoreGene[0]) + "\n\n";
+		output += `Second Strat with ${g.bestScore[1]} wins out of ${g.iterations}:\n` + printStrat(g.bestScoreGene[1]);
+		this.bestStrat.innerText = output;
+		this.winsOverTimeCanvas.height = 500;
+		this.winsOverTimeCanvas.width = 500;
+		this.currWinsCanvas.height = 500;
+		this.currWinsCanvas.width = 500;
+
+		this.myChart !== undefined? this.myChart.destroy():{};
+		this.myChart2 !== undefined? this.myChart2.destroy():{};
+		
+		this.myChart = new Chart(this.winsOverTimeCanvas, {
 		    type: 'line',
 		    data: {
 		        labels: JSON.parse(JSON.stringify(this.stratLoc)),
@@ -805,7 +829,7 @@ class GeneticViewManager{
 		    }
 		});
 
-		var myChart2 = new Chart(this.currWinsChart, {
+		this.myChart2 = new Chart(this.currWinsCanvas, {
 			type:'line',
 			data: {
 				labels: JSON.parse(JSON.stringify(this.genRecord)),
@@ -815,6 +839,7 @@ class GeneticViewManager{
 					fill: false,
 					borderColor: window.chartColors.red,
 					backgroundColor: window.chartColors.red,
+					lineTension: 0,
 				},
 				{
 					label: 'Breakpoint',
@@ -822,6 +847,7 @@ class GeneticViewManager{
 					fill: false,
 					borderColor: window.chartColors.blue,
 					backgroundColor: window.chartColors.blue,
+					lineTension: 0,
 				},				
 				{
 					label: 'Average',
@@ -829,6 +855,7 @@ class GeneticViewManager{
 					fill: false,
 					borderColor: window.chartColors.purple,
 					backgroundColor: window.chartColors.purple,
+					lineTension: 0,
 				},]
 			}
 		})

@@ -57,9 +57,9 @@ g = {
 	spotWinner: [0,0,0,0],
 
 
-	startGeneticParam:function(popSizeIn = 10, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
-		metaGenTransferIn = 0, singleBothOrDoublesIn = 1, iterationsIn = 10, maxGenIn = 3, 
-		maxMetaGenIn = 3, numBestIn = 10, useViewIn = true){
+	startGeneticParam:function(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
+		metaGenTransferIn = 0, singleBothOrDoublesIn = 1, iterationsIn = 500, maxGenIn = 10, 
+		maxMetaGenIn = 8, numBestIn = 10, useViewIn = true){
 
 		this.popSize = popSizeIn;
 		this.breakPointRation = breakpointRatioIn;
@@ -305,6 +305,7 @@ g = {
 		}
 		if(this.useView){
 			geneticManager.submitNewScore(score1, stratLoc);
+			geneticManager.setParamInfo(this, stratLoc);
 		}
 	},
 
@@ -329,10 +330,14 @@ g = {
 		}
 
 		var i = breakpoint;
-		while(sortedScores[i] < 1){
+		while(sortedScores[i] < 1 && i >= 0){
 			i--;
 		}
-		this.scoreBreakpoint = sortedScores[i];
+		if(i < 0){ //special case if no wins occured
+			this.scoreBreakpoint = 1;
+		} else {
+			this.scoreBreakpoint = sortedScores[i];
+		}
 		// print(this.scoreBreakpoint, ' is score breakpoint');
 		print('breakpoint for going forward is ', this.scoreBreakpoint)
 		print(JSON.stringify(sortedScores));
