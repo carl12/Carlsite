@@ -29,6 +29,7 @@ g = {
 	pop:[],
 	popSize:100,
 	scores:[],
+	sortedScores:[],
 	winners:[],
 	scoreBreakpoint:0,
 	
@@ -72,6 +73,7 @@ g = {
 		this.maxMetaGen = maxMetaGenIn;
 		this.numBest = numBestIn;
 		this.useView = useViewIn;
+
 
 		this.startGenetic();
 	},
@@ -160,9 +162,6 @@ g = {
 		// }
 		for(var i = this.pop.length - 1; i < this.popSize; i++){
 			this.pop.push(this.genRandomStrat());
-		}
-		if(this.useView){
-			geneticManager.clearScores();
 		}
 	},
 
@@ -312,35 +311,29 @@ g = {
 	getWinners:function() {
 		this.winners = [];
 		//sort from highest to lowest
-		var sortedScores = this.scores.slice(0,this.scores.length).sort((a,b)=>b-a);
-		var breakpoint = Math.floor(sortedScores.length * this.breakPointRation);
-		// print('sorted scores' ,sortedScores)
+		this.sortedScores = this.scores.slice(0,this.scores.length).sort((a,b)=>b-a);
+		var breakpoint = Math.floor(this.sortedScores.length * this.breakPointRation);
 
-		if(sortedScores[0] >= this.bestScore[0]){
-			//this.bestScore.push(sortedScores[0]);
-			//this.bestScoreGene.push(pop[scores.indexOf(sortedScores[0])]);
-			// this.bestScoreGen.push([currMetaGen, currGen]);
-			var bestScoreLoc = this.scores.indexOf(sortedScores[0]);
-			// bestStratScores.push(sortedScores[0]);
+		if(this.sortedScores[0] >= this.bestScore[0]){
+			var bestScoreLoc = this.scores.indexOf(this.sortedScores[0]);
 
 
-			print('New record! ', sortedScores[0]);
+			print('New record! ', this.sortedScores[0]);
 			this.runOneStrat(bestScoreLoc, true);
 			print('Record setting gene: ', this.bestScoreGene);
 		}
 
 		var i = breakpoint;
-		while(sortedScores[i] < 1 && i >= 0){
+		while(this.sortedScores[i] < 1 && i >= 0){
 			i--;
 		}
 		if(i < 0){ //special case if no wins occured
 			this.scoreBreakpoint = 1;
 		} else {
-			this.scoreBreakpoint = sortedScores[i];
+			this.scoreBreakpoint = this.sortedScores[i];
 		}
-		// print(this.scoreBreakpoint, ' is score breakpoint');
 		print('breakpoint for going forward is ', this.scoreBreakpoint)
-		print(JSON.stringify(sortedScores));
+		print(JSON.stringify(this.sortedScores));
 		
 		for(var i = 0; i < this.scores.length; i++){
 			if(this.scores[i] >= this.scoreBreakpoint){

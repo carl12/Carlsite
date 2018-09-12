@@ -755,6 +755,7 @@ class GeneticViewManager{
 		this.genAvg.push(sum/this.numStratWins.length);
 		this.genRecord.push(currGen);
 		this.draw();
+		this.clearScores();
 	}
 	clearScores(){
 		this.stratLoc = [];
@@ -794,8 +795,10 @@ class GeneticViewManager{
 	draw(){
 		this.setParamInfo(g, g.popSize);
 		print(g.bestScore);
-		var output = `Winning Strat with ${g.bestScore[0]} wins out of ${g.iterations}:\n` + printStrat(g.bestScoreGene[0]) + "\n\n";
-		output += `Second Strat with ${g.bestScore[1]} wins out of ${g.iterations}:\n` + printStrat(g.bestScoreGene[1]);
+		var maxLoc = g.scores.indexOf(g.sortedScores[0]);
+		var output = `Winning Strat with ${g.bestScore[0]} wins out of ${g.iterations}:\n` + printStrat(g.bestScoreGene[0]) + "\n";
+		output += `Second Strat with ${g.bestScore[1]} wins out of ${g.iterations}:\n` + printStrat(g.bestScoreGene[1]) + "\n\n";
+		output += `Most recent run best with ${g.sortedScores[0]} wins: \n ` + printStrat(g.pop[maxLoc]);
 		this.bestStrat.innerText = output;
 		this.winsOverTimeCanvas.height = 500;
 		this.winsOverTimeCanvas.width = 500;
@@ -811,7 +814,7 @@ class GeneticViewManager{
 		        labels: JSON.parse(JSON.stringify(this.stratLoc)),
 		        datasets: [{
 		            label: '# of Wins',
-		            data: JSON.parse(JSON.stringify(this.numStratWins)),
+		            data: JSON.parse(JSON.stringify(g.sortedScores)),
 		            borderWidth: 1,
 		            fill: false,
 		            borderColor: window.chartColors.green,
