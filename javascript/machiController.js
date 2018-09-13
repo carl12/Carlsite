@@ -17,6 +17,8 @@ window.chartColors = {
 };
 var callQueue = [];
 var popInTimeout = false;
+var pausedTimeout = false;
+var currQueuedCall = 0;
 
 const MAIN_MENU_STATE = 0;
 const HUMAN_GAME_STATE = 1;
@@ -59,7 +61,7 @@ g = {
 
 
 	startGeneticParam:function(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
-		metaGenTransferIn = 0, singleBothOrDoublesIn = 1, iterationsIn = 500, maxGenIn = 10, 
+		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 500, maxGenIn = 10, 
 		maxMetaGenIn = 8, numBestIn = 10, useViewIn = true){
 
 		this.popSize = popSizeIn;
@@ -565,7 +567,7 @@ hum = {
 					this.humanInputType = inputType;
 					manage.draw();
 					if(Game.turnState.phase == 4){
-						print('You have $'+me.money);
+						print('You have $'+this.me.money);
 					}
 					return;
 				}
@@ -577,6 +579,15 @@ hum = {
 			manage.draw()
 			humanBindCall(this.runHumanGame, 1000)
 		} 
+	},
+
+	quitHumanGame:function(){
+		this.humanInputType = {};
+		this.me = undefined;
+		clearCallQueue();
+		viewState = MAIN_MENU_STATE;
+		menuManager.draw();
+
 	},
 }
 
@@ -630,24 +641,37 @@ function addToCallQueue(func, timeout = 0, ...args){
 function popCallQueue(){
 	if(callQueue.length > 0){
 		info = callQueue.splice(0,1)[0];
-		setTimeout(delayedCall, info[1], info[0], info[2]);
-	}
+		currQueuedCall = setTimeout(delayedCall, info[1], info[0], info[2]);
+	} 
 }
 
 function delayedCall(func, args){
-	func(...args);
-	if(callQueue.length > 0){
-		setTimeout(popCallQueue);
+	if(!pausedTimeout){
+		func(...args);
+		if(callQueue.length > 0){
+			currQueuedCall = setTimeout(popCallQueue);
+		} else {
+			popInTimeout = false;
+		}
 	} else {
-		popInTimeout = false;
+		currQueuedCall = setTimeout(delayedCall, 20, func, args);
 	}
+}
+
+function clearCallQueue(){
+	clearTimeout(currQueuedCall);
+	callQueue = [];
 }
 
 // var me;
 // var humanInputType; 
 
 function returnHumanGameMaker(numPlayers){
-	return ()=>{hum.initHumanGame(numPlayers)};
+	return ()=>{
+		viewState = HUMAN_GAME_STATE;
+		hum.initHumanGame(numPlayers);
+		manage.draw();
+	};
 }
 
 

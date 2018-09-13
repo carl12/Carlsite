@@ -189,6 +189,7 @@ class GameViewManager{
 		this.bottom = canvas.height - this.pWidth;
 		this.left = this.pWidth;
 		this.right = canvas.width - this.pWidth;
+		this.buttonWidth = this.canvas.width * 0.1;
 		
 		this.numCols = 8;
 		this.numRows = 2;
@@ -242,6 +243,7 @@ class GameViewManager{
 
 		this.windowWidth = this.window.innerWidth;
 		this.windowHeight = this.window.innerHeight;
+		this.buttonWidth = this.canvas.width * 0.15;
 		this.canvas.setAttribute('height',this.windowHeight*this.canvasHeightFraction+"px");
 		this.canvas.setAttribute('width', this.windowWidth*this.canvasWidthFraction+"px");
 
@@ -279,12 +281,13 @@ class GameViewManager{
 	}
 
 	animateBuy(player, card){
+		print(card.position , ' is bought');
 		if(card.position >= FIRST_LANDMARK_LOC){
 			return;
 		}
 		var x = this.cardWrappers[card.position].x;
 		var y = this.cardWrappers[card.position].y;
-		this.addNewImage(this.cardImageHolder[i], x,y, 100, 150)
+		this.addNewImage(this.cardImageHolder[card.position], x,y, 100, 150)
 		var x,y;
 		var left = 0; var midHoriz = (this.left+this.right)/2; var right = canvas.width;
 		var up = 0; var midVert = canvas.height/2; var down = canvas.height;
@@ -321,49 +324,6 @@ class GameViewManager{
 		}
 	}
 
-	// drawMenu(){
-	// 	this.ctx.save();
-	// 	this.ctx.font = '64px monospace';
-	// 	this.ctx.textAlign = 'center';
-	// 	this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
-	// 	// ctx.font = '32px monospace';
-	// 	// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
-		
-
-	// 	ctx.fillText("Image loading...", canvas.width/2, 400);
-
-	// 	if(this.mainMenuPic.height !== 0){
-	// 		var ratio = this.mainMenuPic.height/this.mainMenuPic.width;
-	// 		this.mainMenuPic.width = this.canvas.width*0.9;
-	// 		this.mainMenuPic.height = this.mainMenuPic.width * ratio;
-	// 	}
-
-	// 	this.menuPicMiddleX = this.canvas.width/2 - this.mainMenuPic.width/2;
-	// 	var middleY = this.canvas.height/2 - this.mainMenuPic.height/2;
-
-	// 	ctx.drawImage(this.mainMenuPic, this.menuPicMiddleX, middleY, this.mainMenuPic.width, this.mainMenuPic.height);
-	// 	ctx.textAlign = 'left';
-		
-	// 	this.menuButtonHeight = 80;
-	// 	this.menuButtonBorder = 20;
-	// 	this.menuButtonWidth = this.mainMenuPic.width/5 - this.menuButtonBorder;
-	// 	this.menuButtonY = middleY + this.mainMenuPic.height + this.menuButtonBorder;
-
-
-	// 	ctx.font = '16px monospace';
-	// 	this.ctx.textBaseline="middle";
-	// 	this.ctx.textAlign = 'center';
-		
-	// 	for(var i = 0; i < this.gameModeNames.length; i++){
-	// 		var offset = i*(this.menuButtonWidth + this.menuButtonBorder);
-	// 		this.ctx.fillStyle = 'rgb(255, 0, 0, 0.5)';
-	// 		this.ctx.fillRect(this.menuPicMiddleX + offset, this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight);
-	// 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-	// 		this.ctx.fillText(this.gameModeNames[i], this.menuPicMiddleX + this.menuButtonWidth/2 + offset, this.menuButtonY+ this.menuButtonHeight/2);
-			
-	// 	}
-	// 	ctx.restore();
-	// }
 
 	drawPlayerPalates(){
 		this.ctx.fillStyle = 'rgb(200, 0, 0)';
@@ -439,29 +399,34 @@ class GameViewManager{
 
 	drawStatusBar(){
 		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
-		this.ctx.fillRect(this.right - 150, this.top, 150, this.statusBarHeight);
+		this.ctx.fillRect(this.right - this.buttonWidth, this.top, this.buttonWidth, this.statusBarHeight);
 
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		var buttonDim = [this.right - 300, this.top, 150, this.statusBarHeight]
+		var buttonDim = [this.right - this.buttonWidth*2, this.top, this.buttonWidth, this.statusBarHeight]
 		if(this.game === undefined){
 			this.ctx.fillStyle = 'rgba(0, 200, 0, 1)';
 			this.ctx.fillRect(...buttonDim);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("Start game", this.right - 300 + 40, this.top+40);
+			this.ctx.fillText("Start game", this.right - this.buttonWidth*2 + 40, this.top+40);
 		} else if(this.buyListening){
 			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
 			this.ctx.fillRect(...buttonDim);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("No Purchase", this.right - 300 + 40, this.top+40);
+			this.ctx.fillText("No Purchase", this.right - this.buttonWidth*2 + 40, this.top+40);
 		} else if(this.rerollListening){
 			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
 			this.ctx.fillRect(...buttonDim);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("Keep Roll", this.right - 300 + 40, this.top+40);
+			this.ctx.fillText("Keep Roll", this.right - this.buttonWidth*2 + 40, this.top+40);
 		}
+		
+		this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
+		ctx.fillRect(this.left+10, this.top, this.buttonWidth, this.statusBarHeight);
+		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+		this.ctx.fillText("Quit!", this.left + 20, this.top+40);
 
 		ctx.font = '32px monospace';
-		ctx.fillText(this.messageText, 300, this.top + 50);
+		ctx.fillText(this.messageText, this.left + this.buttonWidth+10, this.top + 50);
 		if(this.game.roll !== undefined){
 			ctx.fillText("Roll: " + this.game.roll, 600, this.top + 50);
 		}
@@ -523,8 +488,12 @@ class GameViewManager{
 	}
 
 	checkClick(x,y){
+		print(x,y);
 		if(this.game === undefined){
 			return;
+		}
+		if(clickInObj(this.left + 10, this.top, this.buttonWidth, this.estTop - this.top, x, y)){
+			hum.quitHumanGame();
 		}
 		if(this.diceListening){
 			var roll1 = clickInObj(this.right - 150, this.top, 75, 75, x, y);
@@ -623,24 +592,8 @@ class MenuViewManager{
 		this.gameModeFuncs = [returnHumanGameMaker(2), returnHumanGameMaker(3), returnHumanGameMaker(4),
 								g.testStrats.bind(g), g.startGeneticParam.bind(g)];
 	}
+
 	draw(){
-		this.drawMenu();
-	}
-
-	checkClick(x,y){
-		for(var i =0; i < this.gameModeNames.length; i++){
-			if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonBorder), 
-				this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight, x,y)){
-
-				this.gameModeFuncs[i]();
-			}
-		}
-		// setTimeout(initHumanGame());
-		return;
-	}
-
-	drawMenu(){
-
 		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
 		this.ctx.save();
 		this.ctx.font = '64px monospace';
@@ -683,6 +636,18 @@ class MenuViewManager{
 			
 		}
 		ctx.restore();
+	}
+
+	checkClick(x,y){
+		for(var i =0; i < this.gameModeNames.length; i++){
+			if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonBorder), 
+				this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight, x,y)){
+
+				this.gameModeFuncs[i]();
+			}
+		}
+		// setTimeout(initHumanGame());
+		return;
 	}
 }
 
