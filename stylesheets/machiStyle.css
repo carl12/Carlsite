@@ -2,6 +2,20 @@ body {
 	margin:0;
 }
 
+.content{
+	width: 100%;
+	max-width: 10000px;
+	padding: 0px;
+}
+
+.mainHead {
+	background-color: #8D8329;  
+	padding: 10px;
+	padding-left: 30px;
+	border-radius: 5px;
+	margin: 10px;
+
+}
 
 .grid-container {
     display: grid;
@@ -19,6 +33,7 @@ body {
 	background-color: orange;
 	/*width: 200px;*/	
 }
+
 h1 {
 	border: 0;
 	margin: 0;
@@ -37,17 +52,14 @@ div {
     -webkit-transform: rotate(20deg); /* Safari 3-8 */
     transform: rotate(-90deg);
     right: -100px;
-    /*left: 0px;*/
-    /*height: 200px;*/
 }
+
 .rotate-right{
 	position:absolute; 	
 	background-color: yellow;
     -ms-transform: rotate(20deg); /* IE 9 */
     -webkit-transform: rotate(20deg); /* Safari 3-8 */
     transform: rotate(90deg);
-    /*width:100px;*/
-    /*height: 200px;*/
 }
 
 .left-player-card{
@@ -60,16 +72,17 @@ div {
 	max-width: 100%;
 	height: auto;
 }
+
 .bottom-area{
 	height: 30vh;
 }
+
 .player-panel {
 	display: inline-block;
 	background-color: blue;
 	width: 85%;
 	margin-top: 1px;
 	height: inherit;
-
 }
 
 .rotated {

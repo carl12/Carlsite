@@ -25,7 +25,7 @@ print = function(...outputText){
 	outputBox.innerHTML += "\n";
 	outputBox.scrollTop = outputBox.scrollHeight;
 }
-canvas.style.outline="3px solid black";
+// canvas.style.outline="3px solid black";
 
 var ctx = canvas.getContext('2d');
 
@@ -143,15 +143,11 @@ class GameViewManager{
 		this.canvas = canvas
 		this.outputBox = outputBox;
 		this.window = window;
-		this.canvasHeightFraction = 0.98;
-		this.canvasWidthFraction = 0.8;
 		this.windowWidth = this.window.innerWidth;
 		this.windowHeight = this.window.innerHeight;
+		this.canvasHeightFraction = 0.9;
+		this.canvasWidthFraction = 0.9;
 		this.ctx = this.canvas.getContext('2d');
-		this.canvas.setAttribute('height',this.windowHeight*this.canvasHeightFraction+"px");
-		this.canvas.setAttribute('width', this.windowWidth*this.canvasWidthFraction+"px");
-		this.outputBox.style.height = this.windowHeight*this.canvasHeightFraction+"px";
-		this.outputBox.style.width = (this.windowWidth*(1-this.canvasWidthFraction)-10)+"px";
 
 		this.imageWrappers = [];
 		this.cardWrappers = [];
@@ -178,9 +174,6 @@ class GameViewManager{
 		// this.mainMenuPic.onload = this.draw.bind(this);
 
 		this.messageText = "Starting messageText";
-		this.gameModeNames = ["Two Players","Three Players", "Four Players", "AI Test", "Genetic"];
-		this.gameModeFuncs = [returnHumanGameMaker(2), returnHumanGameMaker(3), returnHumanGameMaker(4),
-								g.testStrats.bind(g), g.startGeneticParam.bind(g)];
 
 		this.top = 0;
 		this.statusBarHeight = 75;
@@ -298,7 +291,8 @@ class GameViewManager{
 
 	draw(){
 		this.ctx.clearRect(0,0,canvas.width,canvas.height);
-
+		this.outputBox.style.display = "block";
+		this.canvas.style.float= "left";
 		if(this.windowHeight !== window.innerHeight || this.windowWidth !== window.innerWidth){
 			this.setDimensions();
 		} 
@@ -575,13 +569,22 @@ class GameViewManager{
 }
 
 class MenuViewManager{
-	constructor(window, canvas){
+	constructor(window, canvas, outputBox){
 		this.canvas = canvas;
 		this.window = window;
-		this.canvasHeightFraction = 0.98;
-		this.canvasWidthFraction = 0.8;
+		this.outputBox = outputBox;
 		this.windowWidth = this.window.innerWidth;
 		this.windowHeight = this.window.innerHeight;
+		this.canvasHeightFraction = 0.89;
+		this.canvasWidthFraction = 1;
+		this.ctx = this.canvas.getContext('2d');
+		this.canvas.setAttribute('height', this.windowHeight * this.canvasHeightFraction+"px");
+		this.canvas.setAttribute('width', this.windowWidth * this.canvasWidthFraction+"px");
+		this.outputBox.style.height = this.windowHeight * this.canvasHeightFraction+"px";
+		this.outputBox.style.width = (this.windowWidth * (1-this.canvasWidthFraction)-10)+"px";
+		
+
+
 		this.ctx = this.canvas.getContext('2d');
 
 		this.mainMenuPic = new Image();
@@ -595,6 +598,17 @@ class MenuViewManager{
 
 	draw(){
 		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+		if(this.windowHeight !== this.window.innerHeight || this.windowWidth !== this.window.innerWidth){
+			this.windowWidth = this.window.innerWidth;
+			this.windowHeight = this.window.innerHeight;
+			this.canvas.setAttribute('height', this.windowHeight * this.canvasHeightFraction+"px");
+			this.canvas.setAttribute('width', this.windowWidth * this.canvasWidthFraction+"px");
+			this.outputBox.style.height = this.windowHeight * this.canvasHeightFraction+"px";
+			this.outputBox.style.width = (this.windowWidth * (1-this.canvasWidthFraction)-10)+"px";
+		}
+		this.outputBox.style.display = "none";
+
+		this.canvas.style.float = "none"
 		this.ctx.save();
 		this.ctx.font = '64px monospace';
 		this.ctx.textAlign = 'center';
@@ -619,7 +633,7 @@ class MenuViewManager{
 		
 		this.menuButtonHeight = 80;
 		this.menuButtonBorder = 20;
-		this.menuButtonWidth = this.mainMenuPic.width/5 - this.menuButtonBorder;
+		this.menuButtonWidth = this.mainMenuPic.width/5 - (this.menuButtonBorder)*4/5;
 		this.menuButtonY = middleY + this.mainMenuPic.height + this.menuButtonBorder;
 
 

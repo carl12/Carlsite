@@ -591,9 +591,9 @@ hum = {
 	},
 }
 
+var menuManager = new MenuViewManager(window, canvas, outputBox);
 var manage = new GameViewManager(window, canvas, outputBox);
 var geneticManager = new GeneticViewManager();
-var menuManager = new MenuViewManager(window, canvas);
 
 canvas.addEventListener("click", (event)=>{
 	var x = event.pageX - canvasLeft;
@@ -685,6 +685,7 @@ function switchOnGraphs(){
 
 canvas.addEventListener('mouseover', function(e) {
 	if(viewState === MAIN_MENU_STATE){
+		print('menu draw')
 		menuManager.draw();
 	} else if(viewState === HUMAN_GAME_STATE){
 		manage.draw();
