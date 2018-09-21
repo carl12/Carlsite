@@ -638,8 +638,11 @@ class MenuViewManager{
 
 		ctx.textAlign = 'left';
 
-		this.menuButtonHeight = 80;
-		this.menuButtonBorder = 20;
+		this.menuButtonHeightFraction = 0.1;
+		this.menuButtonSpacingFraction = 0.02;
+
+		this.menuButtonHeight = this.menuButtonHeightFraction * this.canvas.height;
+		this.menuButtonBorder = this.menuButtonSpacingFraction * this.canvas.width;
 		this.menuButtonWidth = this.mainMenuPic.width/5 - (this.menuButtonBorder)*4/5;
 		this.menuButtonY = middleY + this.mainMenuPic.height + this.menuButtonBorder;
 
