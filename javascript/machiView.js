@@ -30,16 +30,16 @@ print = function(...outputText){
 var ctx = canvas.getContext('2d');
 
 function clickInObj(objX, objY, width, height, clickX, clickY){
-	return clickX >= objX && clickX <= objX + width && clickY >= objY && clickY <= objY + height;	
+	return clickX >= objX && clickX <= objX + width && clickY >= objY && clickY <= objY + height;
 }
 
-function drawLine(x1,y1,x2,y2){ 
+function drawLine(x1,y1,x2,y2){
 	ctx.save();
 	ctx.strokeStyle = 'navy'; // set the strokeStyle color to 'navy' (for the stroke() call below)
 	ctx.lineWidth = 3.0;      // set the line width to 3 pixels
-	ctx.beginPath();          
-	ctx.moveTo (x1,y1);      
-	ctx.lineTo (x2,y2);     
+	ctx.beginPath();
+	ctx.moveTo (x1,y1);
+	ctx.lineTo (x2,y2);
 	ctx.stroke();             // actually draw the line
 	ctx.restore();
 }
@@ -81,12 +81,12 @@ class ImageWrapper{
 		this.src = img.src;
 		this.x = x;
 		this.y = y;
-		if(width === undefined || height === undefined){	
+		if(width === undefined || height === undefined){
 			this.width = 105;
 			this.height = 168;
 		} else {
 			this.width = width;
-			this.height = height; 
+			this.height = height;
 		}
 		this.currStep = 0;
 		this.totalStep = 0;
@@ -103,7 +103,7 @@ class ImageWrapper{
 			this.y += this.dy;
 			this.currStep++;
 			this.moving = this.currStep < this.totalStep;
-			this.totalStep	
+			this.totalStep
 		}
 
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -177,13 +177,13 @@ class GameViewManager{
 
 		this.top = 0;
 		this.statusBarHeight = 75;
-		this.estTop = this.top + this.statusBarHeight;	
+		this.estTop = this.top + this.statusBarHeight;
 		this.pWidth = 160;
 		this.bottom = canvas.height - this.pWidth;
 		this.left = this.pWidth;
 		this.right = canvas.width - this.pWidth;
 		this.buttonWidth = this.canvas.width * 0.1;
-		
+
 		this.numCols = 8;
 		this.numRows = 2;
 
@@ -220,7 +220,7 @@ class GameViewManager{
 		}
 
 		// this.addNewImage("images/d1.png", this.right - 150 + 10, 10,50,50);
-		
+
 
 		this.addNewImage(this.otherImageHolder[0], this.right - 150 + 10, this.top + 10, 50, 50);
 		this.addNewImage(this.otherImageHolder[1], this.right - 150/2 + 10, this.top + 10, 50, 50);
@@ -229,7 +229,7 @@ class GameViewManager{
 
 		// for(var j = 0; j < 3; j++){
 			// this.addNewLine(this.left, this.estTop + j * this.boxHeight, this.right, this.estTop + j * this.boxHeight);
-		// }		
+		// }
 	}
 
 	setDimensions(){
@@ -247,7 +247,7 @@ class GameViewManager{
 		{
 			this.setPlayerPalates();
 		}
-		
+
 	}
 	setPlayerPalates(){
 		this.numPlayers = this.game.players.length;
@@ -295,7 +295,7 @@ class GameViewManager{
 		this.canvas.style.float= "left";
 		if(this.windowHeight !== window.innerHeight || this.windowWidth !== window.innerWidth){
 			this.setDimensions();
-		} 
+		}
 		if (this.game === undefined){
 			// this.drawMenu();
 			return;
@@ -306,7 +306,7 @@ class GameViewManager{
 		}
 		// this.setDimensions(this.game.players.length);
 		// this.initImagesAndLines();
-		
+
 
 
 		if(this.animating){
@@ -372,21 +372,21 @@ class GameViewManager{
 						ctx.fillText(""+bc[j], (this.boxWidth/2) * (numEstTypes) + 30, 150);
 						ctx.drawImage(tmpImg, (this.boxWidth/2) * numEstTypes + 10,  50, 105/2, 168/2);
 						numEstTypes ++;
-							
+
 					}
 				}
 
 				currLandmark -= (105/2 + 10);
 				for(var j = p.landmarks.length-1; j >= 0; j--){
 					tmpImg = this.cardImageHolder[j + FIRST_LANDMARK_LOC];
-					
-					ctx.drawImage(tmpImg, currLandmark, 50, 105/2, 168/2); 
+
+					ctx.drawImage(tmpImg, currLandmark, 50, 105/2, 168/2);
 					this.landmarkLocs[j] = [j+FIRST_LANDMARK_LOC, [this.left + currLandmark, this.bottom + 50, 105/2, 168/2]];
 					ctx.fillText(p.landmarks[j]?"Bought":"X", currLandmark, 150);
 					currLandmark -= this.boxWidth/2;
 				}
 				ctx.restore();
-				
+
 			}
 		}
 	}
@@ -413,7 +413,7 @@ class GameViewManager{
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 			this.ctx.fillText("Keep Roll", this.right - this.buttonWidth*2 + 40, this.top+40);
 		}
-		
+
 		this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
 		ctx.fillRect(this.left+10, this.top, this.buttonWidth, this.statusBarHeight);
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
@@ -443,9 +443,9 @@ class GameViewManager{
 
 
 
-		
+
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		
+
 
 		for(var i in this.cardWrappers){
 			this.cardWrappers[i].draw(this.ctx);
@@ -505,11 +505,11 @@ class GameViewManager{
 			}
 			var roll1 = clickInObj(this.right - 150, this.top, 75, 75, x, y);
 			var roll2 = clickInObj(this.right - 150/2, this.top, 75, 75, x, y);
-			
+
 			if(roll1 || roll2){
 				print('rerolling');
 				return [true, roll2];
-			} 
+			}
 
 		}
 		if(this.buyListening){
@@ -575,14 +575,16 @@ class MenuViewManager{
 		this.outputBox = outputBox;
 		this.windowWidth = this.window.innerWidth;
 		this.windowHeight = this.window.innerHeight;
-		this.canvasHeightFraction = 0.89;
+		this.canvasHeightFraction = 0.9;
 		this.canvasWidthFraction = 1;
+		this.maxImageHeightFraction = 0.8;
+		this.maxImageWidthFraction = 0.9;
 		this.ctx = this.canvas.getContext('2d');
 		this.canvas.setAttribute('height', this.windowHeight * this.canvasHeightFraction+"px");
 		this.canvas.setAttribute('width', this.windowWidth * this.canvasWidthFraction+"px");
 		this.outputBox.style.height = this.windowHeight * this.canvasHeightFraction+"px";
 		this.outputBox.style.width = (this.windowWidth * (1-this.canvasWidthFraction)-10)+"px";
-		
+
 
 
 		this.ctx = this.canvas.getContext('2d');
@@ -610,51 +612,56 @@ class MenuViewManager{
 
 		this.canvas.style.float = "none"
 		this.ctx.save();
-		this.ctx.font = '64px monospace';
-		this.ctx.textAlign = 'center';
-		this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, 100);
 		// ctx.font = '32px monospace';
 		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
-		
 
-		ctx.fillText("Image loading...", this.canvas.width/2, 400);
+
+		ctx.fillText("Image loading...", this.canvas.width/2, this.canvas.height/2);
 
 		if(this.mainMenuPic.height !== 0){
-			var ratio = this.mainMenuPic.height/this.mainMenuPic.width;
-			this.mainMenuPic.width = this.canvas.width*0.9;
-			this.mainMenuPic.height = this.mainMenuPic.width * ratio;
+			let heightToWidth = this.mainMenuPic.height/this.mainMenuPic.width;
+			let maxPicWidth = this.canvas.width * this.maxImageWidthFraction;
+			let maxPicHeight = this.canvas.height * this.maxImageHeightFraction;
+
+			this.mainMenuPic.width = Math.min(maxPicWidth, maxPicHeight/heightToWidth);
+			this.mainMenuPic.height = Math.min(maxPicHeight, maxPicWidth*heightToWidth);
 		}
 
 		this.menuPicMiddleX = this.canvas.width/2 - this.mainMenuPic.width/2;
 		var middleY = this.canvas.height/2 - this.mainMenuPic.height/2;
 
 		ctx.drawImage(this.mainMenuPic, this.menuPicMiddleX, middleY, this.mainMenuPic.width, this.mainMenuPic.height);
+
+		this.ctx.font = '4em monospace';
+		this.ctx.textAlign = 'center';
+		this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, middleY-10);
+
 		ctx.textAlign = 'left';
-		
+
 		this.menuButtonHeight = 80;
 		this.menuButtonBorder = 20;
 		this.menuButtonWidth = this.mainMenuPic.width/5 - (this.menuButtonBorder)*4/5;
 		this.menuButtonY = middleY + this.mainMenuPic.height + this.menuButtonBorder;
 
 
-		ctx.font = '16px monospace';
+		ctx.font = '1.5em monospace';
 		this.ctx.textBaseline="middle";
 		this.ctx.textAlign = 'center';
-		
+
 		for(var i = 0; i < this.gameModeNames.length; i++){
 			var offset = i*(this.menuButtonWidth + this.menuButtonBorder);
 			this.ctx.fillStyle = 'rgb(255, 0, 0, 0.5)';
 			this.ctx.fillRect(this.menuPicMiddleX + offset, this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 			this.ctx.fillText(this.gameModeNames[i], this.menuPicMiddleX + this.menuButtonWidth/2 + offset, this.menuButtonY+ this.menuButtonHeight/2);
-			
+
 		}
 		ctx.restore();
 	}
 
 	checkClick(x,y){
 		for(var i =0; i < this.gameModeNames.length; i++){
-			if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonBorder), 
+			if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonBorder),
 				this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight, x,y)){
 
 				this.gameModeFuncs[i]();
@@ -786,7 +793,7 @@ class GeneticViewManager{
 
 		this.myChart !== undefined? this.myChart.destroy():{};
 		this.myChart2 !== undefined? this.myChart2.destroy():{};
-		
+
 		this.myChart = new Chart(this.winsOverTimeCanvas, {
 		    type: 'line',
 		    data: {
@@ -830,7 +837,7 @@ class GeneticViewManager{
 					borderColor: window.chartColors.blue,
 					backgroundColor: window.chartColors.blue,
 					lineTension: 0,
-				},				
+				},
 				{
 					label: 'Average',
 					data: JSON.parse(JSON.stringify(this.genAvg)),
@@ -846,4 +853,3 @@ class GeneticViewManager{
 	}
 
 }
-

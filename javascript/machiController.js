@@ -685,7 +685,6 @@ function switchOnGraphs(){
 
 canvas.addEventListener('mouseover', function(e) {
 	if(viewState === MAIN_MENU_STATE){
-		print('menu draw')
 		menuManager.draw();
 	} else if(viewState === HUMAN_GAME_STATE){
 		manage.draw();
