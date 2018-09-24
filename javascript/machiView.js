@@ -30,7 +30,8 @@ print = function(...outputText){
 var ctx = canvas.getContext('2d');
 
 function clickInObj(objX, objY, width, height, clickX, clickY){
-	return clickX >= objX && clickX <= objX + width && clickY >= objY && clickY <= objY + height;
+	return clickX >= objX && clickX <= objX + width
+		&& clickY >= objY && clickY <= objY + height;
 }
 
 function drawLine(x1,y1,x2,y2){
@@ -217,10 +218,18 @@ class GameViewManager{
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			if(i < this.numCols){
 				var currLeft = this.left + (i) * this.boxWidth;
-				this.addNewCardImage(this.cardImageHolder[i], indexedEstablishments[i], currLeft+10, this.estTop+21, this.boxWidth - 20, this.boxHeight - 25);
+				this.addNewCardImage(this.cardImageHolder[i],
+					indexedEstablishments[i], currLeft+10,
+					this.estTop+21, this.boxWidth - 20,
+					this.boxHeight - 25);
+
 			} else {
 				var currLeft = this.left + (i-this.numCols) * this.boxWidth;
-				this.addNewCardImage(this.cardImageHolder[i], indexedEstablishments[i], currLeft+10, this.estTop+21 + this.boxHeight, this.boxWidth - 20, this.boxHeight - 25);
+				this.addNewCardImage(this.cardImageHolder[i],
+					indexedEstablishments[i], currLeft+10,
+					this.estTop+21 + this.boxHeight,
+					this.boxWidth - 20,
+					this.boxHeight - 25);
 			}
 			// this.addNewLine(currLeft, this.estTop, currLeft, this.bottom);
 		}
@@ -250,11 +259,15 @@ class GameViewManager{
 		this.windowWidth = this.window.innerWidth;
 		this.windowHeight = this.window.innerHeight;
 		this.buttonWidth = this.canvas.width * 0.05;
-		this.canvas.setAttribute('height',this.windowHeight*this.canvasHeightFraction+"px");
-		this.canvas.setAttribute('width', this.windowWidth*this.canvasWidthFraction+"px");
+		this.canvas.setAttribute('height',
+			this.windowHeight*this.canvasHeightFraction+"px");
+		this.canvas.setAttribute('width',
+			this.windowWidth*this.canvasWidthFraction+"px");
 
-		this.outputBox.style.height = this.windowHeight*this.canvasHeightFraction+"px";
-		this.outputBox.style.width = (this.windowWidth*(1-this.canvasWidthFraction)-30)+"px";
+		this.outputBox.style.height = this.windowHeight
+			* this.canvasHeightFraction+"px";
+		this.outputBox.style.width = (this.windowWidth
+			* (1 - this.canvasWidthFraction) - 30) + "px";
 
 		if(this.game !== undefined)
 		{
@@ -294,8 +307,11 @@ class GameViewManager{
 			var initialBoxHeight = (this.bottom - this.estTop) / this.numRows;
 
 
-			this.boxWidth = Math.min(initialBoxWidth, initialBoxHeight * this.boxWidthHeightRatio);
-			this.boxHeight = Math.min(initialBoxHeight, initialBoxWidth / this.boxWidthHeightRatio)
+			this.boxWidth = Math.min(initialBoxWidth,
+				initialBoxHeight * this.boxWidthHeightRatio);
+
+			this.boxHeight = Math.min(initialBoxHeight,
+				initialBoxWidth / this.boxWidthHeightRatio)
 
 			this.initInnerImagesAndLines();
 	}
@@ -309,18 +325,25 @@ class GameViewManager{
 		var y = this.cardWrappers[card.position].y;
 		this.addNewImage(this.cardImageHolder[card.position], x,y, 100, 150)
 		var x,y;
-		var left = 0; var midHoriz = (this.left+this.right)/2; var right = canvas.width;
-		var up = 0; var midVert = canvas.height/2; var down = canvas.height;
-		var loc = [[left-100, midVert], [midHoriz, down], [right, midVert], [midHoriz, up-160]][player]
+		var left = 0; var midHoriz = (this.left + this.right) / 2;
+		var right = canvas.width;
+		var up = 0; var midVert = canvas.height/2;
+		var down = canvas.height;
+		var locs = [[left-100, midVert], [midHoriz, down],
+			[right, midVert], [midHoriz, up-160]];
 
-		this.imageWrappers[this.imageWrappers.length - 1].startAnimation(...loc,100)
+		var playerLoc = locs[player];
+
+		this.imageWrappers[this.imageWrappers.length - 1]
+			.startAnimation(playerLoc,100);
 	}
 
 	draw(){
 		this.ctx.clearRect(0,0,canvas.width,canvas.height);
 		this.outputBox.style.display = "block";
 		this.canvas.style.float= "left";
-		if(this.windowHeight !== window.innerHeight || this.windowWidth !== window.innerWidth){
+		if(this.windowHeight !== window.innerHeight
+				|| this.windowWidth !== window.innerWidth){
 			this.setDimensions();
 		}
 		if (this.game === undefined){
@@ -351,7 +374,8 @@ class GameViewManager{
 		this.ctx.fillRect(this.right, 0, this.pWidth, canvas.height);
 
 		this.ctx.fillStyle = 'rgba(0, 200, 0, 0.5)';
-		this.ctx.fillRect(this.left, this.bottom, this.right - this.left, this.pWidth);
+		this.ctx.fillRect(this.left, this.bottom,
+			this.right - this.left, this.pWidth);
 
 		this.ctx.fillStyle = 'rgba(100, 0, 100, 0.5)';
 		this.ctx.fillRect(this.right, 0, this.left - this.right, this.top);
@@ -393,8 +417,15 @@ class GameViewManager{
 				for(var j = 0; j < bc.length; j++){
 					if(bc[j]> 0){
 						tmpImg = this.cardImageHolder[j];
-						ctx.fillText(""+bc[j], (this.pWidth* 0.35) * (numEstTypes) + this.pWidth*0.1, this.pWidth*0.9);
-						ctx.drawImage(tmpImg, (this.pWidth* 0.35) * numEstTypes + this.pWidth*0.1,  this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5);
+						ctx.fillText(""+bc[j],
+							(this.pWidth* 0.35) * (numEstTypes) + this.pWidth*0.1,
+							this.pWidth*0.9);
+
+						ctx.drawImage(tmpImg,
+							(this.pWidth* 0.35) * numEstTypes + this.pWidth*0.1,
+							this.pWidth*0.3, this.pWidth*0.3,
+							this.pWidth*0.5);
+
 						numEstTypes ++;
 
 					}
@@ -404,8 +435,13 @@ class GameViewManager{
 				for(var j = p.landmarks.length-1; j >= 0; j--){
 					tmpImg = this.cardImageHolder[j + FIRST_LANDMARK_LOC];
 
-					ctx.drawImage(tmpImg, currLandmark, this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5);
-					this.landmarkLocs[j] = [j+FIRST_LANDMARK_LOC, [this.left + currLandmark, this.bottom + this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5]];
+					ctx.drawImage(tmpImg, currLandmark,
+						this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5);
+					this.landmarkLocs[j] = [j+FIRST_LANDMARK_LOC,
+						[this.left + currLandmark,
+							this.bottom + this.pWidth*0.3,
+							this.pWidth*0.3, this.pWidth*0.5]];
+
 					ctx.fillText(p.landmarks[j]?"Bought":"X", currLandmark, this.pWidth*0.9);
 					currLandmark -= this.pWidth* 0.35;
 				}
@@ -420,12 +456,16 @@ class GameViewManager{
 
 		//Draw dice box
 		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
-		this.ctx.fillRect(this.right - this.buttonWidth*2.1, this.top+this.statusBarHeight*0.1, this.buttonWidth*2, this.statusBarHeight*0.8);
+		this.ctx.fillRect(this.right - this.buttonWidth*2.1,
+			this.top+this.statusBarHeight*0.1,
+			this.buttonWidth*2,
+			this.statusBarHeight*0.8);
 
 		//Draw pass option button
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		ctx.textBaseline="middle";
-		var buttonDim = [this.right - this.buttonWidth*4.2 - this.buttonWidth * 0.1, this.top+this.statusBarHeight*0.1,
+		var buttonDim = [this.right - this.buttonWidth*4.2 - this.buttonWidth * 0.1,
+			this.top+this.statusBarHeight*0.1,
 			this.buttonWidth*2, this.statusBarHeight*0.8];
 
 		let textLoc = [this.right - this.buttonWidth*4.2 + this.buttonWidth*0.1,
@@ -450,21 +490,32 @@ class GameViewManager{
 
 		//Draw quit button
 		this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
-		ctx.fillRect(this.left+this.buttonWidth*0.2, this.top+this.statusBarHeight*0.1, this.buttonWidth, this.statusBarHeight*0.8);
+		ctx.fillRect(this.left+this.buttonWidth*0.2,
+			this.top+this.statusBarHeight*0.1,
+			this.buttonWidth,
+			this.statusBarHeight*0.8);
+
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		ctx.textBaseline="middle";
 		ctx.textAlign= "center";
-		this.ctx.fillText("Quit!", this.left + this.buttonWidth*0.7, this.top+this.statusBarHeight*0.5, this.buttonWidth*0.8);
+		this.ctx.fillText("Quit!",
+			this.left + this.buttonWidth*0.7,
+			this.top+this.statusBarHeight*0.5,
+			this.buttonWidth*0.8);
 
 		//Draw status message
 		ctx.font = '2em monospace';
 		ctx.textAlign = "left";
-		ctx.fillText(this.messageText, this.left + this.buttonWidth*1.3, this.top + this.statusBarHeight*0.5);
+		ctx.fillText(this.messageText,
+			this.left + this.buttonWidth*1.3,
+			this.top + this.statusBarHeight*0.5);
 
 		//Draw dice roll message
 		if(this.game.roll !== undefined){
 			ctx.textAlign = "right";
-			ctx.fillText("Roll: " + this.game.roll, this.right - this.buttonWidth * 4.6, this.top + this.statusBarHeight*0.5);
+			ctx.fillText("Roll: " + this.game.roll,
+				this.right - this.buttonWidth * 4.6,
+				this.top + this.statusBarHeight*0.5);
 		}
 		this.ctx.restore();
 	}
@@ -475,11 +526,16 @@ class GameViewManager{
 			var currCard = indexedEstablishments[i];
 			if(i < this.numCols){
 				var currLeft = this.left + currCard.position * this.boxWidth;
-				ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+3, this.estTop+20, this.boxWidth-5);
+				ctx.fillText(currCard.name + ': ' + currCard.remain,
+					currLeft+3, this.estTop+20, this.boxWidth-5);
+
 			} else {
-				var currLeft = this.left + (currCard.position-this.numCols) * this.boxWidth;
+				var currLeft = this.left
+					+ (currCard.position-this.numCols) * this.boxWidth;
 				var currUp = this.estTop + this.boxHeight;
-				ctx.fillText(currCard.name + ': ' + currCard.remain, currLeft+3, currUp + 20, this.boxWidth-5);
+				ctx.fillText(currCard.name + ': ' + currCard.remain,
+					currLeft+3, currUp + 20, this.boxWidth-5);
+
 			}
 
 		}
@@ -517,7 +573,8 @@ class GameViewManager{
 	}
 
 	addNewCardImage(img, card, x, y, width, height){
-		this.cardWrappers.push(new cardImageWrapper(img, card, x, y, width, height));
+		this.cardWrappers.push(new cardImageWrapper(
+			img, card, x, y, width, height));
 	}
 
 	addNewLine(x1,y1,x2,y2){
@@ -529,8 +586,11 @@ class GameViewManager{
 		if(this.game === undefined){
 			return;
 		}
-		if(clickInObj(this.left + 10, this.top, this.buttonWidth, this.estTop - this.top, x, y)){
-			hum.quitHumanGame();
+		if(clickInObj(this.left + 10, this.top,
+				this.buttonWidth, this.estTop - this.top,
+				x, y)){
+
+				hum.quitHumanGame();
 		}
 		if(this.diceListening){
 			var roll1 = clickInObj(this.right - 150, this.top, 75, 75, x, y);
@@ -623,10 +683,14 @@ class MenuViewManager{
 		this.maxImageHeightFraction = 0.8;
 		this.maxImageWidthFraction = 0.9;
 		this.ctx = this.canvas.getContext('2d');
-		this.canvas.setAttribute('height', this.windowHeight * this.canvasHeightFraction+"px");
-		this.canvas.setAttribute('width', this.windowWidth * this.canvasWidthFraction+"px");
-		this.outputBox.style.height = this.windowHeight * this.canvasHeightFraction+"px";
-		this.outputBox.style.width = (this.windowWidth * (1-this.canvasWidthFraction)-10)+"px";
+		this.canvas.setAttribute('height', this.windowHeight
+			* this.canvasHeightFraction+"px");
+		this.canvas.setAttribute('width', this.windowWidth
+			* this.canvasWidthFraction+"px");
+		this.outputBox.style.height = this.windowHeight
+			* this.canvasHeightFraction+"px";
+		this.outputBox.style.width = (this.windowWidth
+			* (1-this.canvasWidthFraction)-10)+"px";
 
 
 
@@ -636,20 +700,28 @@ class MenuViewManager{
 		this.mainMenuPic.src = 'images/machi-koro.jpg';
 		this.mainMenuPic.onload = this.draw.bind(this);
 
-		this.gameModeNames = ["Two Players","Three Players", "Four Players", "AI Test", "Genetic"];
-		this.gameModeFuncs = [returnHumanGameMaker(2), returnHumanGameMaker(3), returnHumanGameMaker(4),
-								g.testStrats.bind(g), g.startGeneticParam.bind(g)];
+		this.gameModeNames = ["Two Players","Three Players",
+			"Four Players", "AI Test", "Genetic"];
+		this.gameModeFuncs = [returnHumanGameMaker(2),
+			returnHumanGameMaker(3), returnHumanGameMaker(4),
+			g.testStrats.bind(g), g.startGeneticParam.bind(g)];
 	}
 
 	draw(){
 		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
-		if(this.windowHeight !== this.window.innerHeight || this.windowWidth !== this.window.innerWidth){
+		if(this.windowHeight !== this.window.innerHeight
+				|| this.windowWidth !== this.window.innerWidth){
+
 			this.windowWidth = this.window.innerWidth;
 			this.windowHeight = this.window.innerHeight;
-			this.canvas.setAttribute('height', this.windowHeight * this.canvasHeightFraction+"px");
-			this.canvas.setAttribute('width', this.windowWidth * this.canvasWidthFraction+"px");
-			this.outputBox.style.height = this.windowHeight * this.canvasHeightFraction+"px";
-			this.outputBox.style.width = (this.windowWidth * (1-this.canvasWidthFraction)-10)+"px";
+			this.canvas.setAttribute('height', this.windowHeight
+			 	* this.canvasHeightFraction+"px");
+			this.canvas.setAttribute('width', this.windowWidth
+				* this.canvasWidthFraction+"px");
+			this.outputBox.style.height = this.windowHeight
+				* this.canvasHeightFraction+"px";
+			this.outputBox.style.width = (this.windowWidth
+				* (1-this.canvasWidthFraction)-10)+"px";
 		}
 		this.outputBox.style.display = "none";
 
@@ -673,7 +745,9 @@ class MenuViewManager{
 		this.menuPicMiddleX = this.canvas.width/2 - this.mainMenuPic.width/2;
 		var middleY = this.canvas.height/2 - this.mainMenuPic.height/2;
 
-		ctx.drawImage(this.mainMenuPic, this.menuPicMiddleX, middleY, this.mainMenuPic.width, this.mainMenuPic.height);
+		ctx.drawImage(this.mainMenuPic,
+			this.menuPicMiddleX, middleY,
+			this.mainMenuPic.width, this.mainMenuPic.height);
 
 		this.ctx.font = '4em monospace';
 		this.ctx.textAlign = 'center';
@@ -697,9 +771,12 @@ class MenuViewManager{
 		for(var i = 0; i < this.gameModeNames.length; i++){
 			var offset = i*(this.menuButtonWidth + this.menuButtonBorder);
 			this.ctx.fillStyle = 'rgb(255, 0, 0, 0.5)';
-			this.ctx.fillRect(this.menuPicMiddleX + offset, this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight);
+			this.ctx.fillRect(this.menuPicMiddleX + offset, this.menuButtonY,
+				this.menuButtonWidth, this.menuButtonHeight);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText(this.gameModeNames[i], this.menuPicMiddleX + this.menuButtonWidth/2 + offset, this.menuButtonY+ this.menuButtonHeight/2);
+			this.ctx.fillText(this.gameModeNames[i],
+				this.menuPicMiddleX + this.menuButtonWidth/2 + offset,
+				this.menuButtonY + this.menuButtonHeight/2);
 
 		}
 		ctx.restore();
@@ -707,8 +784,12 @@ class MenuViewManager{
 
 	checkClick(x,y){
 		for(var i =0; i < this.gameModeNames.length; i++){
-			if(clickInObj(this.menuPicMiddleX + i*(this.menuButtonWidth + this.menuButtonBorder),
-				this.menuButtonY, this.menuButtonWidth, this.menuButtonHeight, x,y)){
+			if(clickInObj(
+				this.menuPicMiddleX + i * (this.menuButtonWidth + this.menuButtonBorder),
+				this.menuButtonY,
+				this.menuButtonWidth, 
+				this.menuButtonHeight,
+				x,y)){
 
 				this.gameModeFuncs[i]();
 			}
