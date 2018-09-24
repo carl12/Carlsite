@@ -226,9 +226,16 @@ class GameViewManager{
 
 		// this.addNewImage("images/d1.png", this.right - 150 + 10, 10,50,50);
 
+		var diceDim = [this.buttonWidth*0.8, this.statusBarHeight*0.6];
+		this.addNewImage(this.otherImageHolder[0],
+			this.right - this.buttonWidth*2 ,
+			this.top + this.statusBarHeight*0.2,
+			...diceDim);
 
-		this.addNewImage(this.otherImageHolder[0], this.right - 150 + 10, this.top + 10, 50, 50);
-		this.addNewImage(this.otherImageHolder[1], this.right - 150/2 + 10, this.top + 10, 50, 50);
+		this.addNewImage(this.otherImageHolder[1],
+			this.right - this.buttonWidth,
+			this.top +  this.statusBarHeight*0.2,
+			...diceDim);
 		//1050, 0, 150, 75
 		// this.addNewLine(this.right - 150/2 , this.top, this.right - 150/2, this.estTop);
 
@@ -330,7 +337,6 @@ class GameViewManager{
 		}
 	}
 
-
 	drawPlayerPalates(){
 		this.ctx.fillStyle = 'rgb(200, 0, 0)';
 		this.ctx.fillRect(0,0, this.left, canvas.height);
@@ -373,29 +379,29 @@ class GameViewManager{
 					currLandmark = this.right - this.left;
 				}
 				ctx.font = '1em monospace';
-				ctx.fillText(p.name +": $"+p.money, 2, 16);
+				ctx.fillText(p.name +": $"+p.money, this.pWidth*0.01, this.pWidth*0.1);
 				// ctx.fillText(printCards(p), 2, 33);
-				ctx.fillText(printLandmarks(p), 0, 40);
+				ctx.fillText(printLandmarks(p),  this.pWidth*0.01, this.pWidth*0.2);
 
 				ctx.font = '1em monospace';
 				for(var j = 0; j < bc.length; j++){
 					if(bc[j]> 0){
 						tmpImg = this.cardImageHolder[j];
-						ctx.fillText(""+bc[j], (this.boxWidth/2) * (numEstTypes) + 30, 150);
-						ctx.drawImage(tmpImg, (this.boxWidth/2) * numEstTypes + 10,  50, 105/2, 168/2);
+						ctx.fillText(""+bc[j], (this.pWidth* 0.35) * (numEstTypes) + this.pWidth*0.1, this.pWidth*0.9);
+						ctx.drawImage(tmpImg, (this.pWidth* 0.35) * numEstTypes + this.pWidth*0.1,  this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5);
 						numEstTypes ++;
 
 					}
 				}
 
-				currLandmark -= (105/2 + 10);
+				currLandmark -= (this.pWidth*0.3 + this.pWidth * 0.1);
 				for(var j = p.landmarks.length-1; j >= 0; j--){
 					tmpImg = this.cardImageHolder[j + FIRST_LANDMARK_LOC];
 
-					ctx.drawImage(tmpImg, currLandmark, 50, 105/2, 168/2);
-					this.landmarkLocs[j] = [j+FIRST_LANDMARK_LOC, [this.left + currLandmark, this.bottom + 50, 105/2, 168/2]];
-					ctx.fillText(p.landmarks[j]?"Bought":"X", currLandmark, 150);
-					currLandmark -= this.boxWidth/2;
+					ctx.drawImage(tmpImg, currLandmark, this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5);
+					this.landmarkLocs[j] = [j+FIRST_LANDMARK_LOC, [this.left + currLandmark, this.bottom + this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5]];
+					ctx.fillText(p.landmarks[j]?"Bought":"X", currLandmark, this.pWidth*0.9);
+					currLandmark -= this.pWidth* 0.35;
 				}
 				ctx.restore();
 
@@ -405,14 +411,20 @@ class GameViewManager{
 
 	drawStatusBar(){
 		this.ctx.save();
-		//Dice box
+
+		//Draw dice box
 		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
-		this.ctx.fillRect(this.right - this.buttonWidth*2, this.top, this.buttonWidth*2, this.statusBarHeight);
+		this.ctx.fillRect(this.right - this.buttonWidth*2.1, this.top+this.statusBarHeight*0.1, this.buttonWidth*2, this.statusBarHeight*0.8);
 
 		//Draw pass option button
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		var buttonDim = [this.right - this.buttonWidth*4, this.top, this.buttonWidth*2, this.statusBarHeight]
-		let textLoc = [this.right - this.buttonWidth*4 + 40, this.top+40];
+		ctx.textBaseline="middle";
+		var buttonDim = [this.right - this.buttonWidth*4.2 - this.buttonWidth * 0.1, this.top+this.statusBarHeight*0.1,
+			this.buttonWidth*2, this.statusBarHeight*0.8];
+
+		let textLoc = [this.right - this.buttonWidth*4.2 + this.buttonWidth*0.1,
+			this.top+this.statusBarHeight*0.5];
+
 		if(this.game === undefined){
 			this.ctx.fillStyle = 'rgba(0, 200, 0, 1)';
 			this.ctx.fillRect(...buttonDim);
@@ -432,18 +444,21 @@ class GameViewManager{
 
 		//Draw quit button
 		this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
-		ctx.fillRect(this.left+10, this.top, this.buttonWidth, this.statusBarHeight);
+		ctx.fillRect(this.left+this.buttonWidth*0.2, this.top+this.statusBarHeight*0.1, this.buttonWidth, this.statusBarHeight*0.8);
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		this.ctx.fillText("Quit!", this.left + 20, this.top+40);
+		ctx.textBaseline="middle";
+		ctx.textAlign= "center";
+		this.ctx.fillText("Quit!", this.left + this.buttonWidth*0.7, this.top+this.statusBarHeight*0.5, this.buttonWidth*0.8);
 
 		//Draw status message
 		ctx.font = '2em monospace';
-		ctx.fillText(this.messageText, this.left + this.buttonWidth+20, this.top + 50);
+		ctx.textAlign = "left";
+		ctx.fillText(this.messageText, this.left + this.buttonWidth*2, this.top + this.statusBarHeight*0.5);
 
 		//Draw dice roll message
 		if(this.game.roll !== undefined){
 			ctx.textAlign = "right";
-			ctx.fillText("Roll: " + this.game.roll, this.right - this.buttonWidth * 4 - 10, this.top + 50);
+			ctx.fillText("Roll: " + this.game.roll, this.right - this.buttonWidth * 4 - 10, this.top + this.statusBarHeight*0.5);
 		}
 		this.ctx.restore();
 	}
