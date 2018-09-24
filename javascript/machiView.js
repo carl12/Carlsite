@@ -147,6 +147,7 @@ class GameViewManager{
 		this.windowHeight = this.window.innerHeight;
 		this.canvasHeightFraction = 0.9;
 		this.canvasWidthFraction = 0.8;
+		this.boxWidthHeightRatio = 0.6;
 		this.ctx = this.canvas.getContext('2d');
 
 		this.imageWrappers = [];
@@ -289,8 +290,13 @@ class GameViewManager{
 			this.statusBarHeight = this.canvas.height * 0.1;
 			this.buttonWidth = this.canvas.width * 0.05;
 			this.estTop = this.top + this.statusBarHeight;
-			this.boxWidth = (this.right - this.left) /this.numCols;
-			this.boxHeight = (this.bottom - this.estTop) / this.numRows;
+			var initialBoxWidth = (this.right - this.left) /this.numCols;
+			var initialBoxHeight = (this.bottom - this.estTop) / this.numRows;
+
+
+			this.boxWidth = Math.min(initialBoxWidth, initialBoxHeight * this.boxWidthHeightRatio);
+			this.boxHeight = Math.min(initialBoxHeight, initialBoxWidth / this.boxWidthHeightRatio)
+
 			this.initInnerImagesAndLines();
 	}
 
@@ -453,12 +459,12 @@ class GameViewManager{
 		//Draw status message
 		ctx.font = '2em monospace';
 		ctx.textAlign = "left";
-		ctx.fillText(this.messageText, this.left + this.buttonWidth*2, this.top + this.statusBarHeight*0.5);
+		ctx.fillText(this.messageText, this.left + this.buttonWidth*1.3, this.top + this.statusBarHeight*0.5);
 
 		//Draw dice roll message
 		if(this.game.roll !== undefined){
 			ctx.textAlign = "right";
-			ctx.fillText("Roll: " + this.game.roll, this.right - this.buttonWidth * 4 - 10, this.top + this.statusBarHeight*0.5);
+			ctx.fillText("Roll: " + this.game.roll, this.right - this.buttonWidth * 4.6, this.top + this.statusBarHeight*0.5);
 		}
 		this.ctx.restore();
 	}
