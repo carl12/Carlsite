@@ -146,7 +146,7 @@ class GameViewManager{
 		this.windowWidth = this.window.innerWidth;
 		this.windowHeight = this.window.innerHeight;
 		this.canvasHeightFraction = 0.9;
-		this.canvasWidthFraction = 0.9;
+		this.canvasWidthFraction = 0.8;
 		this.ctx = this.canvas.getContext('2d');
 
 		this.imageWrappers = [];
@@ -174,18 +174,11 @@ class GameViewManager{
 		// this.mainMenuPic.onload = this.draw.bind(this);
 
 		this.messageText = "Starting messageText";
-
-		this.top = 0;
-		this.statusBarHeight = 75;
-		this.estTop = this.top + this.statusBarHeight;
-		this.pWidth = 160;
-		this.bottom = canvas.height - this.pWidth;
-		this.left = this.pWidth;
-		this.right = canvas.width - this.pWidth;
-		this.buttonWidth = this.canvas.width * 0.1;
-
 		this.numCols = 8;
 		this.numRows = 2;
+
+
+		this.top = 0;
 
 		this.game = undefined;
 		this.diceListening = false;
@@ -194,8 +187,20 @@ class GameViewManager{
 		this.playerListening = false;
 		this.stealListening = false;
 
-		this.initImagesAndLines();
+		this.draw();
+		// this.statusBarHeight = this.canvas.height * 0.1;
+		// this.estTop = this.top + this.statusBarHeight;
+		// this.pWidth = Math.min(this.canvas.width*0.2, this.canvas.height*0.25);
+		// this.bottom = canvas.height - this.pWidth;
+		// this.left = this.pWidth;
+		// this.right = canvas.width - this.pWidth;
+		// this.buttonWidth = this.canvas.width * 0.05;
+		//
+		//
+		//
+		// this.initInnerImagesAndLines();
 	}
+
 	enableGameSpan(){
 		this.mySpan.style.display = "block";
 	}
@@ -204,7 +209,7 @@ class GameViewManager{
 	}
 
 
-	initImagesAndLines(){
+	initInnerImagesAndLines(){
 		this.imageWrappers = []
 		this.cardWrappers = []
 		this.lines = []
@@ -236,20 +241,23 @@ class GameViewManager{
 
 		this.windowWidth = this.window.innerWidth;
 		this.windowHeight = this.window.innerHeight;
-		this.buttonWidth = this.canvas.width * 0.15;
+		this.buttonWidth = this.canvas.width * 0.05;
 		this.canvas.setAttribute('height',this.windowHeight*this.canvasHeightFraction+"px");
 		this.canvas.setAttribute('width', this.windowWidth*this.canvasWidthFraction+"px");
 
 		this.outputBox.style.height = this.windowHeight*this.canvasHeightFraction+"px";
-		this.outputBox.style.width = (this.windowWidth*(1-this.canvasWidthFraction)-13)+"px";
+		this.outputBox.style.width = (this.windowWidth*(1-this.canvasWidthFraction)-30)+"px";
 
 		if(this.game !== undefined)
 		{
 			this.setPlayerPalates();
 		}
-
+		this.setInnerArea();
 	}
+
 	setPlayerPalates(){
+
+		this.pWidth = Math.min(this.canvas.width*0.2, this.canvas.height*0.25);
 		this.numPlayers = this.game.players.length;
 		this.left = 0;
 		this.top = 0;
@@ -267,10 +275,16 @@ class GameViewManager{
 		} else {
 		}
 
-		this.estTop = this.top + this.statusBarHeight;
-		this.boxWidth = (this.right - this.left) /this.numCols;
-		this.boxHeight = (this.bottom - this.estTop) / this.numRows;
-		this.initImagesAndLines();
+	}
+
+	setInnerArea(){
+
+			this.statusBarHeight = this.canvas.height * 0.1;
+			this.buttonWidth = this.canvas.width * 0.05;
+			this.estTop = this.top + this.statusBarHeight;
+			this.boxWidth = (this.right - this.left) /this.numCols;
+			this.boxHeight = (this.bottom - this.estTop) / this.numRows;
+			this.initInnerImagesAndLines();
 	}
 
 	animateBuy(player, card){
@@ -305,9 +319,7 @@ class GameViewManager{
 			this.drawCardsLinesImages();
 		}
 		// this.setDimensions(this.game.players.length);
-		// this.initImagesAndLines();
-
-
+		// this.initInnerImagesAndLines();
 
 		if(this.animating){
 			requestAnimationFrame(this.draw.bind(this))
@@ -360,12 +372,12 @@ class GameViewManager{
 					ctx.rotate(Math.PI);
 					currLandmark = this.right - this.left;
 				}
-				ctx.font = '20px monospace';
+				ctx.font = '1em monospace';
 				ctx.fillText(p.name +": $"+p.money, 2, 16);
 				// ctx.fillText(printCards(p), 2, 33);
 				ctx.fillText(printLandmarks(p), 0, 40);
 
-				ctx.font = '16px monospace';
+				ctx.font = '1em monospace';
 				for(var j = 0; j < bc.length; j++){
 					if(bc[j]> 0){
 						tmpImg = this.cardImageHolder[j];
@@ -392,42 +404,52 @@ class GameViewManager{
 	}
 
 	drawStatusBar(){
+		this.ctx.save();
+		//Dice box
 		this.ctx.fillStyle = 'rgba(100, 100, 0, 0.5)';
-		this.ctx.fillRect(this.right - this.buttonWidth, this.top, this.buttonWidth, this.statusBarHeight);
+		this.ctx.fillRect(this.right - this.buttonWidth*2, this.top, this.buttonWidth*2, this.statusBarHeight);
 
+		//Draw pass option button
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		var buttonDim = [this.right - this.buttonWidth*2, this.top, this.buttonWidth, this.statusBarHeight]
+		var buttonDim = [this.right - this.buttonWidth*4, this.top, this.buttonWidth*2, this.statusBarHeight]
+		let textLoc = [this.right - this.buttonWidth*4 + 40, this.top+40];
 		if(this.game === undefined){
 			this.ctx.fillStyle = 'rgba(0, 200, 0, 1)';
 			this.ctx.fillRect(...buttonDim);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("Start game", this.right - this.buttonWidth*2 + 40, this.top+40);
+			this.ctx.fillText("Start game", ...textLoc);
 		} else if(this.buyListening){
 			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
 			this.ctx.fillRect(...buttonDim);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("No Purchase", this.right - this.buttonWidth*2 + 40, this.top+40);
+			this.ctx.fillText("No Purchase", ...textLoc);
 		} else if(this.rerollListening){
 			this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
 			this.ctx.fillRect(...buttonDim);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-			this.ctx.fillText("Keep Roll", this.right - this.buttonWidth*2 + 40, this.top+40);
+			this.ctx.fillText("Keep Roll", ...textLoc);
 		}
 
+		//Draw quit button
 		this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
 		ctx.fillRect(this.left+10, this.top, this.buttonWidth, this.statusBarHeight);
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		this.ctx.fillText("Quit!", this.left + 20, this.top+40);
 
-		ctx.font = '32px monospace';
-		ctx.fillText(this.messageText, this.left + this.buttonWidth+10, this.top + 50);
+		//Draw status message
+		ctx.font = '2em monospace';
+		ctx.fillText(this.messageText, this.left + this.buttonWidth+20, this.top + 50);
+
+		//Draw dice roll message
 		if(this.game.roll !== undefined){
-			ctx.fillText("Roll: " + this.game.roll, 600, this.top + 50);
+			ctx.textAlign = "right";
+			ctx.fillText("Roll: " + this.game.roll, this.right - this.buttonWidth * 4 - 10, this.top + 50);
 		}
+		this.ctx.restore();
 	}
 
 	drawCardsLinesImages(){
-		ctx.font = '16px monospace';
+		ctx.font = '1em monospace';
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			var currCard = indexedEstablishments[i];
 			if(i < this.numCols){
