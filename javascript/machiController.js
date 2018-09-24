@@ -34,7 +34,7 @@ g = {
 	sortedScores:[],
 	winners:[],
 	scoreBreakpoint:0,
-	
+
 	breakpointRatio:0.2,
 	mutationRate:0.01,
 	metaGenTransfer:0,
@@ -60,8 +60,8 @@ g = {
 	spotWinner: [0,0,0,0],
 
 
-	startGeneticParam:function(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.01, 
-		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 500, maxGenIn = 10, 
+	startGeneticParam:function(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.01,
+		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 500, maxGenIn = 10,
 		maxMetaGenIn = 8, numBestIn = 10, useViewIn = true){
 
 		this.popSize = popSizeIn;
@@ -86,7 +86,7 @@ g = {
 			switchOnGraphs();
 		}
 		this.genPopulation();
-		this.runGeneration();	
+		this.runGeneration();
 	},
 
 	runGeneration:function(){
@@ -109,7 +109,7 @@ g = {
 				geneticBindCall(print,0,'Running Meta Gen ', this.currMetaGen, ' of ' ,this.maxMetaGen);
 				geneticBindCall(print,0,'~~~~~~~~~~~~~');
 				geneticBindCall(this.runGeneration, 1000);
-				
+
 
 			} else {
 				geneticBindCall(print,0,'------ All Finished! ------');
@@ -204,7 +204,7 @@ g = {
 			Game.players[playLoc].strat = currStrat[0];
 			Game.players[playLoc].doubles = currStrat[1];
 			Game.players[playLoc].aiChoice = -1;
-			var k = 0; 
+			var k = 0;
 			while(Game.winner === -1 && k < 1000){
 				k++;
 				while(!Game.requireInput() && Game.winner == -1){
@@ -270,13 +270,13 @@ g = {
 
 
 			if(insert <= sameStratLoc){
-				
-				if(sameStratLoc === this.bestScore.length){	
+
+				if(sameStratLoc === this.bestScore.length){
 					if(this.bestScore.length > this.numBest){
 						this.bestScore.pop();
 						this.bestScoreGene.pop();
 						this.bestScoreGen.pop();
-					}	
+					}
 				} else {
 
 					print('Found strat with score '+score1);
@@ -290,16 +290,16 @@ g = {
 				this.bestScore.splice(insert, 0, score1);
 				this.bestScoreGene.splice(insert, 0, currStrat);
 				this.bestScoreGen.splice(insert, 0, [this.currMetaGen, this.currGen]);
-				
+
 				print(this.bestScore);
 			} else {
 				print('Higher score done by same strat')
 				print(this.bestScore);
 				print(score1);
 			}
-			
-				
-			
+
+
+
 		}
 		if(!isRerun){
 			this.scores[stratLoc] = score1;
@@ -336,7 +336,7 @@ g = {
 		}
 		print('breakpoint for going forward is ', this.scoreBreakpoint)
 		print(JSON.stringify(this.sortedScores));
-		
+
 		for(var i = 0; i < this.scores.length; i++){
 			if(this.scores[i] >= this.scoreBreakpoint){
 				this.winners.push(i);
@@ -360,7 +360,7 @@ g = {
 		var newPop = [];
 
 		for(var i = 0; i < this.winners.length; i++){
-			
+
 				var currGene = this.pop[this.winners[i]];
 				if(currGene[0] === undefined){
 					print(currGene);
@@ -389,7 +389,7 @@ g = {
 		}
 		this.pop = newPop;
 		this.scores = [];
-		// print('we made a new pop with ', pop.length, ' which should be the same as ', popSize);	
+		// print('we made a new pop with ', pop.length, ' which should be the same as ', popSize);
 	},
 
 	mutateGene:function(gene){
@@ -437,7 +437,7 @@ g = {
 	runRandomStrats:function(){
 
 		Game.init();
-		var k = 0; 
+		var k = 0;
 		while(Game.winner === -1 && k < 1000){
 			k++;
 			while(!Game.requireInput() && Game.winner == -1){
@@ -458,13 +458,13 @@ g = {
 		var winningAi = -1;
 		for(var k = 0; k < Game.players.length; k++){
 			p = Game.players[k];
-			
+
 			aiCount[p.aiChoice]++;
 			if(Game.winner == k){
 				var winningAi = p.aiChoice;
 				this.spotWinner[k] ++;
 			}
-			 
+
 		}
 		// print(aiCount);
 		for(var k = 0; k < aiCount.length; k++){
@@ -497,11 +497,8 @@ hum = {
 		}
 		Game.init(numPlayers, true);
 		print('you are player '+ playLoc);
-		print('asdf')
-		Game.players[playLoc] = new HumanPlayer("Human Player!");
-		this.me = Game.players[playLoc];
+		this.me = Game.setPlayerAsHuman(playLoc, "Human Player!");
 		manage.game = Game;
-
 
 		manage.disableListeners();
 		manage.setDimensions();
@@ -540,7 +537,7 @@ hum = {
 
 			if (response !== -1){
 				output.card = indexedCards[response];
-			} 
+			}
 		}
 		if(Game.turnState.phase == 4){
 			humanBindCall(this.runHumanGame, 1000);
@@ -558,7 +555,7 @@ hum = {
 				Game.next();
 			} else {
 				inputType = Game.getInputType();
-				if(!Game.players[Game.turnState.playerTurn].isHuman){	
+				if(!Game.players[Game.turnState.playerTurn].isHuman){
 					var response;
 					response = inputType.player.takeInput(inputType);
 					Game.next(response);
@@ -578,7 +575,7 @@ hum = {
 			}
 			manage.draw()
 			humanBindCall(this.runHumanGame, 1000)
-		} 
+		}
 	},
 
 	quitHumanGame:function(){
@@ -609,7 +606,7 @@ canvas.addEventListener("click", (event)=>{
 		}
 		else if(response !== undefined){
 			if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
-				
+
 				var success = hum.f(response);
 				if(success){
 					if(Game.lastBought != null){
@@ -642,7 +639,7 @@ function popCallQueue(){
 	if(callQueue.length > 0){
 		info = callQueue.splice(0,1)[0];
 		currQueuedCall = setTimeout(delayedCall, info[1], info[0], info[2]);
-	} 
+	}
 }
 
 function delayedCall(func, args){
@@ -664,7 +661,7 @@ function clearCallQueue(){
 }
 
 // var me;
-// var humanInputType; 
+// var humanInputType;
 
 function returnHumanGameMaker(numPlayers){
 	return ()=>{
@@ -688,5 +685,5 @@ canvas.addEventListener('mouseover', function(e) {
 		menuManager.draw();
 	} else if(viewState === HUMAN_GAME_STATE){
 		manage.draw();
-	} 
+	}
 });

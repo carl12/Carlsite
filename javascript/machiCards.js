@@ -12,7 +12,7 @@ ESTABLISHMENT_CATEGORY = ['none','farm','animal','food','natural','factory','bus
 FIRST_LANDMARK_LOC = 15;
 
 function reward_func(player){
-	//TODO - implement rewards that require input. 
+	//TODO - implement rewards that require input.
 	// console.log('implement reward function');
 	return 0;
 }
@@ -23,7 +23,7 @@ function per_build_maker(buildingType){
 		player.cards.forEach((a)=>{if(a.category == buildingType){count+= this.rewardVal;}})
 		return count;
 	}
-	
+
 
 }
 
@@ -267,7 +267,7 @@ Cards = {
 		position:15,
 		src:'images/Station.jpg',
 		unbuiltSRC:'images/unbuiltStation.jpg',
- 
+
 	},
 	ShoppingMall:{
 		name:"Shopping Mall",
@@ -288,7 +288,7 @@ Cards = {
 		unbuiltSRC:'images/unbuiltAmusementPark.jpg',
 	},
 	RadioTower:{
-		name:"Radio Tower",		
+		name:"Radio Tower",
 		cost:22,
 		isLandmark:true,
 		landmarkPosition:3,
@@ -303,4 +303,3 @@ var indexedCards = [];
 Object.entries(Cards).forEach((key,val)=>{indexedCards[key[1].position] = key[1]});
 var indexedEstablishments = indexedCards.slice(0, FIRST_LANDMARK_LOC);
 var indexedLandmarks = indexedCards.slice(FIRST_LANDMARK_LOC);
-

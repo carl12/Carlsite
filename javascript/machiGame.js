@@ -28,11 +28,12 @@ Game = {
 								Game.inputRewardPhase, Game.buyPhase, Game.nextPlayer];
 
 		Game.phaseRequiresInput = [true, true, false, true, true, false]
-		Game.phaseStrings = ['roll', 'reroll', 'start reward', 
+		Game.phaseStrings = ['roll', 'reroll', 'start reward',
 								'reward input', 'buy', 'ending turn']
 
 		Game.turnState = {'playerTurn':0, 'phase':0, 'amuseDoubles':false, 'isSecond':false,
 							'rewardResponse':-1, 'gameOver':false};
+
 		Game.lastBought = null;
 		Game.inputQueue = [];
 		Game.numPlayers = numPlayers;
@@ -44,7 +45,15 @@ Game = {
 		for(var i = 0; i < Game.numPlayers; i++){
 			Game.players.push(new AIPlayer(Game.genericNames[i]));
 		}
+		Game.currPlayer = Game.players[Game.turnState.playerTurn];
 	},
+
+	setPlayerAsHuman(pos, name = "Human Player!"){
+		Game.players[pos] = new HumanPlayer(name);
+		Game.currPlayer = Game.players[Game.turnState.playerTurn];
+		return Game.players[pos];
+	},
+
 	getTurnString(){
 		return Game.phaseStrings[Game.turnState.phase]
 	},
@@ -66,7 +75,7 @@ Game = {
 	getInputType:function(){
 		inputType={};
 		if(Game.turnPhases[Game.turnState.phase] !== Game.inputRewardPhase){
-			inputType.player = Game.players[Game.turnState.playerTurn];
+			inputType.player = Game.currPlayer;
 		} else {
 			inputType.player = Game.players[Game.turnState.rewardResponse];
 		}
@@ -84,7 +93,7 @@ Game = {
 	rollPhase:function(input){
 		Game.rollOneOrTwo(input);
 		if(Game.d1Roll > 0){
-			var currPlayer = Game.players[Game.turnState.playerTurn];
+			var currPlayer = Game.currPlayer;
 			if(Game.print){
 				print(Game.roll +' rolled');
 			}
@@ -94,7 +103,7 @@ Game = {
 			} else {
 				input.reroll = false;
 				Game.turnState.phase += 1;
-				return Game.rerollPhase(input);	
+				return Game.rerollPhase(input);
 			}
 		} else {
 			return false;
@@ -105,24 +114,24 @@ Game = {
 		//TODO - take input on whether to reroll or keep
 		// print(input)
 		if(input !== undefined && input.reroll !== undefined){
-			var currPlayer = Game.players[Game.turnState.playerTurn];
+			var currPlayer = Game.currPlayer;
 			if(input.reroll){
 				Game.rollOneOrTwo(input);
 				if(Game.d1Roll == 0){
 					return false;
-				} 
+				}
 				if(Game.print){
 					print(Game.roll +' re-rolled');
 				}
-				
-			} 
+
+			}
 			if(currPlayer.landmarks[2] && Game.d1Roll === Game.d2Roll){
 				if(Game.print){
 					print(currPlayer.name,' takes a second turn!')
 				}
 				Game.turnState.amuseDoubles = true;
 				//TODO - add go again functionality
-			} 
+			}
 			Game.turnState.phase += 1;
 			Game.rolls.push(Game.roll);
 			return true;
@@ -135,7 +144,7 @@ Game = {
 		if(input !== undefined && input.rollTwo !== undefined){
 			var a = 0;
 			var b = 0;
-			var currPlayer = Game.players[Game.turnState.playerTurn]
+			var currPlayer = Game.currPlayer
 			if (input.rollTwo && currPlayer.landmarks[0]){
 				Game.d1Roll = rollDice();
 				Game.d2Roll = rollDice();
@@ -162,9 +171,9 @@ Game = {
 				{
 					if(c.noInput){
 						if(c.triggersOn === COLOR_TRIGGERS.red){
-							var currPlayer = Game.players[Game.turnState.playerTurn];
+							var currPlayer = Game.currPlayer;
 							var moneyLost = Math.min(currPlayer.money, c.reward(p));
-							Game.players[Game.turnState.playerTurn].money -= moneyLost;
+							Game.currPlayer.money -= moneyLost;
 							p.money += moneyLost;
 
 						} else if(c.position == 6){
@@ -177,7 +186,7 @@ Game = {
 									totalLost += lost;
 								}
 							}
-							
+
 							p.money += moneyLost;
 						} else {
 							p.money += c.reward(p);
@@ -190,8 +199,8 @@ Game = {
 			}
 
 			if(p.isHuman && Game.print){
-				print(p.name+" won $"+ (p.money - pre));			
-			} 
+				print(p.name+" won $"+ (p.money - pre));
+			}
 			p.winnings.push(p.money - pre);
 		}
 		if(Game.inputQueue.length === 0){
@@ -208,12 +217,12 @@ Game = {
 		var success = false;
 		if(resovling[1] == 7){
 			if(input !== undefined && input.targetPlayer !== undefined){
-				var steal = Math.min(Game.players[input.targetPlayer].money, 
+				var steal = Math.min(Game.players[input.targetPlayer].money,
 					indexedCards[resovling[1]].rewardVal);
 				print('stole ', steal);
 				Game.players[input.targetPlayer].money -= steal;
 				Game.players[resovling[0]].money += steal;
-				
+
 				if(Game.inputQueue.length == 0){
 					Game.turnState.rewardResponse = Game.inputQueue[0][0];
 					Game.turnState.phase += 1;
@@ -221,7 +230,7 @@ Game = {
 				success = true;
 			}
 		} else {
-			// if(input !== undefined && input.targetPlayer !== undefined 
+			// if(input !== undefined && input.targetPlayer !== undefined
 			// 	&& input.targetBuilding !== undefined && input.myBuilding){
 			try {
 			var target = Game[input.targetPlayer];
@@ -259,7 +268,7 @@ Game = {
 	},
 
 	buyPhase:function(input){
-		var currPlayer = Game.players[Game.turnState.playerTurn];
+		var currPlayer = Game.currPlayer;
 		if(input !== undefined && input.card !== undefined){
 			card = input.card;
 			//check card is valid
@@ -291,7 +300,7 @@ Game = {
 					return false;
 				}
 			}
-			
+
 		} else {
 			if(Game.print){
 				print(currPlayer.name + " didn't buy anything");
@@ -328,12 +337,14 @@ Game = {
 			} else {
 				Game.turnState.playerTurn < Game.players.length - 1 ? Game.turnState.playerTurn++ : Game.turnState.playerTurn = 0;
 				Game.turn += 1;
+				Game.currPlayer = Game.players[Game.turnState.playerTurn];
 				if(Game.print){
 					print('------------------------')
-					print('It is now ', Game.players[Game.turnState.playerTurn].name,"'s turn!");
+					print('It is now ', Game.currPlayer.name,"'s turn!");
 				}
 			}
 			Game.turnState.phase = 0;
+
 		}
 		else{
 			// print('game over!');
@@ -351,9 +362,5 @@ Game = {
 Game.turnPhases = [Game.rollPhase, Game.rerollPhase, Game.startRewardPhase,
 						Game.inputRewardPhase, Game.buyPhase, Game.nextPlayer];
 
-Game.turnPhaseNames = ['Roll Phase', 'Reroll Phase', 'Starting Reward Phase', 
+Game.turnPhaseNames = ['Roll Phase', 'Reroll Phase', 'Starting Reward Phase',
 	'Input Reward Phase', 'Buy Phase', 'Next Player Phase'];
-
-
-
-
