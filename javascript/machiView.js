@@ -246,12 +246,7 @@ class GameViewManager{
 			this.right - this.buttonWidth,
 			this.top +  this.statusBarHeight*0.2,
 			...diceDim);
-		//1050, 0, 150, 75
-		// this.addNewLine(this.right - 150/2 , this.top, this.right - 150/2, this.estTop);
 
-		// for(var j = 0; j < 3; j++){
-			// this.addNewLine(this.left, this.estTop + j * this.boxHeight, this.right, this.estTop + j * this.boxHeight);
-		// }
 	}
 
 	setDimensions(){
@@ -787,7 +782,7 @@ class MenuViewManager{
 			if(clickInObj(
 				this.menuPicMiddleX + i * (this.menuButtonWidth + this.menuButtonBorder),
 				this.menuButtonY,
-				this.menuButtonWidth, 
+				this.menuButtonWidth,
 				this.menuButtonHeight,
 				x,y)){
 
@@ -901,7 +896,10 @@ class GeneticViewManager{
 		var numGen = g.maxGen;
 		var iterations = g.iterations;
 		var popSize = g.popSize;
-		var output = `Meta Generations: ${currMetaGen}/${numMetaGen} | Generation: ${currGen}/${numGen} |  Pop Size: ${currStrat}/${popSize} | iterations: ${iterations}`
+		var output = `Meta Generations: ${currMetaGen}/${numMetaGen}`
+			+` | Generation: ${currGen}/${numGen}`
+			+` |  Pop Size: ${currStrat}/${popSize}`
+			+` | iterations: ${iterations}`;
 		this.paramDiv.innerText = output;
 	}
 
@@ -909,9 +907,16 @@ class GeneticViewManager{
 		this.setParamInfo(g, g.popSize);
 		print(g.bestScore);
 		var maxLoc = g.scores.indexOf(g.sortedScores[0]);
-		var output = `Winning Strat with ${g.bestScore[0]} wins out of ${g.iterations}:\n` + printStrat(g.bestScoreGene[0]) + "\n";
-		output += `Second Strat with ${g.bestScore[1]} wins out of ${g.iterations}:\n` + printStrat(g.bestScoreGene[1]) + "\n\n";
-		output += `Most recent run best with ${g.sortedScores[0]} wins: \n ` + printStrat(g.pop[maxLoc]);
+		var output = `Winning Strat with ${g.bestScore[0]}
+			wins out of ${g.iterations}:\n`
+			+ printStrat(g.bestScoreGene[0]) + "\n";
+
+		output += `Second Strat with ${g.bestScore[1]} wins out of
+			${g.iterations}:\n`
+			+ printStrat(g.bestScoreGene[1]) + "\n\n";
+
+		output += `Most recent run best with ${g.sortedScores[0]} wins: \n `
+			+ printStrat(g.pop[maxLoc]);
 		this.bestStrat.innerText = output;
 		this.winsOverTimeCanvas.height = 500;
 		this.winsOverTimeCanvas.width = 500;

@@ -18,18 +18,18 @@ Machi Koro
 
 	<span id="gameSpan" style="display: block; outline: 0px">
 
-		<canvas id="myCanvas" style="float:left" > 
+		<canvas id="myCanvas" style="float:left" >
 			Canvas failed to load
 		</canvas>
 
-	    <textarea id="outputText" id="output" style="resize:none" readonly></textarea> 
+	    <textarea id="outputText" id="output" style="resize:none" readonly></textarea>
 	</span>
 	<span id="geneticSpan" style="display: none">
 		<span id="inputGeneticSpan">
 			<h1>Big menu Here!</h1>
-			
+
 		</span>
-		<span id="runningGeneticSpan">
+		<div id="runningGeneticSpan">
 			<h1>Running Genetic Algorithm</h1>
 			<div id="paramInfo">asdf</div>
 			<div class="chart-container" style="position: relative; float:left; height:500px; width:500px">
@@ -39,14 +39,15 @@ Machi Koro
     			<canvas id="chart2"></canvas>
 			</div>
 			<div id="bestStrat" style="float:left"></div>
-		</span>
+			<div style="clear: both"></div>
+		</div>
 	</span>
-  	
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script src="javascript/machiCards.js"></script>
 <script src="javascript/machiPlayer.js"></script>
-<script src="javascript/machiGame.js"></script> 
+<script src="javascript/machiGame.js"></script>
 <script src="javascript/machiView.js"></script>
 <script src="javascript/machiController.js"></script>
 
