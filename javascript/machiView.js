@@ -206,10 +206,10 @@ class GameViewManager{
 	enableGameSpan(){
 		this.mySpan.style.display = "block";
 	}
+
 	disableGameSpan(){
 		this.mySpan.style.display = "none";
 	}
-
 
 	initInnerImagesAndLines(){
 		this.imageWrappers = []
@@ -312,7 +312,6 @@ class GameViewManager{
 	}
 
 	animateBuy(player, card){
-		print(card.position , ' is bought');
 		if(card.position >= FIRST_LANDMARK_LOC){
 			return;
 		}
@@ -328,9 +327,8 @@ class GameViewManager{
 			[right, midVert], [midHoriz, up-160]];
 
 		var playerLoc = locs[player];
-
 		this.imageWrappers[this.imageWrappers.length - 1]
-			.startAnimation(playerLoc,100);
+			.startAnimation(...playerLoc,100);
 	}
 
 	draw(){
@@ -577,7 +575,6 @@ class GameViewManager{
 	}
 
 	checkClick(x,y){
-		print(x,y);
 		if(this.game === undefined){
 			return;
 		}
@@ -795,7 +792,8 @@ class MenuViewManager{
 }
 
 class GeneticViewManager{
-	constructor(){
+	constructor(g){
+		this.g = g;
 		this.mySpanId = 'geneticSpan'
 		this.menuSpanId = 'inputGeneticSpan';
 		this.runSpanId = 'runningGeneticSpan';
@@ -839,6 +837,7 @@ class GeneticViewManager{
 		*/
 
 	}
+
 	submitNewScore(score, loc){
 		this.stratLoc.push(loc);
 		this.numStratWins.push(score);
@@ -847,8 +846,9 @@ class GeneticViewManager{
 		// 	this.draw();
 		// 	this.lastNumStrats = this.numStratWins.length;
 		// }
-
+		this.draw();
 	}
+
 	endTesting(breakpoint, currGen){
 		var maxLoc = 0;
 		var sum = 0;
@@ -862,50 +862,44 @@ class GeneticViewManager{
 		this.genBreakpoint.push(breakpoint);
 		this.genAvg.push(sum/this.numStratWins.length);
 		this.genRecord.push(currGen);
-		this.draw();
+		this.drawCharts();
 		this.clearScores();
 	}
+
 	clearScores(){
 		this.stratLoc = [];
 		this.numStratWins = [];
 		this.lastNumStrats = 0;
 	}
-	startGeneticView(){
-		this.mySpan.style.display = "block";
-		this.menuSpan.style.display = "block";
-		this.runSpan.style.display = "none";
-	}
+
 	disableGeneticSpan(){
 		this.mySpan.style.display = "none";
 	}
 
-	toggleMenu(){
-		if(this.menuSpan.style.display == "none"){
-			this.menuSpan.style.display = "block";
-			this.runSpan.style.display = "none";
-		} else {
-			this.menuSpan.style.display = "none";
-			this.runSpan.style.display = "block";
-			// this.draw();
-		}
-	}
-	setParamInfo(g, currStrat = 0){
-		var currMetaGen = g.currMetaGen;
-		var currGen = g.currGen;
-		var numMetaGen = g.maxMetaGen;
-		var numGen = g.maxGen;
-		var iterations = g.iterations;
-		var popSize = g.popSize;
-		var output = `Meta Generations: ${currMetaGen}/${numMetaGen}`
-			+` | Generation: ${currGen}/${numGen}`
-			+` |  Pop Size: ${currStrat}/${popSize}`
-			+` | iterations: ${iterations}`;
-		this.paramDiv.innerText = output;
+	enableGeneticView(){
+		this.menuSpan.style.display = "none";
+		this.mySpan.style.display = "block";
+		this.runSpan.style.display = "block";
 	}
 
-	draw(){
-		this.setParamInfo(g, g.popSize);
-		print(g.bestScore);
+	disableGeneticView(){
+		// this.menuSpan.style.display = "block";
+		this.runSpan.style.display = "none";
+	}
+
+	draw(g, currStrat = 0){
+		var g = this.g;
+
+		var output = `Meta Generations: ${g.currMetaGen}/${g.maxMetaGen}`
+			+` | Generation: ${g.currGen}/${g.maxMetaGen}`
+			+` |  Pop Size: ${currStrat}/${g.popSize}`
+			+` | iterations: ${g.iterations}`;
+		this.paramDiv.innerText = output;
+
+	}
+
+	drawCharts(){
+		var g = this.g;
 		var maxLoc = g.scores.indexOf(g.sortedScores[0]);
 		var output = `Winning Strat with ${g.bestScore[0]}
 			wins out of ${g.iterations}:\n`
@@ -982,6 +976,85 @@ class GeneticViewManager{
 		})
 
 
+	}
+
+}
+
+class MachiViewsManager{
+	constructor(window, canvas, outputBox, g){
+		this.STATE_NAMES = {
+			'MAIN_MENU_STATE':0,
+			'HUMAN_GAME_STATE':1,
+			'GENTIC_STATE':2,
+			'TEST_STRAT_STATE':3,
+		}
+
+		this.viewState = this.STATE_NAMES.MAIN_MENU_STATE;
+
+		this.menuManager = new MenuViewManager(window, canvas, outputBox);
+		this.manage = new GameViewManager(window, canvas, outputBox);
+		this.geneticManager = new GeneticViewManager(g);
+		this.aiTestManager = undefined; //TODO - implement aitest manager
+
+		this.currManage = this.menuManager;
+	}
+
+	draw(){
+		this.currManage.draw();
+	}
+
+	openMenu(){
+		this.currManage = this.menuManager;
+		this.viewState = this.STATE_NAMES.STATE_NAMES.MAIN_MENU_STATE;
+		this.draW();
+	}
+
+	openGame(){
+		this.currManage = this.manage;
+		this.viewState = this.STATE_NAMES.HUMAN_GAME_STATE;
+		this.draw();
+
+	}
+
+	openAiTest(){
+		this.currManage = this.aiTestManager;
+		this.viewState = this.STATE_NAMES.TEST_STRAT_STATE;
+		print('implement ai view')
+	}
+
+	openGenetic(){
+		this.manage.disableGameSpan();
+		this.viewState = this.STATE_NAMES.GENTIC_STATE;
+		this.geneticManager.enableGeneticView();
+		this.currManage = this.geneticManager;
+	}
+
+
+	canvasClicked(x, y, event){
+		var response;
+		if(this.viewState === this.STATE_NAMES.MAIN_MENU_STATE){
+			this.menuManager.checkClick(x,y);
+			return;
+		} else if (this.viewState === this.STATE_NAMES.HUMAN_GAME_STATE){
+			print('state is human game')
+			response = this.manage.checkClick(x,y);
+			if(!Game.initRun){
+				return;
+			}
+			else if(response !== undefined){
+				if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
+
+					var success = hum.f(response);
+					if(success){
+						if(Game.lastBought != null){
+							print('animating buy!')
+							this.manage.animateBuy(Game.turnState.playerTurn, Game.lastBought);
+						}
+						this.manage.disableListeners();
+					}
+				}
+			}
+		}
 	}
 
 }

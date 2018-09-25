@@ -20,13 +20,6 @@ var popInTimeout = false;
 var pausedTimeout = false;
 var currQueuedCall = 0;
 
-const MAIN_MENU_STATE = 0;
-const HUMAN_GAME_STATE = 1;
-const GENTIC_STATE = 2;
-const TEST_STRAT_STATE = 3;
-
-var viewState = MAIN_MENU_STATE;
-
 g = {
 	pop:[],
 	popSize:100,
@@ -81,9 +74,12 @@ g = {
 	},
 
 	startGenetic:function(){
-		viewState = GENTIC_STATE;
+		viewManage.openGenetic();
+		this.genView = viewManage.geneticManager;
+
 		if(this.useView){
-			switchOnGraphs();
+			viewManage.openGenetic();
+
 		}
 		this.genPopulation();
 		this.runGeneration();
@@ -305,8 +301,8 @@ g = {
 			this.scores[stratLoc] = score1;
 		}
 		if(this.useView){
-			geneticManager.submitNewScore(score1, stratLoc);
-			geneticManager.setParamInfo(this, stratLoc);
+			this.genView.submitNewScore(score1, stratLoc);
+			this.genView.draw(this, stratLoc);
 		}
 	},
 
@@ -345,7 +341,7 @@ g = {
 		}
 		console.log('out of ', this.pop.length,' strats, we have ', this.winners.length, ' winners');
 		if(this.useView){
-			geneticManager.endTesting(this.scoreBreakpoint, [this.currMetaGen, this.currGen]);
+			this.genView.endTesting(this.scoreBreakpoint, [this.currMetaGen, this.currGen]);
 		}
 		return i;
 	},
@@ -424,7 +420,7 @@ g = {
 	},
 
 	testStrats:function(tests = 10000){
-		viewState = TEST_STRAT_STATE;
+		viewManage.openAiTest();
 		for(var j = 0; j < tests; j++){
 			geneticBindCall(this.runRandomStrats);
 			if(j % 3000 == 0){
@@ -487,7 +483,7 @@ hum = {
 	humanInputType:{},
 
 	initHumanGame:function(numPlayers = 4, position = undefined){
-
+		this.gameView = viewManage.manage;
 		print('Welcome to Machi Koro!');
 		var playLoc;
 		if(position === undefined){
@@ -498,11 +494,11 @@ hum = {
 		Game.init(numPlayers, true);
 		print('you are player '+ playLoc);
 		this.me = Game.setPlayerAsHuman(playLoc, "Human Player!");
-		manage.game = Game;
+		this.gameView.game = Game;
 
-		manage.disableListeners();
-		manage.setDimensions();
-		viewState = HUMAN_GAME_STATE;
+		this.gameView.disableListeners();
+		this.gameView.setDimensions();
+		viewManage.openGame();
 
 		humanBindCall(this.runHumanGame);
 	},
@@ -544,25 +540,26 @@ hum = {
 		} else {
 			humanBindCall(this.runHumanGame, 300);
 		}
+
 		return Game.next(output);
 	},
 
 	runHumanGame:function(){
 
 		if(Game.winner === -1){
-			manage.draw()
+			this.gameView.draw()
 			if(!Game.requireInput()){
 				Game.next();
 			} else {
-				inputType = Game.getInputType();
+				var inputType = Game.getInputType();
 				if(!Game.players[Game.turnState.playerTurn].isHuman){
 					var response;
 					response = inputType.player.takeInput(inputType);
 					Game.next(response);
 				} else {
-					manage.takeHumanInput(inputType);
+					this.gameView.takeHumanInput(inputType);
 					this.humanInputType = inputType;
-					manage.draw();
+					this.gameView.draw();
 					if(Game.turnState.phase == 4){
 						print('You have $'+this.me.money);
 					}
@@ -570,10 +567,10 @@ hum = {
 				}
 
 				if(Game.lastBought != null){
-					manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
+					this.gameView.animateBuy(Game.turnState.playerTurn, Game.lastBought)
 				}
 			}
-			manage.draw()
+			this.gameView.draw()
 			humanBindCall(this.runHumanGame, 1000)
 		}
 	},
@@ -582,41 +579,21 @@ hum = {
 		this.humanInputType = {};
 		this.me = undefined;
 		clearCallQueue();
-		viewState = MAIN_MENU_STATE;
-		menuManager.draw();
+		viewState.openMenu();
 
 	},
 }
 
-var menuManager = new MenuViewManager(window, canvas, outputBox);
-var manage = new GameViewManager(window, canvas, outputBox);
-var geneticManager = new GeneticViewManager();
+var viewManage = new MachiViewsManager(window, canvas, outputBox, g);
+var V_STATES = viewManage.STATE_NAMES;
+// var menuManager = new MenuViewManager(window, canvas, outputBox);
+// var manage = new GameViewManager(window, canvas, outputBox);
+// var geneticManager = new GeneticViewManager(g);
 
 canvas.addEventListener("click", (event)=>{
 	var x = event.pageX - canvasLeft;
 	var y = event.pageY - canvasTop;
-	var response;
-	if(viewState === MAIN_MENU_STATE){
-		menuManager.checkClick(x,y);
-		return;
-	} else if (viewState === HUMAN_GAME_STATE){
-		response = manage.checkClick(x,y);
-		if(!Game.initRun){
-			return;
-		}
-		else if(response !== undefined){
-			if(Game.players[Game.turnState.playerTurn].isHuman && Game.requireInput){
-
-				var success = hum.f(response);
-				if(success){
-					if(Game.lastBought != null){
-						manage.animateBuy(Game.turnState.playerTurn, Game.lastBought)
-					}
-					manage.disableListeners();
-				}
-			}
-		}
-	}
+	viewManage.canvasClicked(x, y, event);
 });
 
 function geneticBindCall(func, timeout, ...args){
@@ -665,25 +642,20 @@ function clearCallQueue(){
 
 function returnHumanGameMaker(numPlayers){
 	return ()=>{
-		viewState = HUMAN_GAME_STATE;
 		hum.initHumanGame(numPlayers);
-		manage.draw();
 	};
 }
 
 
-function switchOnGraphs(){
-	manage.disableGameSpan();
-	geneticManager.startGeneticView();
-	geneticManager.toggleMenu();
-}
+
 
 
 
 canvas.addEventListener('mouseover', function(e) {
-	if(viewState === MAIN_MENU_STATE){
-		menuManager.draw();
-	} else if(viewState === HUMAN_GAME_STATE){
-		manage.draw();
-	}
+	viewManage.draw();
+	// if(viewState === V_STATES.MAIN_MENU_STATE){
+	// 	menuManager.draw();
+	// } else if(viewState === V_STATES.HUMAN_GAME_STATE){
+	// 	manage.draw();
+	// }
 });
