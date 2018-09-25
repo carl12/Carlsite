@@ -215,21 +215,20 @@ class GameViewManager{
 		this.imageWrappers = []
 		this.cardWrappers = []
 		this.lines = []
+		this.innerCardDims = [this.boxWidth*0.8, this.boxHeight*0.8]
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			if(i < this.numCols){
-				var currLeft = this.left + (i) * this.boxWidth;
+				var currLeft = this.left + (i+0.1) * this.boxWidth;
 				this.addNewCardImage(this.cardImageHolder[i],
-					indexedEstablishments[i], currLeft+10,
-					this.estTop+21, this.boxWidth - 20,
-					this.boxHeight - 25);
+					indexedEstablishments[i], currLeft,
+					this.estTop+21, ...this.innerCardDims);
 
 			} else {
-				var currLeft = this.left + (i-this.numCols) * this.boxWidth;
+				var currLeft = this.left + (i - this.numCols + 0.1) * this.boxWidth;
 				this.addNewCardImage(this.cardImageHolder[i],
-					indexedEstablishments[i], currLeft+10,
+					indexedEstablishments[i], currLeft,
 					this.estTop+21 + this.boxHeight,
-					this.boxWidth - 20,
-					this.boxHeight - 25);
+					...this.innerCardDims);
 			}
 			// this.addNewLine(currLeft, this.estTop, currLeft, this.bottom);
 		}
@@ -317,7 +316,7 @@ class GameViewManager{
 		}
 		var x = this.cardWrappers[card.position].x;
 		var y = this.cardWrappers[card.position].y;
-		this.addNewImage(this.cardImageHolder[card.position], x,y, 100, 150)
+		this.addNewImage(this.cardImageHolder[card.position], x,y, ...this.innerCardDims);
 		var x,y;
 		var left = 0; var midHoriz = (this.left + this.right) / 2;
 		var right = canvas.width;
@@ -457,11 +456,12 @@ class GameViewManager{
 		//Draw pass option button
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		ctx.textBaseline="middle";
+		ctx.textAlign= "center";
 		var buttonDim = [this.right - this.buttonWidth*4.2 - this.buttonWidth * 0.1,
 			this.top+this.statusBarHeight*0.1,
 			this.buttonWidth*2, this.statusBarHeight*0.8];
 
-		let textLoc = [this.right - this.buttonWidth*4.2 + this.buttonWidth*0.1,
+		let textLoc = [this.right - this.buttonWidth*3.3 + this.buttonWidth*0.1,
 			this.top+this.statusBarHeight*0.5];
 
 		if(this.game === undefined){
