@@ -330,15 +330,13 @@ Game = {
 		if(!Game.turnState.gameOver){
 			if(Game.turnState.amuseDoubles && !Game.turnState.isSecond){
 				Game.turnState.isSecond = true;
-				Game.turnState.amuseDoubles = false;
-				
+
 				if(Game.print){
 					print(Game.currPlayer.name,
 						"is taking another turn from amusement park ");
 				}
 			} else {
 				Game.turnState.isSecond = false;
-				Game.turnState.amuseDoubles = false;
 				Game.turnState.playerTurn < Game.players.length - 1
 					? Game.turnState.playerTurn++
 					: Game.turnState.playerTurn = 0;
@@ -350,6 +348,7 @@ Game = {
 					print('It is now ', Game.currPlayer.name,"'s turn!");
 				}
 			}
+			Game.turnState.amuseDoubles = false;
 			Game.turnState.phase = 0;
 
 		}
