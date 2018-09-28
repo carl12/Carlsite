@@ -128,20 +128,19 @@ Game = {
 					print(currPlayer.name,' takes a second turn!')
 				}
 				Game.turnState.amuseDoubles = true;
-				//TODO - add go again functionality
 			}
+
 			Game.turnState.phase += 1;
 			Game.rolls.push(Game.roll);
 			return true;
 		} else {
+			print('oops')
 			return false;
 		}
 	},
 
 	rollOneOrTwo(input){
 		if(input !== undefined && input.rollTwo !== undefined){
-			var a = 0;
-			var b = 0;
 			var currPlayer = Game.currPlayer
 			if (input.rollTwo && currPlayer.landmarks[0]){
 				Game.d1Roll = rollDice();
@@ -331,16 +330,19 @@ Game = {
 		if(!Game.turnState.gameOver){
 			if(Game.turnState.amuseDoubles && !Game.turnState.isSecond){
 				Game.turnState.isSecond = true;
+				Game.turnState.amuseDoubles = false;
+				
 				if(Game.print){
 					print(Game.currPlayer.name,
-						"is taking another turn from amusement park");
+						"is taking another turn from amusement park ");
 				}
 			} else {
 				Game.turnState.isSecond = false;
+				Game.turnState.amuseDoubles = false;
 				Game.turnState.playerTurn < Game.players.length - 1
 					? Game.turnState.playerTurn++
 					: Game.turnState.playerTurn = 0;
-					
+
 				Game.turn += 1;
 				Game.currPlayer = Game.players[Game.turnState.playerTurn];
 				if(Game.print){
