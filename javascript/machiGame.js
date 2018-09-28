@@ -111,8 +111,6 @@ Game = {
 	},
 
 	rerollPhase:function(input){
-		//TODO - take input on whether to reroll or keep
-		// print(input)
 		if(input !== undefined && input.reroll !== undefined){
 			var currPlayer = Game.currPlayer;
 			if(input.reroll){
@@ -333,9 +331,16 @@ Game = {
 		if(!Game.turnState.gameOver){
 			if(Game.turnState.amuseDoubles && !Game.turnState.isSecond){
 				Game.turnState.isSecond = true;
-				// print('woo taking another turn!!')
+				if(Game.print){
+					print(Game.currPlayer.name,
+						"is taking another turn from amusement park");
+				}
 			} else {
-				Game.turnState.playerTurn < Game.players.length - 1 ? Game.turnState.playerTurn++ : Game.turnState.playerTurn = 0;
+				Game.turnState.isSecond = false;
+				Game.turnState.playerTurn < Game.players.length - 1
+					? Game.turnState.playerTurn++
+					: Game.turnState.playerTurn = 0;
+					
 				Game.turn += 1;
 				Game.currPlayer = Game.players[Game.turnState.playerTurn];
 				if(Game.print){
