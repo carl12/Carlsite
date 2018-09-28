@@ -419,7 +419,7 @@ g = {
 		// print('breakpoint is ', scoreBreakpoint);
 	},
 
-	testStrats:function(tests = 10000){
+	testStrats:function(tests = 1000){
 		viewManage.openAiTest();
 		for(var j = 0; j < tests; j++){
 			geneticBindCall(this.runRandomStrats);

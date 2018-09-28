@@ -457,11 +457,11 @@ class GameViewManager{
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		ctx.textBaseline="middle";
 		ctx.textAlign= "center";
-		var buttonDim = [this.right - this.buttonWidth*4.2 - this.buttonWidth * 0.1,
+		let buttonDim = [this.right - this.buttonWidth*4.2 - this.buttonWidth * 0.1,
 			this.top+this.statusBarHeight*0.1,
 			this.buttonWidth*2, this.statusBarHeight*0.8];
 
-		let textLoc = [this.right - this.buttonWidth*3.3 + this.buttonWidth*0.1,
+		let textLoc = [this.right - this.buttonWidth*3.4 + this.buttonWidth*0.1,
 			this.top+this.statusBarHeight*0.5];
 
 		if(this.game === undefined){
@@ -483,7 +483,7 @@ class GameViewManager{
 
 		//Draw quit button
 		this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
-		ctx.fillRect(this.left+this.buttonWidth*0.2,
+		ctx.fillRect(this.left+this.buttonWidth*0.1,
 			this.top+this.statusBarHeight*0.1,
 			this.buttonWidth,
 			this.statusBarHeight*0.8);
@@ -492,7 +492,7 @@ class GameViewManager{
 		ctx.textBaseline="middle";
 		ctx.textAlign= "center";
 		this.ctx.fillText("Quit!",
-			this.left + this.buttonWidth*0.7,
+			this.left + this.buttonWidth*0.6,
 			this.top+this.statusBarHeight*0.5,
 			this.buttonWidth*0.8);
 

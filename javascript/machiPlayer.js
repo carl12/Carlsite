@@ -21,7 +21,7 @@ function shuffle(arrIn) {
 
 function randInt(low, high){
 	var diff = high-low;
-	var val = Math.floor(Math.random() * diff) + low; 
+	var val = Math.floor(Math.random() * diff) + low;
 	return val;
 }
 
@@ -33,7 +33,7 @@ function randIntTwoRange(low1, high1, low2, high2){
 		val = val - high1 + low2;
 	}
 	return val;
-} 
+}
 
 function genRandomBuildPriority(){
 	var base = [[18,1],[17,1],[16,1],[15,1]]
@@ -55,14 +55,14 @@ class Player{
 		this.buildingCount[2] = 1;
 		this.landmarks = [false,false,false,false];
 		this.winnings = [];
-		
+
 	}
 	rewards(roll, isTurn){
 
 	}
 
 	buyCard(card){
-		
+
 		this.money -= card.cost;
 		if(card.isLandmark){
 			this.landmarks[card.landmarkPosition] = true;
@@ -77,8 +77,8 @@ class Player{
 	}
 
 	getRollEv(roll){
-		var income1D = 0; 
-		var income2D = 0; 
+		var income1D = 0;
+		var income2D = 0;
 		var c;
 		if(this.landmarks[0]){
 			for(var i = 0; i < this.cards.length; i++){
@@ -94,7 +94,7 @@ class Player{
 				income1D += c.reward(this)/6;
 			}
 		}
-		
+
 		if(income1D > income2D){
 			return [income1D, 1];
 		} else {
@@ -105,7 +105,7 @@ class Player{
 	evalIncome(roll){
 		var income = 0;
 		var c;
-			
+
 		for(var i = 0; i < this.cards.length; i++){
 			c = this.cards[i];
 
@@ -120,7 +120,7 @@ aiStratList = [
 [[[18,1],[5,3],[15,1],[10,1],[16,1],[17,1],[1,2],[0,2],[5,2],[11,4]],1],
 [[[5,3],[15,1],[10,2],[18,1],[17,1],[16,1],[11,2],[1,2]],1], // - countered by [[[5,5],[12,1],[18,1],[1,3],[17,1],[16,1],[2,5],[15,1]],0],
 [[[1,3],[16,1],[3,5],[4,1],[18,1],[2,4],[15,1],[17,1],[3,5]],0],
-[[[5,2],[18,1],[17,1],[15,1],[10,1],[16,1],[11,5],[1,2]],1], // just added 
+[[[5,2],[18,1],[17,1],[15,1],[10,1],[16,1],[11,5],[1,2]],1], // just added
 [[[18,1],[0,5],[4,4],[16,1],[15,1],[17,1]],0],
 [[[16,1],[1,4],[4,5],[18,1],[17,1],[15,1],[0,5]],0],
 [[[5,3],[5,1],[15,1],[18,1],[1,4],[10,1],[16,1],[17,1],[3,4]],1],
@@ -130,21 +130,21 @@ aiStratList = [
 [[[16,1],[3,3],[4,4],[18,1],[0,2],[15,1],[0,1],[17,1],[2,3]],0],//335 avg 31%
 [[[3,2],[3,3],[18,1],[16,1],[0,5],[4,4],[15,1],[17,1]],0],
 [[[16,1],[18,1],[1,5],[2,5],[17,1],[15,1],[0,4]],0],
-[[[1,5],[18,1],[16,1],[3,5],[0,4],[15,1],[17,1]],0],		
+[[[1,5],[18,1],[16,1],[3,5],[0,4],[15,1],[17,1]],0],
 ]
 
 //[0.2936760891546138, 0.28368856565124706, 0.27562029234233243, 0.2757425543062105, 0.2742609089978204, 0.2601329474904972, 0.2547351495550805, 0.2555264321931354, 0.22891265936934097, 0.22995090315528569, 0.22126520716799813]
 class AIPlayer extends Player {
 	constructor(name){
 		super(name);
-		
+
 		this.isHuman = false;
 		var version = Math.floor(Math.random()*2);
 		this.aiChoice = randInt(0,aiStratList.length);
 
 		this.strat = aiStratList[this.aiChoice][0];
 		this.doubles = aiStratList[this.aiChoice][1];
-		
+
 
 		// if(this.name[0] == 'A'){
 		// 	this.doubles = aiStratList[0][1];
@@ -158,16 +158,16 @@ class AIPlayer extends Player {
 		// 	this.doubles = aiStratList[2][1];
 
 		// }
-		
-		
-		
+
+
+
 
 
 	}
 
 	takeInput(input) {
 		var num = input.phase;
-		
+
 		if(num == 0 || num == 1){
 			var output = {};
 			//TODO - add more logic here, might have just bought station to get to win
@@ -185,12 +185,12 @@ class AIPlayer extends Player {
 				} else if (this.landmarks[2] && input.currD1 == input.currD2 && income > rollEv/6){
 					output.reroll = false;
 				} else {
-					
+
 					output.reroll = true;
 				}
 			}
 			return output;
-		} else if (num == 4) { 
+		} else if (num == 4) {
 			return this.basicStrat();
 		} else {
 			// TODO - implement other logic
@@ -204,9 +204,9 @@ class AIPlayer extends Player {
 		var buildLoc;
 		var building;
 		var quantity;
-	
+
 		for(var i in listOfBuildings){
-			
+
 			buildLoc = listOfBuildings[i][0];
 			quantity = listOfBuildings[i][1];
 			building = indexedCards[buildLoc];
@@ -221,7 +221,7 @@ class AIPlayer extends Player {
 				}
 			}
 
-			
+
 		}
 		return -1;
 
@@ -233,7 +233,7 @@ class AIPlayer extends Player {
 		var num = this.canBuy(this.strat);
 		if (num !== -1){
 			output.card = indexedCards[num];
-		} 
+		}
 		return output;
 	}
 
@@ -242,7 +242,7 @@ class AIPlayer extends Player {
 	// 	var num = this.canBuy([[1,6], [15,1], [18,1], [17,1], [16,1], [9,3]]);
 	// 	if (num !== -1){
 	// 		output.card = indexedCards[num];
-	// 	} 
+	// 	}
 	// 	return output;
 
 	// }
