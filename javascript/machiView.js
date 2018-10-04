@@ -736,6 +736,10 @@ class MenuViewManager{
 		this.ctx.textAlign = 'center';
 		this.ctx.fillText("Image loading...", this.canvas.width/2, this.canvas.height/2);
 
+		this.menuButtonHeightFraction = 0.1;
+		this.menuButtonSpacingFraction = 0.02;
+		this.menuButtonHeight = this.menuButtonHeightFraction * this.canvas.height;
+		this.menuButtonBorder = this.menuButtonSpacingFraction * this.canvas.width;
 
 		if(this.mainMenuPic.height !== 0){
 			let heightToWidth = this.mainMenuPic.height/this.mainMenuPic.width;
@@ -753,7 +757,7 @@ class MenuViewManager{
 			this.buttonsTotalWidth = this.canvas.width * this.maxImageWidthFraction;
 			this.menuPicLeftX = this.canvas.width * (1-this.maxImageWidthFraction)/2;
 			var menuPicTopY = this.canvas.height * (1 - this.maxImageHeightFraction)/2;
-			this.menuButtonY = this.canvas.height * (this.maxImageHeightFraction)
+			this.menuButtonY = this.canvas.height * (this.maxImageHeightFraction);
 		}
 
 
@@ -767,13 +771,11 @@ class MenuViewManager{
 
 		this.ctx.textAlign = 'left';
 
-		this.menuButtonHeightFraction = 0.1;
-		this.menuButtonSpacingFraction = 0.02;
+
 
 		var numModes = this.gameModeNames.length;
 
-		this.menuButtonHeight = this.menuButtonHeightFraction * this.canvas.height;
-		this.menuButtonBorder = this.menuButtonSpacingFraction * this.canvas.width;
+
 		this.menuButtonWidth = this.buttonsTotalWidth/numModes
 			- (this.menuButtonBorder)*(numModes-1)/numModes;
 
@@ -782,8 +784,8 @@ class MenuViewManager{
 		this.ctx.font = '1.5em monospace';
 		this.ctx.textBaseline="middle";
 		this.ctx.textAlign = 'center';
-
 		for(var i = 0; i < this.gameModeNames.length; i++){
+
 			var offset = i*(this.menuButtonWidth + this.menuButtonBorder);
 			this.ctx.fillStyle = 'rgb(255, 0, 0, 0.5)';
 			this.ctx.fillRect(this.menuPicLeftX + offset, this.menuButtonY,
