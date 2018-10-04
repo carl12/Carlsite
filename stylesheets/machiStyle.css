@@ -8,22 +8,32 @@ body {
 	padding: 0px;
 }
 
+.hidden{
+	display: none;
+}
+.float-left{
+	float:left;
+}
+.float-none{
+	float:none;
+}
+
 #gameSpan{
-	display: block;
+	/* display: block; */
 	outline: 0px
 }
 
 #mainCanvas {
-	float:left
+	/* float:left */
 }
 
 #outputText{
 	resize:none;
 }
-
+/*
 #geneticSpan{
 	display: none;
-}
+} */
 
 .chart-container{
 	position: relative; float:left; height:500px; width:500px
@@ -36,3 +46,7 @@ body {
 .remove-clear{
 	clear:both;
 }
+
+/* #testAiSpan{
+	display: none;
+} */

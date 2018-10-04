@@ -204,11 +204,14 @@ class GameViewManager{
 	}
 
 	enableGameSpan(){
-		this.mySpan.style.display = "block";
+		// this.mySpan.classList.add("hidden");
+		this.mySpan.classList.remove("hidden");
+		// this.mySpan.style.display = "block";
 	}
 
 	disableGameSpan(){
-		this.mySpan.style.display = "none";
+		this.mySpan.classList.add("hidden");
+		// this.mySpan.style.display = "none";
 	}
 
 	initInnerImagesAndLines(){
@@ -332,8 +335,11 @@ class GameViewManager{
 
 	draw(){
 		this.ctx.clearRect(0,0,canvas.width,canvas.height);
-		this.outputBox.style.display = "block";
-		this.canvas.style.float= "left";
+		// this.outputBox.style.display = "block";
+		this.outputBox.classList.remove("hidden")
+		// this.canvas.style.float= "left";
+		this.canvas.classList.add("float-left");
+		this.canvas.classList.remove("float-none");
 		if(this.windowHeight !== window.innerHeight
 				|| this.windowWidth !== window.innerWidth){
 			this.setDimensions();
@@ -716,9 +722,13 @@ class MenuViewManager{
 			this.outputBox.style.width = (this.windowWidth
 				* (1-this.canvasWidthFraction)-10)+"px";
 		}
-		this.outputBox.style.display = "none";
+		this.outputBox.classList.add("hidden");
+		// this.outputBox.style.display = "none";
 
-		this.canvas.style.float = "none"
+		// this.canvas.style.float = "none"
+		this.canvas.classList.add("float-none");
+		this.canvas.classList.remove("float-left");
+
 		// ctx.font = '32px monospace';
 		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
 
@@ -887,18 +897,24 @@ class GeneticViewManager{
 	}
 
 	disableGeneticSpan(){
-		this.mySpan.style.display = "none";
+		// this.mySpan.style.display = "none";
+		this.mySpan.classList.add("hidden");
 	}
 
 	enableGeneticView(){
-		this.menuSpan.style.display = "none";
-		this.mySpan.style.display = "block";
-		this.runSpan.style.display = "block";
+		// this.menuSpan.style.display = "none";
+		// this.mySpan.style.display = "block";
+		// this.runSpan.style.display = "block";
+		this.menuSpan.classList.add("hidden");
+		this.mySpan.classList.remove("hidden");
+		this.runSpan.classList.remove("hidden");
 	}
 
 	disableGeneticView(){
 		// this.menuSpan.style.display = "block";
-		this.runSpan.style.display = "none";
+
+		// this.runSpan.style.display = "none";
+		this.runSpan.classList.add("hidden");
 	}
 
 	draw(g, currStrat = 0){

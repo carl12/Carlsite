@@ -54,8 +54,8 @@ g = {
 
 
 	startGeneticParam:function(popSizeIn = 10, breakpointRatioIn = 0.2, mutationRateIn = 0.01,
-		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 10, maxGenIn = 10,
-		maxMetaGenIn = 8, numBestIn = 10, useViewIn = true){
+		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 10, maxGenIn = 3,
+		maxMetaGenIn = 3, numBestIn = 10, useViewIn = true){
 
 		this.popSize = popSizeIn;
 		this.breakPointRation = breakpointRatioIn;
