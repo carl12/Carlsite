@@ -700,6 +700,7 @@ class MenuViewManager{
 	}
 
 	draw(){
+		this.ctx.save();
 		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
 		if(this.windowHeight !== this.window.innerHeight
 				|| this.windowWidth !== this.window.innerWidth){
@@ -718,12 +719,13 @@ class MenuViewManager{
 		this.outputBox.style.display = "none";
 
 		this.canvas.style.float = "none"
-		this.ctx.save();
 		// ctx.font = '32px monospace';
 		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
 
-
+		ctx.font = "5em monospace";
+		this.ctx.textAlign = 'center';
 		ctx.fillText("Image loading...", this.canvas.width/2, this.canvas.height/2);
+
 
 		if(this.mainMenuPic.height !== 0){
 			let heightToWidth = this.mainMenuPic.height/this.mainMenuPic.width;
@@ -732,28 +734,39 @@ class MenuViewManager{
 
 			this.mainMenuPic.width = Math.min(maxPicWidth, maxPicHeight/heightToWidth);
 			this.mainMenuPic.height = Math.min(maxPicHeight, maxPicWidth*heightToWidth);
+
+			this.buttonsTotalWidth = this.mainMenuPic.width;
+			this.menuPicLeftX = this.canvas.width/2 - this.mainMenuPic.width/2;
+			var menuPicTopY = this.canvas.height/2 - this.mainMenuPic.height/2;
+			this.menuButtonY = menuPicTopY + this.mainMenuPic.height + this.menuButtonBorder;
+		} else {
+			this.buttonsTotalWidth = this.canvas.width * this.maxImageWidthFraction;
+			this.menuPicLeftX = this.canvas.width * (1-this.maxImageWidthFraction)/2;
+			var menuPicTopY = this.canvas.height * (1 - this.maxImageHeightFraction)/2;
+			this.menuButtonY = this.canvas.height * (this.maxImageHeightFraction)
 		}
 
-		this.menuPicMiddleX = this.canvas.width/2 - this.mainMenuPic.width/2;
-		var middleY = this.canvas.height/2 - this.mainMenuPic.height/2;
 
 		ctx.drawImage(this.mainMenuPic,
-			this.menuPicMiddleX, middleY,
+			this.menuPicLeftX, menuPicTopY,
 			this.mainMenuPic.width, this.mainMenuPic.height);
 
 		this.ctx.font = '4em monospace';
 		this.ctx.textAlign = 'center';
-		this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, middleY-10);
+		this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, menuPicTopY-10);
 
 		ctx.textAlign = 'left';
 
 		this.menuButtonHeightFraction = 0.1;
 		this.menuButtonSpacingFraction = 0.02;
 
+		var numModes = this.gameModeNames.length;
+
 		this.menuButtonHeight = this.menuButtonHeightFraction * this.canvas.height;
 		this.menuButtonBorder = this.menuButtonSpacingFraction * this.canvas.width;
-		this.menuButtonWidth = this.mainMenuPic.width/5 - (this.menuButtonBorder)*4/5;
-		this.menuButtonY = middleY + this.mainMenuPic.height + this.menuButtonBorder;
+		this.menuButtonWidth = this.buttonsTotalWidth/numModes
+			- (this.menuButtonBorder)*(numModes-1)/numModes;
+
 
 
 		ctx.font = '1.5em monospace';
@@ -763,12 +776,13 @@ class MenuViewManager{
 		for(var i = 0; i < this.gameModeNames.length; i++){
 			var offset = i*(this.menuButtonWidth + this.menuButtonBorder);
 			this.ctx.fillStyle = 'rgb(255, 0, 0, 0.5)';
-			this.ctx.fillRect(this.menuPicMiddleX + offset, this.menuButtonY,
+			this.ctx.fillRect(this.menuPicLeftX + offset, this.menuButtonY,
 				this.menuButtonWidth, this.menuButtonHeight);
 			this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 			this.ctx.fillText(this.gameModeNames[i],
-				this.menuPicMiddleX + this.menuButtonWidth/2 + offset,
-				this.menuButtonY + this.menuButtonHeight/2);
+				this.menuPicLeftX + this.menuButtonWidth/2 + offset,
+				this.menuButtonY + this.menuButtonHeight/2,
+				this.menuButtonWidth);
 
 		}
 		ctx.restore();
@@ -777,7 +791,7 @@ class MenuViewManager{
 	checkClick(x,y){
 		for(var i =0; i < this.gameModeNames.length; i++){
 			if(clickInObj(
-				this.menuPicMiddleX + i * (this.menuButtonWidth + this.menuButtonBorder),
+				this.menuPicLeftX + i * (this.menuButtonWidth + this.menuButtonBorder),
 				this.menuButtonY,
 				this.menuButtonWidth,
 				this.menuButtonHeight,
