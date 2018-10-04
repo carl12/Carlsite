@@ -29,7 +29,7 @@ body {
 	position: relative; float:left; height:500px; width:500px
 }
 
-.bestStrat{
+#bestStrat{
 	float:left;
 }
 

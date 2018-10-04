@@ -53,8 +53,8 @@ g = {
 	spotWinner: [0,0,0,0],
 
 
-	startGeneticParam:function(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.01,
-		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 500, maxGenIn = 10,
+	startGeneticParam:function(popSizeIn = 10, breakpointRatioIn = 0.2, mutationRateIn = 0.01,
+		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 10, maxGenIn = 10,
 		maxMetaGenIn = 8, numBestIn = 10, useViewIn = true){
 
 		this.popSize = popSizeIn;
