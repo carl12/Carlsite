@@ -16,15 +16,15 @@ Machi Koro
 
 {% block content %}
 
-	<span id="gameSpan" style="display: block; outline: 0px">
+	<span id="gameSpan">
 
-		<canvas id="myCanvas" style="float:left" >
+		<canvas id="mainCanvas" >
 			Canvas failed to load
 		</canvas>
 
-	    <textarea id="outputText" id="output" style="resize:none" readonly></textarea>
+	    <textarea id="outputText" readonly></textarea>
 	</span>
-	<span id="geneticSpan" style="display: none">
+	<span id="geneticSpan">
 		<span id="inputGeneticSpan">
 			<h1>Big menu Here!</h1>
 
@@ -32,16 +32,18 @@ Machi Koro
 		<div id="runningGeneticSpan">
 			<h1>Running Genetic Algorithm</h1>
 			<div id="paramInfo">asdf</div>
-			<div class="chart-container" style="position: relative; float:left; height:500px; width:500px">
+			<div class="chart-container">
     			<canvas id="chart1"></canvas>
 			</div>
-			<div class="chart-container" style="position: relative; float:left; height:500px; width:500px">
+			<div class="chart-container">
     			<canvas id="chart2"></canvas>
 			</div>
-			<div id="bestStrat" style="float:left"></div>
-			<div style="clear: both"></div>
+			<div id="bestStrat"></div>
+			<div class="remove-clear" style="clear:both;"></div>
 		</div>
 	</span>
+
+
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>

@@ -1,7 +1,7 @@
 //Add listeners to images and dice
 //Handle listener input
 
-var canvas = document.getElementById('myCanvas');
+var canvas = document.getElementById('mainCanvas');
 var outputBox = document.getElementById('outputText');
 
 var canvasLeft = canvas.offsetLeft;

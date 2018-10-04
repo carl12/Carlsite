@@ -27,7 +27,7 @@ print = function(...outputText){
 }
 // canvas.style.outline="3px solid black";
 
-var ctx = canvas.getContext('2d');
+// var ctx = canvas.getContext('2d');
 
 function clickInObj(objX, objY, width, height, clickX, clickY){
 	return clickX >= objX && clickX <= objX + width
@@ -400,12 +400,12 @@ class GameViewManager{
 					ctx.rotate(Math.PI);
 					currLandmark = this.right - this.left;
 				}
-				ctx.font = '1em monospace';
+				this.ctx.font = '1em monospace';
 				ctx.fillText(p.name +": $"+p.money, this.pWidth*0.01, this.pWidth*0.1);
 				// ctx.fillText(printCards(p), 2, 33);
-				ctx.fillText(printLandmarks(p),  this.pWidth*0.01, this.pWidth*0.2);
+				this.ctx.fillText(printLandmarks(p),  this.pWidth*0.01, this.pWidth*0.2);
 
-				ctx.font = '1em monospace';
+				this.ctx.font = '1em monospace';
 				for(var j = 0; j < bc.length; j++){
 					if(bc[j]> 0){
 						tmpImg = this.cardImageHolder[j];
@@ -722,9 +722,9 @@ class MenuViewManager{
 		// ctx.font = '32px monospace';
 		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
 
-		ctx.font = "5em monospace";
+		this.ctx.font = "5em monospace";
 		this.ctx.textAlign = 'center';
-		ctx.fillText("Image loading...", this.canvas.width/2, this.canvas.height/2);
+		this.ctx.fillText("Image loading...", this.canvas.width/2, this.canvas.height/2);
 
 
 		if(this.mainMenuPic.height !== 0){
@@ -747,7 +747,7 @@ class MenuViewManager{
 		}
 
 
-		ctx.drawImage(this.mainMenuPic,
+		this.ctx.drawImage(this.mainMenuPic,
 			this.menuPicLeftX, menuPicTopY,
 			this.mainMenuPic.width, this.mainMenuPic.height);
 
@@ -755,7 +755,7 @@ class MenuViewManager{
 		this.ctx.textAlign = 'center';
 		this.ctx.fillText("Welcome To MachiKoro!", canvas.width/2, menuPicTopY-10);
 
-		ctx.textAlign = 'left';
+		this.ctx.textAlign = 'left';
 
 		this.menuButtonHeightFraction = 0.1;
 		this.menuButtonSpacingFraction = 0.02;
@@ -769,7 +769,7 @@ class MenuViewManager{
 
 
 
-		ctx.font = '1.5em monospace';
+		this.ctx.font = '1.5em monospace';
 		this.ctx.textBaseline="middle";
 		this.ctx.textAlign = 'center';
 
@@ -785,7 +785,7 @@ class MenuViewManager{
 				this.menuButtonWidth);
 
 		}
-		ctx.restore();
+		this.ctx.restore();
 	}
 
 	checkClick(x,y){
@@ -992,6 +992,15 @@ class GeneticViewManager{
 
 	}
 
+}
+
+class StratTestManager{
+	constructor(){
+
+	}
+	draw(){
+
+	}
 }
 
 class MachiViewsManager{
