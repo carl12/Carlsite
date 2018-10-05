@@ -1085,46 +1085,58 @@ class StratTestManager{
 			winrateLocs[i] = winrates1[i][0];
 		}
 		this.myChart !== undefined? this.myChart.destroy():{};
-// Array.from({length: N}, (v, k) => k+1);
+		// Array.from({length: N}, (v, k) => k+1);
 		var myChart = new Chart(this.winrateCanvas, {
 		    type: 'bar',
 		    data: {
 		        labels: winrateLocs,
 		        datasets: [{
-		            label: '# of Votes',
+		            label: 'Winrate of Strategies',
 		            data: cleanedWinrates,
-		            backgroundColor: [
-		                'rgba(255, 99, 132, 0.2)',
-		                'rgba(54, 162, 235, 0.2)',
-		                'rgba(255, 206, 86, 0.2)',
-		                'rgba(75, 192, 192, 0.2)',
-		                'rgba(153, 102, 255, 0.2)',
-		                'rgba(255, 159, 64, 0.2)'
-		            ],
-		            borderColor: [
-		                'rgba(255,99,132,1)',
-		                'rgba(54, 162, 235, 1)',
-		                'rgba(255, 206, 86, 1)',
-		                'rgba(75, 192, 192, 1)',
-		                'rgba(153, 102, 255, 1)',
-		                'rgba(255, 159, 64, 1)'
-		            ],
+		            backgroundColor: this.makeScaledGradient(cleanedWinrates),
+		            borderColor: this.makeScaledGradient(cleanedWinrates),
 		            borderWidth: 1
 		        }]
 		    },
-		    options: {
-		        scales: {
-		            yAxes: [{
-		                ticks: {
-		                    beginAtZero:true
-		                }
-		            }]
-		        }
-		    }
+				options:{
+					scales: {
+			        yAxes: [{
+			            display: true,
+			            ticks: {
+											suggestedMax: 0.4,
+											stepSize: 0.05,
+			                suggestedMin: 0.1,    // minimum will be 0, unless there is a lower value
+			            }
+			        }]
+			    }
+				},
 		});
 
 
 
+	}
+
+	makeColorGradient(n){
+		var colors = []
+
+		var increment = 255/(n-1);
+		for(var i = 0; i < n; i++){
+			colors[i] = `rgb(${i*increment}, ${255-i*increment}, 0, 0.4)`;
+		}
+		print(colors)
+		return colors;
+	}
+
+	makeScaledGradient(data){
+		var max = Math.max(...data);
+		var min = Math.min(...data);
+
+		var colors = []
+		for(var i = 0; i < data.length; i++){
+			let ratio = (data[i] - min)/(max - min)
+			colors[i] = `rgb(${Math.round((1-ratio)*255)}, ${Math.round(ratio*255)}, 0, 0.4)`;
+		}
+		return colors;
 	}
 
 	enableView(){
