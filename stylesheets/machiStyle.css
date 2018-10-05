@@ -31,7 +31,10 @@ body {
 
 
 .chart-container{
-	position: relative; float:left; height:500px; width:500px
+	position: relative;
+	float:left;
+	height:500px;
+	width:500px
 }
 
 #bestStrat{
@@ -40,4 +43,8 @@ body {
 
 .remove-clear{
 	clear:both;
+}
+
+#dataDump{
+	float:left;
 }

@@ -1027,10 +1027,16 @@ class GeneticViewManager{
 class StratTestManager{
 	constructor(){
 		this.mySpanId = 'stratTestSpan';
+		this.dataDumpSpanId = 'dataDump';
+		this.chartCanvasId = 'chart3';
+		this.lastUpdate = 0;
 		this.mySpan = document.getElementById(this.mySpanId);
+		this.dataDump = document.getElementById(this.dataDumpSpanId);
+		this.winrateCanvas = document.getElementById('chart3');
 		this.data = {}
 
 	}
+
 	inputData(g, num){
 
 		this.data = {
@@ -1062,7 +1068,63 @@ class StratTestManager{
 
 		text += "\n"+ JSON.stringify(winrates1) + "\n\n";
 		text += JSON.stringify(winrates2);
-		this.mySpan.innerText = text;
+		this.dataDump.innerText = text;
+		if (this.data.numGames - this.lastUpdate > 400){
+			print('update');
+			this.drawCharts(winrates1);
+			this.lastUpdate = this.data.numGames;
+		}
+
+	}
+
+	drawCharts(winrates1){
+		var cleanedWinrates = [];
+		var winrateLocs = [];
+		for (let i = 0; i < winrates1.length; i++){
+			cleanedWinrates[i] = winrates1[i][1];
+			winrateLocs[i] = winrates1[i][0];
+		}
+		this.myChart !== undefined? this.myChart.destroy():{};
+// Array.from({length: N}, (v, k) => k+1);
+		var myChart = new Chart(this.winrateCanvas, {
+		    type: 'bar',
+		    data: {
+		        labels: winrateLocs,
+		        datasets: [{
+		            label: '# of Votes',
+		            data: cleanedWinrates,
+		            backgroundColor: [
+		                'rgba(255, 99, 132, 0.2)',
+		                'rgba(54, 162, 235, 0.2)',
+		                'rgba(255, 206, 86, 0.2)',
+		                'rgba(75, 192, 192, 0.2)',
+		                'rgba(153, 102, 255, 0.2)',
+		                'rgba(255, 159, 64, 0.2)'
+		            ],
+		            borderColor: [
+		                'rgba(255,99,132,1)',
+		                'rgba(54, 162, 235, 1)',
+		                'rgba(255, 206, 86, 1)',
+		                'rgba(75, 192, 192, 1)',
+		                'rgba(153, 102, 255, 1)',
+		                'rgba(255, 159, 64, 1)'
+		            ],
+		            borderWidth: 1
+		        }]
+		    },
+		    options: {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero:true
+		                }
+		            }]
+		        }
+		    }
+		});
+
+
+
 	}
 
 	enableView(){
