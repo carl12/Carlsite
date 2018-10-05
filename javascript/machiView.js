@@ -1031,25 +1031,37 @@ class StratTestManager{
 		this.data = {}
 
 	}
-	inputData(g){
+	inputData(g, num){
 
 		this.data = {
 			singleWins:g.singleWins,
 			singleGames:g.singleGames,
 			multiWins:g.multiWins,
 			multiGames:g.multiGames,
-			strats:aiStratList
+			strats:aiStratList,
+			numGames: num,
 		}
 		this.numStrats = this.data.strats.length;
 		this.draw();
 	}
 
 	draw(){
-		var text = "asdf \n";
+		var text = this.data.numGames+ " games played! \n";
+		var winrates1 = []
+		var winrates2 = []
 		for(let i = 0; i < this.numStrats; i++){
-			text += `Single: ${this.data.singleWins[i]}/${this.data.singleGames[i]} = ${(this.data.singleWins[i]/this.data.singleGames[i]).toFixed(3)}`;
+			var winrate1 = parseFloat((this.data.singleWins[i]/this.data.singleGames[i]).toFixed(3));
+			var winrate2 = parseFloat((this.data.multiWins[i]/this.data.multiGames[i]).toFixed(3));
+			winrates1[i] = [i, winrate1];
+			winrates2[i] = [i, winrate2];
+			text += `Single: ${this.data.singleWins[i]}/${this.data.singleGames[i]} = ${winrate1}   ||  ${winrate2}`;
 			text+= "\n";
 		}
+		winrates1 = winrates1.sort((a,b)=>{return b[1]-a[1]});
+		winrates2 = winrates2.sort((a,b)=>{return b[1]-a[1]});
+
+		text += "\n"+ JSON.stringify(winrates1) + "\n\n";
+		text += JSON.stringify(winrates2);
 		this.mySpan.innerText = text;
 	}
 

@@ -424,7 +424,7 @@ g = {
 		for(var j = 0; j < tests; j++){
 			geneticBindCall(this.runRandomStrats);
 			if(view && j%100 == 0){
-			addToCallQueue(viewManage.currManage.inputData.bind(viewManage.currManage), 0, this);
+				addToCallQueue(viewManage.currManage.inputData.bind(viewManage.currManage), 0, this, j);
 			}
 			if(j % 3000 == 0){
 				geneticBindCall(print, 0, j, ' runs out of ', tests);
