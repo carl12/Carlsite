@@ -1029,10 +1029,12 @@ class StratTestManager{
 		this.mySpanId = 'stratTestSpan';
 		this.dataDumpSpanId = 'dataDump';
 		this.chartCanvasId = 'chart3';
+		this.stratListId = 'stratList';
 		this.lastUpdate = 0;
 		this.mySpan = document.getElementById(this.mySpanId);
 		this.dataDump = document.getElementById(this.dataDumpSpanId);
-		this.winrateCanvas = document.getElementById('chart3');
+		this.winrateCanvas = document.getElementById(this.chartCanvasId);
+		this.stratList = document.getElementById(this.stratListId);
 		this.data = {}
 
 	}
@@ -1069,6 +1071,15 @@ class StratTestManager{
 		text += "\n"+ JSON.stringify(winrates1) + "\n\n";
 		text += JSON.stringify(winrates2);
 		this.dataDump.innerText = text;
+
+		var text2 = "";
+		for(let i = 0; i < aiStratList.length; i++){
+			text2 += "Strat:"+i+" \n "+printStrat(aiStratList[i]) + "\n";
+
+		}
+		print(text2);
+		this.stratList.innerText = text2;
+
 		if (this.data.numGames - this.lastUpdate > 400){
 			print('update');
 			this.drawCharts(winrates1);
