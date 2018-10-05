@@ -203,14 +203,16 @@ class GameViewManager{
 		// this.initInnerImagesAndLines();
 	}
 
-	enableGameSpan(){
+	enableView(){
 		// this.mySpan.classList.add("hidden");
 		this.mySpan.classList.remove("hidden");
+		this.outputBox.classList.remove("hidden");
 		// this.mySpan.style.display = "block";
 	}
 
-	disableGameSpan(){
+	disableView(){
 		this.mySpan.classList.add("hidden");
+		this.outputBox.classList.add("hidden");
 		// this.mySpan.style.display = "none";
 	}
 
@@ -671,6 +673,8 @@ class GameViewManager{
 
 class MenuViewManager{
 	constructor(window, canvas, outputBox){
+		this.mySpanId = "gameSpan";
+		this.mySpan = document.getElementById(this.mySpanId);
 		this.canvas = canvas;
 		this.window = window;
 		this.outputBox = outputBox;
@@ -702,7 +706,7 @@ class MenuViewManager{
 			"Four Players", "AI Test", "Genetic"];
 		this.gameModeFuncs = [returnHumanGameMaker(2),
 			returnHumanGameMaker(3), returnHumanGameMaker(4),
-			g.testStrats.bind(g), g.startGeneticParam.bind(g)];
+			g.testStrats.bind(g, 10000, true), g.startGeneticParam.bind(g)];
 	}
 
 	draw(){
@@ -815,6 +819,14 @@ class MenuViewManager{
 		// setTimeout(initHumanGame());
 		return;
 	}
+
+	enableView(){
+		this.mySpan.classList.remove("hidden");
+	}
+
+	disableView(){
+		this.mySpan.classList.add("hidden");
+	}
 }
 
 class GeneticViewManager{
@@ -898,12 +910,12 @@ class GeneticViewManager{
 		this.lastNumStrats = 0;
 	}
 
-	disableGeneticSpan(){
+	disableView(){
 		// this.mySpan.style.display = "none";
 		this.mySpan.classList.add("hidden");
 	}
 
-	enableGeneticView(){
+	enableView(){
 		// this.menuSpan.style.display = "none";
 		// this.mySpan.style.display = "block";
 		// this.runSpan.style.display = "block";
@@ -1014,11 +1026,41 @@ class GeneticViewManager{
 
 class StratTestManager{
 	constructor(){
+		this.mySpanId = 'stratTestSpan';
+		this.mySpan = document.getElementById(this.mySpanId);
+		this.data = {}
 
 	}
+	inputData(g){
+
+		this.data = {
+			singleWins:g.singleWins,
+			singleGames:g.singleGames,
+			multiWins:g.multiWins,
+			multiGames:g.multiGames,
+			strats:aiStratList
+		}
+		this.numStrats = this.data.strats.length;
+		this.draw();
+	}
+
 	draw(){
-
+		var text = "asdf \n";
+		for(let i = 0; i < this.numStrats; i++){
+			text += `Single: ${this.data.singleWins[i]}/${this.data.singleGames[i]} = ${(this.data.singleWins[i]/this.data.singleGames[i]).toFixed(3)}`;
+			text+= "\n";
+		}
+		this.mySpan.innerText = text;
 	}
+
+	enableView(){
+		this.mySpan.classList.remove("hidden");
+	}
+
+	disableView(){
+		this.mySpan.classList.add("hidden");
+	}
+
 }
 
 class MachiViewsManager{
@@ -1035,7 +1077,7 @@ class MachiViewsManager{
 		this.menuManager = new MenuViewManager(window, canvas, outputBox);
 		this.manage = new GameViewManager(window, canvas, outputBox);
 		this.geneticManager = new GeneticViewManager(g);
-		this.aiTestManager = undefined; //TODO - implement aitest manager
+		this.aiTestManager = new StratTestManager();
 
 		this.currManage = this.menuManager;
 	}
@@ -1045,29 +1087,34 @@ class MachiViewsManager{
 	}
 
 	openMenu(){
+		this.currManage.disableView();
 		this.currManage = this.menuManager;
 		this.viewState = this.STATE_NAMES.STATE_NAMES.MAIN_MENU_STATE;
-		this.draW();
+		this.currManage.enableView();
+		this.draw();
 	}
 
 	openGame(){
+		this.currManage.disableView();
 		this.currManage = this.manage;
 		this.viewState = this.STATE_NAMES.HUMAN_GAME_STATE;
+		this.currManage.enableView();
 		this.draw();
 
 	}
 
 	openAiTest(){
+		this.currManage.disableView();
 		this.currManage = this.aiTestManager;
 		this.viewState = this.STATE_NAMES.TEST_STRAT_STATE;
-		print('implement ai view')
+		this.currManage.enableView();
 	}
 
 	openGenetic(){
-		this.manage.disableGameSpan();
-		this.viewState = this.STATE_NAMES.GENTIC_STATE;
-		this.geneticManager.enableGeneticView();
+		this.currManage.disableView();
 		this.currManage = this.geneticManager;
+		this.viewState = this.STATE_NAMES.GENTIC_STATE;
+		this.currManage.enableView();
 	}
 
 

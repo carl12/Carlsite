@@ -419,10 +419,13 @@ g = {
 		// print('breakpoint is ', scoreBreakpoint);
 	},
 
-	testStrats:function(tests = 1000){
+	testStrats:function(tests = 1000, view = false){
 		viewManage.openAiTest();
 		for(var j = 0; j < tests; j++){
 			geneticBindCall(this.runRandomStrats);
+			if(view && j%100 == 0){
+			addToCallQueue(viewManage.currManage.inputData.bind(viewManage.currManage), 0, this);
+			}
 			if(j % 3000 == 0){
 				geneticBindCall(print, 0, j, ' runs out of ', tests);
 			}

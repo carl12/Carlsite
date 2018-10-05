@@ -19,21 +19,16 @@ body {
 }
 
 #gameSpan{
-	/* display: block; */
 	outline: 0px
 }
 
 #mainCanvas {
-	/* float:left */
 }
 
 #outputText{
 	resize:none;
 }
-/*
-#geneticSpan{
-	display: none;
-} */
+
 
 .chart-container{
 	position: relative; float:left; height:500px; width:500px
@@ -46,7 +41,3 @@ body {
 .remove-clear{
 	clear:both;
 }
-
-/* #testAiSpan{
-	display: none;
-} */
