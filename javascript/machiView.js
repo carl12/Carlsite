@@ -945,12 +945,12 @@ class GeneticViewManager{
 	drawCharts(){
 		var g = this.g;
 		var maxLoc = g.scores.indexOf(g.sortedScores[0]);
-		var output = `Winning Strat with ${g.bestScore[0]}
-			wins out of ${g.iterations}:\n`
+		var output = `Winning Strat with ${g.bestScore[0]} wins out of
+		${g.iterations} (${(g.bestScore[0]/g.iterations).toFixed(3)}):\n`
 			+ printStrat(g.bestScoreGene[0]) + "\n";
 
 		output += `Second Strat with ${g.bestScore[1]} wins out of
-			${g.iterations}:\n`
+			${g.iterations} (${(g.bestScore[1]/g.iterations).toFixed(3)}):\n`
 			+ printStrat(g.bestScoreGene[1]) + "\n\n";
 
 		output += `Most recent run best with ${g.sortedScores[0]} wins: \n `
@@ -1077,11 +1077,9 @@ class StratTestManager{
 			text2 += "Strat:"+i+" \n "+printStrat(aiStratList[i]) + "\n";
 
 		}
-		print(text2);
 		this.stratList.innerText = text2;
 
 		if (this.data.numGames - this.lastUpdate > 400){
-			print('update');
 			this.drawCharts(winrates1);
 			this.lastUpdate = this.data.numGames;
 		}
@@ -1134,7 +1132,6 @@ class StratTestManager{
 		for(var i = 0; i < n; i++){
 			colors[i] = `rgb(${i*increment}, ${255-i*increment}, 0, 0.4)`;
 		}
-		print(colors)
 		return colors;
 	}
 

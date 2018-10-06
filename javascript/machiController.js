@@ -53,9 +53,9 @@ g = {
 	spotWinner: [0,0,0,0],
 
 
-	startGeneticParam:function(popSizeIn = 10, breakpointRatioIn = 0.2, mutationRateIn = 0.01,
-		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 10, maxGenIn = 3,
-		maxMetaGenIn = 3, numBestIn = 10, useViewIn = true){
+	startGeneticParam:function(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.03,
+		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 300, maxGenIn = 8,
+		maxMetaGenIn = 8, numBestIn = 10, useViewIn = true){
 
 		this.popSize = popSizeIn;
 		this.breakPointRation = breakpointRatioIn;

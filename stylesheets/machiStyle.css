@@ -39,6 +39,7 @@ body {
 
 #bestStrat{
 	float:left;
+	margin:10px;
 }
 
 .remove-clear{
@@ -47,4 +48,9 @@ body {
 
 #dataDump{
 	float:left;
+}
+
+.nonCanvasSpan{
+	max-width: 900px;
+	width: 80%;
 }
