@@ -935,7 +935,7 @@ class GeneticViewManager{
 		var g = this.g;
 
 		var output = `Meta Generations: ${g.currMetaGen}/${g.maxMetaGen}`
-			+` | Generation: ${g.currGen}/${g.maxMetaGen}`
+			+` | Generation: ${g.currGen}/${g.maxGen}`
 			+` |  Pop Size: ${currStrat}/${g.popSize}`
 			+` | iterations: ${g.iterations}`;
 		this.paramDiv.innerText = output;
