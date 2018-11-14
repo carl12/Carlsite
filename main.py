@@ -8,6 +8,7 @@ import rot13
 import rss
 import about
 import machiKoro
+import phaser
 from handlers import Handler
 
 
@@ -30,7 +31,7 @@ front_page = [
 ('/phaser', PhaserPage),
 ]
 
-all_pages = front_page + blog.pages + helloWorld.pages + fizzBuzz.pages + asciiC.pages + rot13.pages +rss.pages + about.pages + machiKoro.pages
+all_pages = front_page + blog.pages + helloWorld.pages + fizzBuzz.pages + asciiC.pages + rot13.pages +rss.pages + about.pages + machiKoro.pages + phaser.pages
 
 
 app = webapp2.WSGIApplication(all_pages, debug=True)
