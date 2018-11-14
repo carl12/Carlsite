@@ -14,6 +14,9 @@ from handlers import Handler
 def blog_key(name = 'default'):
     return db.Key.from_path('blogs',name)
 
+class PhaserPage(Handler):
+	def get(self):
+		self.render("phaserTest.html")
 
 class FrontPage(Handler):
     def get(self):
@@ -22,7 +25,11 @@ class FrontPage(Handler):
 
 
 
-front_page = [('/', FrontPage)]
+front_page = [
+('/', FrontPage),
+('/phaser', PhaserPage),
+]
+
 all_pages = front_page + blog.pages + helloWorld.pages + fizzBuzz.pages + asciiC.pages + rot13.pages +rss.pages + about.pages + machiKoro.pages
 
 
