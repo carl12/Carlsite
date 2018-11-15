@@ -11,6 +11,6 @@ class Phaser1(Handler):
 
 
 pages = [
-('/p-demo', PhaserDemo),
+('/phaser', PhaserDemo),
 ('/p1', Phaser1),
 ]
