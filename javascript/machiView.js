@@ -34,7 +34,7 @@ function clickInObj(objX, objY, width, height, clickX, clickY){
 		&& clickY >= objY && clickY <= objY + height;
 }
 
-function drawLine(x1,y1,x2,y2){
+function drawLine(x1,y1,x2,y2, ctx){
 	ctx.save();
 	ctx.strokeStyle = 'navy'; // set the strokeStyle color to 'navy' (for the stroke() call below)
 	ctx.lineWidth = 3.0;      // set the line width to 3 pixels
@@ -64,14 +64,15 @@ function printLandmarks(p){
 }
 
 class LineWrapper{
-	constructor(x1,y1,x2,y2){
+	constructor(x1,y1,x2,y2,ctx){
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
 		this.y2 = y2;
+		this.ctx = ctx;
 	}
 	draw(){
-		drawLine(this.x1,this.y1,this.x2,this.y2);
+		drawLine(this.x1, this.y1, this.x2, this.y2, this.ctx);
 	}
 }
 
@@ -149,6 +150,7 @@ class GameViewManager{
 		this.canvasHeightFraction = 0.9;
 		this.canvasWidthFraction = 0.8;
 		this.boxWidthHeightRatio = 0.6;
+		this.fontPxFraction = 0.01;
 		this.ctx = this.canvas.getContext('2d');
 
 		this.imageWrappers = [];
@@ -260,6 +262,9 @@ class GameViewManager{
 		this.buttonWidth = this.canvas.width * 0.05;
 		this.canvas.setAttribute('height',
 			this.windowHeight*this.canvasHeightFraction+"px");
+
+		this.canvas.style.fontSize = this.windowWidth*this.fontPxFraction+"px";
+
 		this.canvas.setAttribute('width',
 			this.windowWidth*this.canvasWidthFraction+"px");
 
@@ -387,41 +392,41 @@ class GameViewManager{
 				var bc = this.game.players[i].buildingCount;
 				var tmpImg;
 				var numEstTypes = 0;
-				ctx.save();
+				this.ctx.save();
 				var currLandmark;
 
 				if(i==0){
-					ctx.translate( this.left, 0 );
-					ctx.rotate( Math.PI / 2 );
+					this.ctx.translate( this.left, 0 );
+					this.ctx.rotate( Math.PI / 2 );
 					currLandmark = canvas.height;
 				} else if(i==1){
-					ctx.translate(this.left, this.bottom);
+					this.ctx.translate(this.left, this.bottom);
 					currLandmark = this.right - this.left;
 				}
 				else if(i ==2){
-					ctx.translate( this.right, canvas.height);
-					ctx.rotate( -Math.PI / 2 );
+					this.ctx.translate( this.right, canvas.height);
+					this.ctx.rotate( -Math.PI / 2 );
 					currLandmark = canvas.height;
 				}
 				else if(i == 3){
-					ctx.translate(this.right, this.top);
-					ctx.rotate(Math.PI);
+					this.ctx.translate(this.right, this.top);
+					this.ctx.rotate(Math.PI);
 					currLandmark = this.right - this.left;
 				}
-				this.ctx.font = '1em monospace';
-				ctx.fillText(p.name +": $"+p.money, this.pWidth*0.01, this.pWidth*0.1);
+				this.ctx.font = '1.2em monospace';
+				this.ctx.fillText(p.name +": $"+p.money, this.pWidth*0.01, this.pWidth*0.1);
 				// ctx.fillText(printCards(p), 2, 33);
 				this.ctx.fillText(printLandmarks(p),  this.pWidth*0.01, this.pWidth*0.2);
 
-				this.ctx.font = '1em monospace';
+				this.ctx.font = '1.2em monospace';
 				for(var j = 0; j < bc.length; j++){
 					if(bc[j]> 0){
 						tmpImg = this.cardImageHolder[j];
-						ctx.fillText(""+bc[j],
+						this.ctx.fillText(""+bc[j],
 							(this.pWidth* 0.35) * (numEstTypes) + this.pWidth*0.1,
 							this.pWidth*0.9);
 
-						ctx.drawImage(tmpImg,
+						this.ctx.drawImage(tmpImg,
 							(this.pWidth* 0.35) * numEstTypes + this.pWidth*0.1,
 							this.pWidth*0.3, this.pWidth*0.3,
 							this.pWidth*0.5);
@@ -435,17 +440,17 @@ class GameViewManager{
 				for(var j = p.landmarks.length-1; j >= 0; j--){
 					tmpImg = this.cardImageHolder[j + FIRST_LANDMARK_LOC];
 
-					ctx.drawImage(tmpImg, currLandmark,
+					this.ctx.drawImage(tmpImg, currLandmark,
 						this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5);
 					this.landmarkLocs[j] = [j+FIRST_LANDMARK_LOC,
 						[this.left + currLandmark,
 							this.bottom + this.pWidth*0.3,
 							this.pWidth*0.3, this.pWidth*0.5]];
 
-					ctx.fillText(p.landmarks[j]?"Bought":"X", currLandmark, this.pWidth*0.9);
+					this.ctx.fillText(p.landmarks[j]?"Bought":"X", currLandmark, this.pWidth*0.9);
 					currLandmark -= this.pWidth* 0.35;
 				}
-				ctx.restore();
+				this.ctx.restore();
 
 			}
 		}
@@ -463,8 +468,8 @@ class GameViewManager{
 
 		//Draw pass option button
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		ctx.textBaseline="middle";
-		ctx.textAlign= "center";
+		this.ctx.textBaseline="middle";
+		this.ctx.textAlign= "center";
 		let buttonDim = [this.right - this.buttonWidth*4.2 - this.buttonWidth * 0.1,
 			this.top+this.statusBarHeight*0.1,
 			this.buttonWidth*2, this.statusBarHeight*0.8];
@@ -491,30 +496,30 @@ class GameViewManager{
 
 		//Draw quit button
 		this.ctx.fillStyle = 'rgba(200, 0, 0, 1)';
-		ctx.fillRect(this.left+this.buttonWidth*0.1,
+		this.ctx.fillRect(this.left+this.buttonWidth*0.1,
 			this.top+this.statusBarHeight*0.1,
 			this.buttonWidth,
 			this.statusBarHeight*0.8);
 
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		ctx.textBaseline="middle";
-		ctx.textAlign= "center";
+		this.ctx.textBaseline="middle";
+		this.ctx.textAlign= "center";
 		this.ctx.fillText("Quit!",
 			this.left + this.buttonWidth*0.6,
 			this.top+this.statusBarHeight*0.5,
 			this.buttonWidth*0.8);
 
 		//Draw status message
-		ctx.font = '2em monospace';
-		ctx.textAlign = "left";
-		ctx.fillText(this.messageText,
+		this.ctx.font = '2em monospace';
+		this.ctx.textAlign = "left";
+		this.ctx.fillText(this.messageText,
 			this.left + this.buttonWidth*1.3,
 			this.top + this.statusBarHeight*0.5);
 
 		//Draw dice roll message
 		if(this.game.roll !== undefined){
-			ctx.textAlign = "right";
-			ctx.fillText("Roll: " + this.game.roll,
+			this.ctx.textAlign = "right";
+			this.ctx.fillText("Roll: " + this.game.roll,
 				this.right - this.buttonWidth * 4.6,
 				this.top + this.statusBarHeight*0.5);
 		}
@@ -522,19 +527,19 @@ class GameViewManager{
 	}
 
 	drawCardsLinesImages(){
-		ctx.font = '1em monospace';
+		this.ctx.font = '1em monospace';
 		for(var i = 0; i < indexedEstablishments.length; i++){
 			var currCard = indexedEstablishments[i];
 			if(i < this.numCols){
 				var currLeft = this.left + currCard.position * this.boxWidth;
-				ctx.fillText(currCard.name + ': ' + currCard.remain,
+				this.ctx.fillText(currCard.name + ': ' + currCard.remain,
 					currLeft+3, this.estTop+20, this.boxWidth-5);
 
 			} else {
 				var currLeft = this.left
 					+ (currCard.position-this.numCols) * this.boxWidth;
 				var currUp = this.estTop + this.boxHeight;
-				ctx.fillText(currCard.name + ': ' + currCard.remain,
+				this.ctx.fillText(currCard.name + ': ' + currCard.remain,
 					currLeft+3, currUp + 20, this.boxWidth-5);
 
 			}
@@ -579,7 +584,7 @@ class GameViewManager{
 	}
 
 	addNewLine(x1,y1,x2,y2){
-		this.lines.push(new LineWrapper(x1,y1,x2,y2));
+		this.lines.push(new LineWrapper(x1,y1,x2,y2,this.ctx));
 	}
 
 	checkClick(x,y){
@@ -684,11 +689,13 @@ class MenuViewManager{
 		this.canvasWidthFraction = 1;
 		this.maxImageHeightFraction = 0.8;
 		this.maxImageWidthFraction = 0.9;
+		this.fontPxFraction = 0.01;
 		this.ctx = this.canvas.getContext('2d');
 		this.canvas.setAttribute('height', this.windowHeight
 			* this.canvasHeightFraction+"px");
 		this.canvas.setAttribute('width', this.windowWidth
 			* this.canvasWidthFraction+"px");
+		this.canvas.style.fontSize = this.windowWidth*this.fontPxFraction+"px";
 		this.outputBox.style.height = this.windowHeight
 			* this.canvasHeightFraction+"px";
 		this.outputBox.style.width = (this.windowWidth
@@ -721,6 +728,7 @@ class MenuViewManager{
 			 	* this.canvasHeightFraction+"px");
 			this.canvas.setAttribute('width', this.windowWidth
 				* this.canvasWidthFraction+"px");
+			this.canvas.style.fontSize = this.windowWidth*this.fontPxFraction+"px";
 			this.outputBox.style.height = this.windowHeight
 				* this.canvasHeightFraction+"px";
 			this.outputBox.style.width = (this.windowWidth
@@ -733,7 +741,7 @@ class MenuViewManager{
 		this.canvas.classList.add("float-none");
 		this.canvas.classList.remove("float-left");
 
-		// ctx.font = '32px monospace';
+
 		// ctx.fillText("Click anywhere to start!", canvas.width/2, 150)
 
 		this.ctx.font = "5em monospace";
@@ -775,15 +783,10 @@ class MenuViewManager{
 
 		this.ctx.textAlign = 'left';
 
-
-
 		var numModes = this.gameModeNames.length;
-
 
 		this.menuButtonWidth = this.buttonsTotalWidth/numModes
 			- (this.menuButtonBorder)*(numModes-1)/numModes;
-
-
 
 		this.ctx.font = '1.5em monospace';
 		this.ctx.textBaseline="middle";
