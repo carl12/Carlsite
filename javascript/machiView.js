@@ -710,9 +710,9 @@ class MenuViewManager{
 		this.mainMenuPic.onload = this.draw.bind(this);
 
 		this.gameModeNames = ["Two Players","Three Players",
-			"Four Players", "AI Test", "Genetic"];
+			"Four Players", "Two AI", "AI Test", "Genetic"];
 		this.gameModeFuncs = [returnHumanGameMaker(2),
-			returnHumanGameMaker(3), returnHumanGameMaker(4),
+			returnHumanGameMaker(3), returnHumanGameMaker(4),returnHumanGameMaker(-2),
 			g.testStrats.bind(g, 10000, true), g.startGeneticParam.bind(g)];
 	}
 

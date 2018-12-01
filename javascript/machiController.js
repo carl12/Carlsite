@@ -490,14 +490,21 @@ hum = {
 		this.gameView = viewManage.manage;
 		print('Welcome to Machi Koro!');
 		var playLoc;
-		if(position === undefined){
-			playLoc = randInt(0,numPlayers);
-		} else {
-			playLoc = position;
+		if (numPlayers < 0){
+			Game.init(-numPlayers, true);
 		}
-		Game.init(numPlayers, true);
-		print('you are player '+ playLoc);
-		this.me = Game.setPlayerAsHuman(playLoc, "Human Player!");
+		else{
+
+			if(position === undefined){
+				playLoc = randInt(0,numPlayers);
+			} else {
+				playLoc = position;
+			}
+			print('you are player '+ playLoc);
+			Game.init(numPlayers, true);
+			this.me = Game.setPlayerAsHuman(playLoc, "Human Player!");
+		}
+
 		this.gameView.game = Game;
 
 		this.gameView.disableListeners();
