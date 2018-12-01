@@ -1221,7 +1221,7 @@ class MachiViewsManager{
 			this.menuManager.checkClick(x,y);
 			return;
 		} else if (this.viewState === this.STATE_NAMES.HUMAN_GAME_STATE){
-			print('state is human game')
+			// print('state is human game')
 			response = this.manage.checkClick(x,y);
 			if(!Game.initRun){
 				return;

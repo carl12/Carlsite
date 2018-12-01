@@ -314,7 +314,7 @@ Game = {
 				//TODO - add tiebreaking logic
 				// print('Add tie-breaking logic');
 				if(Game.print){
-						print(Game.players[Game.winner] , ' won!');
+						print(Game.players[Game.winner].name , ' won!');
 				}
 				break;
 			}
