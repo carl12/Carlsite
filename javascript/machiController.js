@@ -19,6 +19,7 @@ var callQueue = [];
 var popInTimeout = false;
 var pausedTimeout = false;
 var currQueuedCall = 0;
+var running = true;
 
 g = {
 	pop:[],
@@ -53,9 +54,9 @@ g = {
 	spotWinner: [0,0,0,0],
 
 
-	startGeneticParam:function(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.03,
-		metaGenTransferIn = 0, singleBothOrDoublesIn = 2, iterationsIn = 300, maxGenIn = 8,
-		maxMetaGenIn = 8, numBestIn = 10, useViewIn = true){
+	startGeneticParam:function(popSizeIn = 200, breakpointRatioIn = 0.2, mutationRateIn = 0.05,
+		metaGenTransferIn = 0, singleBothOrDoublesIn = 1, iterationsIn = 3000, maxGenIn = 9,
+		maxMetaGenIn = 5, numBestIn = 10, useViewIn = true){
 
 		this.popSize = popSizeIn;
 		this.breakPointRation = breakpointRatioIn;
@@ -608,6 +609,7 @@ function humanBindCall(func, timeout, ...args){
 }
 
 function addToCallQueue(func, timeout = 0, ...args){
+
 	callQueue.push([func, timeout, args]);
 	if(!popInTimeout){
 		setTimeout(popCallQueue);
@@ -616,6 +618,7 @@ function addToCallQueue(func, timeout = 0, ...args){
 }
 
 function popCallQueue(){
+
 	if(callQueue.length > 0){
 		info = callQueue.splice(0,1)[0];
 		currQueuedCall = setTimeout(delayedCall, info[1], info[0], info[2]);
@@ -631,7 +634,7 @@ function delayedCall(func, args){
 			popInTimeout = false;
 		}
 	} else {
-		currQueuedCall = setTimeout(delayedCall, 20, func, args);
+		currQueuedCall = setTimeout(delayedCall, 100, func, args);
 	}
 }
 
