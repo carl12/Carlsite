@@ -388,9 +388,9 @@ class GameViewManager{
 		this.ctx.fillStyle = 'rgba(100, 0, 100, 0.5)';
 		this.ctx.fillRect(this.right, 0, this.left - this.right, this.top);
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-		this.landmarkLocs = [];
 		if(this.game !== undefined){
-			this.drawLandmarks();
+			this.landmarkLocs = [];
+			this.drawLandmarks(true);
 			for(var i = 0; i < this.game.players.length; i++){
 				var p = this.game.players[i];
 				var bc = this.game.players[i].buildingCount;
@@ -459,14 +459,13 @@ class GameViewManager{
 	}
 
 	drawLandmarks(reset = false){
-		if(reset){
-			print('landmarks reset')
-		}
+		
 		this.landmarkLocs = []
 		for(var i = 0; i < this.game.players.length; i++){
 			var currLndmkLoc;
 			var dir;
 			var rot;
+			var cardStart;
 			if(i==0){
 				currLndmkLoc = canvas.height;
 				dir = 1;
@@ -486,78 +485,50 @@ class GameViewManager{
 			currLndmkLoc -= dir * this.pWidth * (0.1 + 0.3);
 			var p = this.game.players[i];
 			for(var j = p.landmarks.length-1; j >= 0; j--){
-				this.setLandmarkListenArea(i, j, currLndmkLoc, reset);
+				this.addPlayerCard(i, j+FIRST_LANDMARK_LOC, currLndmkLoc, reset);
 				currLndmkLoc -= dir * this.pWidth* (0.05 + 0.3);
 			}
 		}
 	}
 
-	setLandmarkListenArea(side, j, currLndmkLoc, reset = False){
-		if(reset && side == 1){
-			// print(side, ' is side ', j , ' is landmark');
-		}
+	addPlayerCard(side, j, currLndmkLoc, reset = False){
+		var isLandmark = j >= FIRST_LANDMARK_LOC;
 		if(side==1){
-			if(reset){
-				this.landmarkLocs.push(
-					[j+FIRST_LANDMARK_LOC,
-						[currLndmkLoc,
-							this.bottom + this.pWidth*0.3,
-							this.pWidth*0.3,
-							this.pWidth*0.5]]);
-			}
+				if (reset && isLandmark)
+					this.landmarkLocs.push(
+						[j,	[currLndmkLoc, this.bottom + this.pWidth*0.3,
+								this.pWidth*0.3, this.pWidth*0.5]]);
+
 			this.drawRotatedImage(currLndmkLoc, this.bottom + this.pWidth*0.3,
-				0,
-				this.cardImageHolder[j + FIRST_LANDMARK_LOC],
-				this.pWidth*0.3, this.pWidth*0.5);
-
-
+				0, this.cardImageHolder[j], this.pWidth*0.3, this.pWidth*0.5);
 
 		} else if (side== 0){
-			this.landmarkLocs.push(
-				[j+FIRST_LANDMARK_LOC,
-					[this.left - this.pWidth*0.8,
-						currLndmkLoc,
-						this.pWidth*0.5,
-						this.pWidth*0.3]]);
+			if(reset && isLandmark)
+				this.landmarkLocs.push(
+					[j, [this.left - this.pWidth*0.8,	currLndmkLoc,
+							 this.pWidth*0.5, this.pWidth*0.3]]);
+
 			this.drawRotatedImage(this.left - this.pWidth*0.3, currLndmkLoc,
-				Math.PI/2,
-				this.cardImageHolder[j + FIRST_LANDMARK_LOC],
-				this.pWidth*0.3, this.pWidth*0.5);
+				Math.PI/2, this.cardImageHolder[j], this.pWidth*0.3, this.pWidth*0.5);
 
 		} else if (side == 2){
-			this.landmarkLocs.push(
-				[j+FIRST_LANDMARK_LOC,
-					[this.right + this.pWidth*0.3,
-						currLndmkLoc,
-						this.pWidth*0.5,
-						this.pWidth*0.3]]);
+			if (reset && isLandmark)
+				this.landmarkLocs.push(
+					[j, [this.right + this.pWidth*0.3, currLndmkLoc - this.pWidth * 0.3,
+					 	this.pWidth*0.5, this.pWidth*0.3]]);
 
 			this.drawRotatedImage(this.right + this.pWidth*0.3, currLndmkLoc,
-				-Math.PI/2,
-				this.cardImageHolder[j + FIRST_LANDMARK_LOC],
-				this.pWidth*0.3, this.pWidth*0.5);
+				-Math.PI/2, this.cardImageHolder[j], this.pWidth*0.3, this.pWidth*0.5);
 
 		} else if (side == 3){
-			this.landmarkLocs.push(
-				[j+FIRST_LANDMARK_LOC,
-					[this.right - currLndmkLoc,
-						this.pWidth*(1-0.8),
-						this.pWidth*0.3,
-						this.pWidth*0.5]]);
+			if(reset && isLandmark)
+				this.landmarkLocs.push(
+					[j, [currLndmkLoc,	this.pWidth*(0.2),
+							this.pWidth*0.3, this.pWidth*0.5]]);
 
 			this.drawRotatedImage(currLndmkLoc, this.top - this.pWidth*0.3,
-				-Math.PI,
-				this.cardImageHolder[j + FIRST_LANDMARK_LOC],
-				this.pWidth*0.3, this.pWidth*0.5);
+				-Math.PI, this.cardImageHolder[j], this.pWidth*0.3, this.pWidth*0.5);
 		}
-		// if(reset && side == 1){
-		if(side == 1){
-			// print(currLndmkLoc, this.bottom + this.pWidth*0.3);
-
-		}
-			// print(this.landmarkLocs[this.landmarkLocs.length-1],' Added to locs');
-		// }
-
 	}
 
 	drawStatusBar(){
@@ -701,6 +672,7 @@ class GameViewManager{
 	}
 
 	checkClick(x,y){
+		print(x,y)
 		if(this.game === undefined){
 			return;
 		}
@@ -742,8 +714,11 @@ class GameViewManager{
 					return this.cardWrappers[i].card.position;
 				}
 			}
+			print('asdf')
 			for(var i in this.landmarkLocs){
+
 				if(clickInObj(...this.landmarkLocs[i][1],x,y)){
+					print('landmark clicked: ', this.landmarkLocs[i][0]);
 					return this.landmarkLocs[i][0];
 				}
 			}
