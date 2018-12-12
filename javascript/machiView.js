@@ -299,6 +299,7 @@ class GameViewManager{
 			this.top = this.pWidth;
 		} else {
 		}
+		this.drawLandmarks(true);
 
 	}
 
@@ -358,6 +359,7 @@ class GameViewManager{
 			this.drawPlayerPalates();
 			this.drawStatusBar();
 			this.drawCardsLinesImages();
+
 		}
 		// this.setDimensions(this.game.players.length);
 		// this.initInnerImagesAndLines();
@@ -372,6 +374,7 @@ class GameViewManager{
 	}
 
 	drawPlayerPalates(){
+
 		this.ctx.fillStyle = 'rgb(200, 0, 0)';
 		this.ctx.fillRect(0,0, this.left, canvas.height);
 
@@ -387,31 +390,32 @@ class GameViewManager{
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		this.landmarkLocs = [];
 		if(this.game !== undefined){
+			this.drawLandmarks();
 			for(var i = 0; i < this.game.players.length; i++){
 				var p = this.game.players[i];
 				var bc = this.game.players[i].buildingCount;
 				var tmpImg;
 				var numEstTypes = 0;
 				this.ctx.save();
-				var currLandmark;
+				var currLndmkLoc;
 
 				if(i==0){
 					this.ctx.translate( this.left, 0 );
 					this.ctx.rotate( Math.PI / 2 );
-					currLandmark = canvas.height;
+					currLndmkLoc = canvas.height;
 				} else if(i==1){
 					this.ctx.translate(this.left, this.bottom);
-					currLandmark = this.right - this.left;
+					currLndmkLoc = this.right - this.left;
 				}
 				else if(i ==2){
 					this.ctx.translate( this.right, canvas.height);
 					this.ctx.rotate( -Math.PI / 2 );
-					currLandmark = canvas.height;
+					currLndmkLoc = canvas.height;
 				}
 				else if(i == 3){
 					this.ctx.translate(this.right, this.top);
 					this.ctx.rotate(Math.PI);
-					currLandmark = this.right - this.left;
+					currLndmkLoc = this.right - this.left;
 				}
 				this.ctx.font = '1.2em monospace';
 				this.ctx.fillText(p.name +": $"+p.money, this.pWidth*0.01, this.pWidth*0.1);
@@ -436,24 +440,124 @@ class GameViewManager{
 					}
 				}
 
-				currLandmark -= (this.pWidth*0.3 + this.pWidth * 0.1);
+				currLndmkLoc -= (this.pWidth*0.3 + this.pWidth * 0.1);
 				for(var j = p.landmarks.length-1; j >= 0; j--){
 					tmpImg = this.cardImageHolder[j + FIRST_LANDMARK_LOC];
 
-					this.ctx.drawImage(tmpImg, currLandmark,
-						this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5);
-					this.landmarkLocs[j] = [j+FIRST_LANDMARK_LOC,
-						[this.left + currLandmark,
-							this.bottom + this.pWidth*0.3,
-							this.pWidth*0.3, this.pWidth*0.5]];
+					// this.ctx.drawImage(tmpImg, currLndmkLoc,
+					// 	this.pWidth*0.3, this.pWidth*0.3, this.pWidth*0.5);
 
-					this.ctx.fillText(p.landmarks[j]?"Bought":"X", currLandmark, this.pWidth*0.9);
-					currLandmark -= this.pWidth* 0.35;
+					// this.setLandmarkListenArea(j, currLndmkLoc);
+
+					this.ctx.fillText(p.landmarks[j]?"Bought":"X", currLndmkLoc, this.pWidth*0.9);
+					currLndmkLoc -= this.pWidth* 0.35;
 				}
 				this.ctx.restore();
 
 			}
 		}
+	}
+
+	drawLandmarks(reset = false){
+		if(reset){
+			print('landmarks reset')
+		}
+		this.landmarkLocs = []
+		for(var i = 0; i < this.game.players.length; i++){
+			var currLndmkLoc;
+			var dir;
+			var rot;
+			if(i==0){
+				currLndmkLoc = canvas.height;
+				dir = 1;
+			} else if(i==1){
+				currLndmkLoc = this.right;
+				dir = 1;
+				rot = 0;
+			}
+			else if(i ==2){
+				currLndmkLoc = 0;
+				dir = -1;
+			}
+			else if(i == 3){
+				currLndmkLoc = this.left;
+				dir = -1;
+			}
+			currLndmkLoc -= dir * this.pWidth * (0.1 + 0.3);
+			var p = this.game.players[i];
+			for(var j = p.landmarks.length-1; j >= 0; j--){
+				this.setLandmarkListenArea(i, j, currLndmkLoc, reset);
+				currLndmkLoc -= dir * this.pWidth* (0.05 + 0.3);
+			}
+		}
+	}
+
+	setLandmarkListenArea(side, j, currLndmkLoc, reset = False){
+		if(reset && side == 1){
+			// print(side, ' is side ', j , ' is landmark');
+		}
+		if(side==1){
+			if(reset){
+				this.landmarkLocs.push(
+					[j+FIRST_LANDMARK_LOC,
+						[currLndmkLoc,
+							this.bottom + this.pWidth*0.3,
+							this.pWidth*0.3,
+							this.pWidth*0.5]]);
+			}
+			this.drawRotatedImage(currLndmkLoc, this.bottom + this.pWidth*0.3,
+				0,
+				this.cardImageHolder[j + FIRST_LANDMARK_LOC],
+				this.pWidth*0.3, this.pWidth*0.5);
+
+
+
+		} else if (side== 0){
+			this.landmarkLocs.push(
+				[j+FIRST_LANDMARK_LOC,
+					[this.left - this.pWidth*0.8,
+						currLndmkLoc,
+						this.pWidth*0.5,
+						this.pWidth*0.3]]);
+			this.drawRotatedImage(this.left - this.pWidth*0.3, currLndmkLoc,
+				Math.PI/2,
+				this.cardImageHolder[j + FIRST_LANDMARK_LOC],
+				this.pWidth*0.3, this.pWidth*0.5);
+
+		} else if (side == 2){
+			this.landmarkLocs.push(
+				[j+FIRST_LANDMARK_LOC,
+					[this.right + this.pWidth*0.3,
+						currLndmkLoc,
+						this.pWidth*0.5,
+						this.pWidth*0.3]]);
+
+			this.drawRotatedImage(this.right + this.pWidth*0.3, currLndmkLoc,
+				-Math.PI/2,
+				this.cardImageHolder[j + FIRST_LANDMARK_LOC],
+				this.pWidth*0.3, this.pWidth*0.5);
+
+		} else if (side == 3){
+			this.landmarkLocs.push(
+				[j+FIRST_LANDMARK_LOC,
+					[this.right - currLndmkLoc,
+						this.pWidth*(1-0.8),
+						this.pWidth*0.3,
+						this.pWidth*0.5]]);
+
+			this.drawRotatedImage(currLndmkLoc, this.top - this.pWidth*0.3,
+				-Math.PI,
+				this.cardImageHolder[j + FIRST_LANDMARK_LOC],
+				this.pWidth*0.3, this.pWidth*0.5);
+		}
+		// if(reset && side == 1){
+		if(side == 1){
+			// print(currLndmkLoc, this.bottom + this.pWidth*0.3);
+
+		}
+			// print(this.landmarkLocs[this.landmarkLocs.length-1],' Added to locs');
+		// }
+
 	}
 
 	drawStatusBar(){
@@ -585,6 +689,15 @@ class GameViewManager{
 
 	addNewLine(x1,y1,x2,y2){
 		this.lines.push(new LineWrapper(x1,y1,x2,y2,this.ctx));
+	}
+
+	drawRotatedImage(x, y, angle, image, width, height){
+		this.ctx.save();
+		this.ctx.translate(x, y);
+		this.ctx.rotate(angle);
+		this.ctx.drawImage(image, 0,0, width, height);
+		this.ctx.restore();
+
 	}
 
 	checkClick(x,y){
