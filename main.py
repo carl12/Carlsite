@@ -26,7 +26,7 @@ class MachiPage(Handler):
 
 class IstanPage(Handler):
     def get(self):
-        self.render("instanbul.html")
+        self.render("istanbul.html")
 
 class PhaserDemo(Handler):
 	def get(self):
