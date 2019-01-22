@@ -6,7 +6,6 @@ import fizzBuzz
 import asciiC
 import rot13
 import rss
-import phaser
 from handlers import Handler
 
 
@@ -29,6 +28,15 @@ class IstanPage(Handler):
     def get(self):
         self.render("instanbul.html")
 
+class PhaserDemo(Handler):
+	def get(self):
+		self.render("phaserTest.html")
+
+class Phaser1(Handler):
+	def get(self):
+		self.render("phaser1/part1.html")
+
+
 
 
 
@@ -41,9 +49,11 @@ front_page = [
 ('/about', AboutPage),
 ('/machikoro', MachiPage),
 ('/istanbul', IstanPage),
+('/phaser', PhaserDemo),
+('/p1', Phaser1),
 ]
 
-all_pages = front_page + blog.pages + helloWorld.pages + fizzBuzz.pages + asciiC.pages + rot13.pages +rss.pages + phaser.pages
+all_pages = front_page + blog.pages + helloWorld.pages + fizzBuzz.pages + asciiC.pages + rot13.pages +rss.pages
 
 
 app = webapp2.WSGIApplication(all_pages, debug=True)
