@@ -241,7 +241,7 @@ Game = {
 
 			target.cards.push(myBuilding);
 			me.cards.push(targetBuilding);
-			success = true;
+			success = true; 
 			} catch(err){
 				print('Business center failed');
 				print(err);
