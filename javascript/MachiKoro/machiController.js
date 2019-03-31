@@ -13,7 +13,8 @@ window.chartColors = {
 	green: 'rgb(75, 192, 192)',
 	blue: 'rgb(54, 162, 235)',
 	purple: 'rgb(153, 102, 255)',
-	grey: 'rgb(201, 203, 207)'
+	grey: 'rgb(201, 203, 207)',
+	darkBlue: '#4B5B97',
 };
 var callQueue = [];
 var popInTimeout = false;
@@ -590,7 +591,7 @@ hum = {
 		this.humanInputType = {};
 		this.me = undefined;
 		clearCallQueue();
-		viewState.openMenu();
+		viewManage.openMenu();
 
 	},
 }

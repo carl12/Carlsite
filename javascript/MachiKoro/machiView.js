@@ -375,17 +375,17 @@ class GameViewManager{
 
 	drawPlayerPalates(){
 
-		this.ctx.fillStyle = 'rgb(200, 0, 0)';
+		this.ctx.fillStyle = window.chartColors.darkBlue;
 		this.ctx.fillRect(0,0, this.left, canvas.height);
 
-		this.ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
+		this.ctx.fillStyle = window.chartColors.darkBlue;
 		this.ctx.fillRect(this.right, 0, this.pWidth, canvas.height);
 
-		this.ctx.fillStyle = 'rgba(0, 200, 0, 0.5)';
+		this.ctx.fillStyle = window.chartColors.darkBlue;
 		this.ctx.fillRect(this.left, this.bottom,
 			this.right - this.left, this.pWidth);
 
-		this.ctx.fillStyle = 'rgba(100, 0, 100, 0.5)';
+		this.ctx.fillStyle = window.chartColors.darkBlue;
 		this.ctx.fillRect(this.right, 0, this.left - this.right, this.top);
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 		if(this.game !== undefined){
@@ -1271,7 +1271,7 @@ class MachiViewsManager{
 	openMenu(){
 		this.currManage.disableView();
 		this.currManage = this.menuManager;
-		this.viewState = this.STATE_NAMES.STATE_NAMES.MAIN_MENU_STATE;
+		this.viewState = this.STATE_NAMES.MAIN_MENU_STATE;
 		this.currManage.enableView();
 		this.draw();
 	}

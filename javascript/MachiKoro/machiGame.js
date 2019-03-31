@@ -1,8 +1,5 @@
 pr = print = console.log
 
-
-
-
 function rollDice(){
 	return randInt(1,7);
 }
@@ -12,7 +9,7 @@ function allTrue(value){
 }
 
 Game = {
-	genericNames:['Aaron','Bob','Carl','Devon'],
+	genericNames:['Amanda','Bobetta','Carla','Denice'],
 	players:[],
 	initRun:false,
 
